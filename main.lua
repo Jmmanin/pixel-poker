@@ -8,17 +8,22 @@ function love.load()
 
    numOpponents = 7
    opponentNames = {'Jeff', 'Geoff', 'Steven', 'Stephen', 'Sean', 'Shawn', 'Jeremy'}
-   initialBalance = '1234'
 
    opponents = {}
    for i=1, numOpponents
    do
-      local newOpponent = opponent.new(gameConstants.opponentOrigins[i], opponentNames[i], initialBalance, false)
+      local newOpponent = opponent.new(gameConstants.opponentOrigins[i], opponentNames[i], gameConstants.initialBalance)
       table.insert(opponents, newOpponent)
    end
 
    currentTurn = 5
    opponents[5].isTurn = true
+   opponents[1].balance = 1
+   opponents[2].balance = 15
+   opponents[3].balance = 300
+   opponents[4].balance = 600
+   opponents[5].balance = 900
+   opponents[6].balance = 1111
    updateTime = 0
 end
 

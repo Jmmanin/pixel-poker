@@ -12,9 +12,9 @@ function opponent.new(origin, name, initialBalance)
       and string.find(name, 'q') == nil
       and string.find(name, 'y') == nil
    then
-      nameY_Offset = gameConstants.opponentNameY_OffsetDescender
-   else
       nameY_Offset = gameConstants.opponentNameY_OffsetNoDescender
+   else
+      nameY_Offset = gameConstants.opponentNameY_OffsetDescender
    end
 
    newOpponent = {

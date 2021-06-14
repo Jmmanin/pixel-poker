@@ -16,8 +16,8 @@ gameConstants.opponentOrigins = {
 
 gameConstants.opponentNameFont = love.graphics.newFont('resources/monogram.ttf', 65, 'mono')
 gameConstants.opponentNameX_Offsets = {123, 111, 99, 87, 75, 63, 51, 39, 27, 15}
-gameConstants.opponentNameY_OffsetDescender = -4
-gameConstants.opponentNameY_OffsetNoDescender = -8
+gameConstants.opponentNameY_OffsetDescender = -8
+gameConstants.opponentNameY_OffsetNoDescender = -4
 
 gameConstants.smallChipPiles = {
    love.graphics.newImage('resources/opponentChipPile1.png'),
@@ -61,5 +61,16 @@ gameConstants.dealtEnum = {
    halfDealt = 2,
    dealt = 3
 }
+
+gameConstants.buttonImage = love.graphics.newImage('resources/button.png')
+gameConstants.buttonClickedImage = love.graphics.newImage('resources/buttonClicked.png')
+gameConstants.buttonSize = {208, 58}
+
+gameConstants.buttonFont = love.graphics.newFont('resources/monogram.ttf', 65, 'mono')
+gameConstants.buttonX_Origins = {30, 269, 803, 1042}
+gameConstants.buttonY_Origin = 638
+
+gameConstants.buttonTextX_Offsets = {94, 82, 70, 58, 46, 34, 22, 10}
+gameConstants.buttonTextY_Offset = -2
 
 return gameConstants

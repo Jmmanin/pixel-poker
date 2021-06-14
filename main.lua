@@ -17,13 +17,20 @@ function love.load()
    end
 
    currentTurn = 5
-   opponents[5].isTurn = true
+   dealStart = 5
+   dealPosition = dealStart
+   dealing = true
+
    opponents[1].balance = 1
    opponents[2].balance = 15
    opponents[3].balance = 300
    opponents[4].balance = 600
    opponents[5].balance = 900
+   opponents[5].isTurn = true
+   opponents[5].token = gameConstants.tokenEnum['dealer']
    opponents[6].balance = 1111
+   opponents[6].token = gameConstants.tokenEnum['smallBlind']
+   opponents[7].token = gameConstants.tokenEnum['bigBlind']
    updateTime = 0
 end
 
@@ -36,17 +43,25 @@ function love.draw()
    end
 end
 
--- function love.update(dt)
-   -- updateTime = updateTime + dt
-   -- if updateTime >= 1
-   -- then
-      -- opponents[currentTurn].isTurn = false
-      -- currentTurn = (currentTurn % 7) +1
-      -- opponents[currentTurn].isTurn = true
+function love.update(dt)
+   if dealing
+   then
+      updateTime = updateTime + dt
+      if updateTime >= 1
+      then
+         opponents[dealPosition]:dealNext()
+         dealPosition = (dealPosition % 7) +1
 
-      -- updateTime = 0
-   -- end
--- end
+         updateTime = 0
+      end
+
+      if dealPosition == dealStart-1
+         and opponents[dealPosition].cards == gameConstants.dealtEnum['dealt']
+      then
+         dealing = false
+      end
+   end
+end
 
 function love.mousereleased(x, y, button)
    if button == 1

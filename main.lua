@@ -1,21 +1,48 @@
 require('gameConstants')
-opponent = require('opponent')
 button = require('button')
+opponent = require('opponent')
+player = require('player')
 
 function love.load()
    love.window.setMode(1280, 720)
    love.graphics.setDefaultFilter('nearest', 'nearest', 1)
    love.window.setTitle('Pixel Poker')
 
-   numOpponents = 7
-   opponentNames = {'Jeff', 'Geoff', 'Steven', 'Stephen', 'Sean', 'Shawn', 'Jeremy'}
+   myName = 'John'
+   playerNames = {'Shawn', 'Jeremy', 'John', 'Jeff', 'Geoff', 'Steven', 'Stephen', 'Sean'}
+   numPlayers = table.getn(playerNames)
 
-   opponents = {}
-   for i=1, numOpponents
+   local myID = 0
+   for i, name in ipairs(playerNames)
    do
-      local newOpponent = opponent.new(gameConstants.opponentOrigins[i], opponentNames[i], gameConstants.initialBalance)
-      table.insert(opponents, newOpponent)
+      if name == myName
+      then
+         myID = i
+         break
+      end
    end
+
+   table.remove(playerNames, myID)
+
+   for i=1, myID-1
+   do
+      temp = table.remove(playerNames, 1)
+      table.insert(playerNames, temp)
+   end
+
+   playerDict = {}
+   playerList = {}
+
+   for i=1, table.getn(playerNames)
+   do
+      local newOpponent = opponent.new(i, gameConstants.opponentOrigins[i], playerNames[i], gameConstants.initialBalance)
+      playerDict[playerNames[i]] = newOpponent
+      table.insert(playerList, newOpponent)
+   end
+
+   local myPlayer = player.new(numPlayers, gameConstants.initialBalance)
+   playerDict[myName] = myPlayer
+   table.insert(playerList, myPlayer)
 
    buttons = {
       ['check'] = button.new(1, 'Check', advanceTurn),
@@ -34,30 +61,31 @@ function love.load()
    buttons['fold'].active = true
    buttons['settings'].active = true
 
-   currentTurn = 5
-   dealStart = 5
+   playerDict['Jeff'].balance = 1
+   playerDict['Geoff'].balance = 15
+   playerDict['Steven'].balance = 300
+   playerDict['Stephen'].balance = 600
+   playerDict['Sean'].balance = 900
+   playerDict['Sean'].isTurn = true
+   playerDict['Sean'].token = gameConstants.tokenEnum['dealer']
+   playerDict['Shawn'].balance = 1111
+   playerDict['Shawn'].token = gameConstants.tokenEnum['smallBlind']
+   playerDict['Jeremy'].token = gameConstants.tokenEnum['bigBlind']
+   --playerDict['John'].token = gameConstants.tokenEnum['dealer']
+
+   currentTurn = playerDict['Sean'].position
+   dealStart = playerDict['Shawn'].position
    dealPosition = dealStart
    dealing = true
-
-   opponents[1].balance = 1
-   opponents[2].balance = 15
-   opponents[3].balance = 300
-   opponents[4].balance = 600
-   opponents[5].balance = 900
-   opponents[5].isTurn = true
-   opponents[5].token = gameConstants.tokenEnum['dealer']
-   opponents[6].balance = 1111
-   opponents[6].token = gameConstants.tokenEnum['smallBlind']
-   opponents[7].token = gameConstants.tokenEnum['bigBlind']
    updateTime = 0
 end
 
 function love.draw()
    love.graphics.draw(gameConstants.gameBg)
 
-   for _, currOpponent in ipairs(opponents)
+   for _, currPlayer in pairs(playerDict)
    do
-      currOpponent:draw()
+      currPlayer:draw()
    end
 
    local x, y = love.mouse.getPosition()
@@ -79,14 +107,14 @@ function love.update(dt)
       updateTime = updateTime + dt
       if updateTime >= 1
       then
-         opponents[dealPosition]:dealNext()
-         dealPosition = (dealPosition%7)+1
+         playerList[dealPosition]:dealNext()
+         dealPosition = (dealPosition%numPlayers)+1
 
          updateTime = 0
       end
 
       if dealPosition == dealStart-1
-         and opponents[dealPosition].cards == gameConstants.dealtEnum['dealt']
+         and playerList[dealPosition].cards == gameConstants.dealtEnum['dealt']
       then
          dealing = false
       end
@@ -124,17 +152,17 @@ function love.mousereleased(x, y, button)
 end
 
 function advanceTurn()
-   opponents[currentTurn].isTurn = false
-   currentTurn = (currentTurn%7)+1
-   opponents[currentTurn].isTurn = true
+   playerList[currentTurn].isTurn = false
+   currentTurn = (currentTurn%numPlayers)+1
+   playerList[currentTurn].isTurn = true
 end
 
 function reverseTurn()
-   opponents[currentTurn].isTurn = false
+   playerList[currentTurn].isTurn = false
    currentTurn = currentTurn-1
    if currentTurn == 0
    then
-      currentTurn = 7
+      currentTurn = numPlayers
    end
-   opponents[currentTurn].isTurn = true
+   playerList[currentTurn].isTurn = true
 end

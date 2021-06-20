@@ -48,7 +48,7 @@ function button:draw(moused)
       end
 
       love.graphics.draw(curImage, self.origin[1], self.origin[2])
-      love.graphics.print({{0, 0, 0, 255}, self.text}, gameConstants.buttonFont, self.origin[1]+self.textOffset[1], self.origin[2]+self.textOffset[2])
+      love.graphics.print({gameConstants.black, self.text}, gameConstants.buttonFont, self.origin[1]+self.textOffset[1], self.origin[2]+self.textOffset[2])
    end
 end
 

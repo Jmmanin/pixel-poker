@@ -3,7 +3,7 @@ require('gameConstants')
 opponent = {}
 opponent.__index = opponent
 
-function opponent.new(origin, name, initialBalance)
+function opponent.new(position, origin, name, initialBalance)
    nameX_Offset = gameConstants.opponentNameX_Offsets[string.len(name)]
 
    if string.find(name, 'g') == nil
@@ -18,6 +18,7 @@ function opponent.new(origin, name, initialBalance)
    end
 
    newOpponent = {
+      position = position,
       origin = origin,
       name = name,
       balance = initialBalance,
@@ -47,7 +48,7 @@ end
 function opponent:draw()
    love.graphics.draw(gameConstants.opponentBg, self.origin[1], self.origin[2])
 
-   love.graphics.print({{0, 0, 0, 255}, self.name}, gameConstants.opponentNameFont, self.origin[1]+self.nameX_Offset, self.origin[2]+self.nameY_Offset)
+   love.graphics.print({gameConstants.black, self.name}, gameConstants.opponentNameFont, self.origin[1]+self.nameX_Offset, self.origin[2]+self.nameY_Offset)
 
    local chipPileSize = math.ceil(self.balance/gameConstants.chipPileSizeFactor)
    local balanceLen = math.floor(math.log10(self.balance)+1)
@@ -57,12 +58,12 @@ function opponent:draw()
 
    if chipPileSize == 1
    then
-      chipX = chipX+gameConstants.smallestOpponentChipPileX_Offset
-      balanceX = balanceX+gameConstants.smallestOpponentChipPileX_Offset
+      chipX = chipX+gameConstants.smallestSmallChipPileX_Offset
+      balanceX = balanceX+gameConstants.smallestSmallChipPileX_Offset
    end
 
    love.graphics.draw(gameConstants.smallChipPiles[chipPileSize], chipX, self.origin[2]+gameConstants.opponentChipY_Offset)
-   love.graphics.print({{0, 0, 0, 255}, '$' .. self.balance}, gameConstants.opponentBalanceFont, balanceX, self.origin[2]+gameConstants.opponentBalanceY_Offset)
+   love.graphics.print({gameConstants.black, '$' .. self.balance}, gameConstants.opponentBalanceFont, balanceX, self.origin[2]+gameConstants.opponentBalanceY_Offset)
 
    local cardX = self.origin[1]+gameConstants.smallCardBacksX_Offset
 
@@ -70,13 +71,13 @@ function opponent:draw()
    then
       if self.token == gameConstants.tokenEnum['dealer']
       then
-         love.graphics.draw(gameConstants.dealerToken, self.origin[1]+gameConstants.tokenOffset[1], self.origin[2]+gameConstants.tokenOffset[2])
+         love.graphics.draw(gameConstants.dealerToken, self.origin[1]+gameConstants.opponentTokenOffset[1], self.origin[2]+gameConstants.opponentTokenOffset[2])
       elseif self.token == gameConstants.tokenEnum['smallBlind']
       then
-         love.graphics.draw(gameConstants.smallBlindToken, self.origin[1]+gameConstants.tokenOffset[1], self.origin[2]+gameConstants.tokenOffset[2])
+         love.graphics.draw(gameConstants.smallBlindToken, self.origin[1]+gameConstants.opponentTokenOffset[1], self.origin[2]+gameConstants.opponentTokenOffset[2])
       elseif self.token == gameConstants.tokenEnum['bigBlind']
       then
-         love.graphics.draw(gameConstants.bigBlindToken, self.origin[1]+gameConstants.tokenOffset[1], self.origin[2]+gameConstants.tokenOffset[2])
+         love.graphics.draw(gameConstants.bigBlindToken, self.origin[1]+gameConstants.opponentTokenOffset[1], self.origin[2]+gameConstants.opponentTokenOffset[2])
       end
 
       cardX = cardX+gameConstants.smallCardBacksX_ExtraTokenOffset
@@ -84,12 +85,7 @@ function opponent:draw()
 
    if self.cards == gameConstants.dealtEnum['halfDealt']
    then
-      love.graphics.draw(gameConstants.smallCardBacks, gameConstants.halfDealtQuad, cardX, self.origin[2]+gameConstants.smallCardBacksY_Offset)
-
-      if self.folded
-      then
-         love.graphics.draw(gameConstants.smallFoldOverlay, gameConstants.halfDealtQuad, cardX, self.origin[2]+gameConstants.smallCardBacksY_Offset)
-      end
+      love.graphics.draw(gameConstants.smallCardBacks, gameConstants.smallhalfDealtQuad, cardX, self.origin[2]+gameConstants.smallCardBacksY_Offset)
    elseif self.cards == gameConstants.dealtEnum['dealt']
    then
       love.graphics.draw(gameConstants.smallCardBacks, cardX, self.origin[2]+gameConstants.smallCardBacksY_Offset)

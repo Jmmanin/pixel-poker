@@ -9,7 +9,8 @@ function player.new(position, initialBalance)
       balance = initialBalance,
       isTurn = false,
       token = gameConstants.tokenEnum['none'],
-      cards = gameConstants.dealtEnum['none'],
+      hand = {},
+      dealtStatus = gameConstants.dealtEnum['none'],
       folded = false
    }
 
@@ -18,13 +19,20 @@ function player.new(position, initialBalance)
    return newPlayer
 end
 
+function player:setHand(card1, card2)
+   self.hand = {
+      love.graphics.newImage(gameConstants.deckFolder..card1..'.png'),
+      love.graphics.newImage(gameConstants.deckFolder..card2..'.png')
+   }
+end
+
 function player:dealNext()
-   if self.cards == gameConstants.dealtEnum['none']
+   if self.dealtStatus == gameConstants.dealtEnum['none']
    then
-      self.cards = gameConstants.dealtEnum['halfDealt']
-   elseif self.cards == gameConstants.dealtEnum['halfDealt']
+      self.dealtStatus = gameConstants.dealtEnum['halfDealt']
+   elseif self.dealtStatus == gameConstants.dealtEnum['halfDealt']
    then
-      self.cards = gameConstants.dealtEnum['dealt']
+      self.dealtStatus = gameConstants.dealtEnum['dealt']
    end
 end
 
@@ -44,11 +52,6 @@ function player:draw()
    love.graphics.draw(gameConstants.bigChipPiles[chipPileSize], chipX, gameConstants.playerChipY_Origin)
    love.graphics.print({gameConstants.black, '$' .. self.balance}, gameConstants.playerBalanceFont, balanceX, gameConstants.playerBalanceY_Origin)
 
-   if self.isTurn
-   then
-      love.graphics.draw(gameConstants.playerTurnOverlay, gameConstants.playerOrigin[1], gameConstants.playerOrigin[2])
-   end
-
    if self.token ~= gameConstants.tokenEnum['none']
    then
       if self.token == gameConstants.tokenEnum['dealer']
@@ -61,6 +64,25 @@ function player:draw()
       then
          love.graphics.draw(gameConstants.bigBlindToken, gameConstants.playerTokenOrigin[1], gameConstants.playerTokenOrigin[2])
       end
+   end
+
+   if self.dealtStatus == gameConstants.dealtEnum['halfDealt']
+   then
+      love.graphics.draw(self.hand[1], gameConstants.playerCard1_X_Origin, gameConstants.playerCardY_Origin)
+   elseif self.dealtStatus == gameConstants.dealtEnum['dealt']
+   then
+      love.graphics.draw(self.hand[1], gameConstants.playerCard1_X_Origin, gameConstants.playerCardY_Origin)
+      love.graphics.draw(self.hand[2], gameConstants.playerCard2_X_Origin, gameConstants.playerCardY_Origin)
+
+      if self.folded
+      then
+         love.graphics.draw(gameConstants.bigFoldOverlay, gameConstants.playerCard1_X_Origin, gameConstants.playerCardY_Origin)
+      end
+   end
+
+   if self.isTurn
+   then
+      love.graphics.draw(gameConstants.playerTurnOverlay, gameConstants.playerOrigin[1], gameConstants.playerOrigin[2])
    end
 end
 

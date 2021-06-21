@@ -26,7 +26,7 @@ function opponent.new(position, origin, name, initialBalance)
       nameX_Offset = nameX_Offset,
       nameY_Offset = nameY_Offset,
       token = gameConstants.tokenEnum['none'],
-      cards = gameConstants.dealtEnum['none'],
+      dealtStatus = gameConstants.dealtEnum['none'],
       folded = false
    }
 
@@ -36,12 +36,12 @@ function opponent.new(position, origin, name, initialBalance)
 end
 
 function opponent:dealNext()
-   if self.cards == gameConstants.dealtEnum['none']
+   if self.dealtStatus == gameConstants.dealtEnum['none']
    then
-      self.cards = gameConstants.dealtEnum['halfDealt']
-   elseif self.cards == gameConstants.dealtEnum['halfDealt']
+      self.dealtStatus = gameConstants.dealtEnum['halfDealt']
+   elseif self.dealtStatus == gameConstants.dealtEnum['halfDealt']
    then
-      self.cards = gameConstants.dealtEnum['dealt']
+      self.dealtStatus = gameConstants.dealtEnum['dealt']
    end
 end
 
@@ -83,10 +83,10 @@ function opponent:draw()
       cardX = cardX+gameConstants.smallCardBacksX_ExtraTokenOffset
    end
 
-   if self.cards == gameConstants.dealtEnum['halfDealt']
+   if self.dealtStatus == gameConstants.dealtEnum['halfDealt']
    then
       love.graphics.draw(gameConstants.smallCardBacks, gameConstants.smallhalfDealtQuad, cardX, self.origin[2]+gameConstants.smallCardBacksY_Offset)
-   elseif self.cards == gameConstants.dealtEnum['dealt']
+   elseif self.dealtStatus == gameConstants.dealtEnum['dealt']
    then
       love.graphics.draw(gameConstants.smallCardBacks, cardX, self.origin[2]+gameConstants.smallCardBacksY_Offset)
 

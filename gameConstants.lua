@@ -6,6 +6,8 @@ gameConstants.dealerToken = love.graphics.newImage('resources/dealer.png')
 gameConstants.smallBlindToken = love.graphics.newImage('resources/smallBlind.png')
 gameConstants.bigBlindToken = love.graphics.newImage('resources/bigBlind.png')
 
+gameConstants.deckFolder = 'resources/deck/'
+
 gameConstants.black = {0, 0, 0, 255}
 
 gameConstants.initialBalance = 1234
@@ -47,6 +49,12 @@ gameConstants.playerBalanceX_Origins = {631, 614, 598, 581}
 gameConstants.playerBalanceY_Origin = 645
 
 gameConstants.playerTokenOrigin = {441, 576}
+
+gameConstants.bigFoldOverlay = love.graphics.newImage('resources/bigFoldOverlay.png')
+
+gameConstants.playerCard1_X_Origin = 506
+gameConstants.playerCard2_X_Origin = 644
+gameConstants.playerCardY_Origin = 434
 
 -- Opponent Constants
 gameConstants.opponentBg = love.graphics.newImage('resources/opponentBg.png')

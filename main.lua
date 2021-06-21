@@ -71,8 +71,8 @@ function love.load()
    playerDict['Shawn'].balance = 1111
    playerDict['Shawn'].token = gameConstants.tokenEnum['smallBlind']
    playerDict['Jeremy'].token = gameConstants.tokenEnum['bigBlind']
-   --playerDict['John'].token = gameConstants.tokenEnum['dealer']
 
+   playerDict['John']:setHand('2s', '7s')
    currentTurn = playerDict['Sean'].position
    dealStart = playerDict['Shawn'].position
    dealPosition = dealStart

@@ -1,0 +1,33 @@
+[gd_scene load_steps=6 format=3 uid="uid://svr8ru7hvllj"]
+
+[ext_resource type="Texture2D" uid="uid://cvr8jqmuodqho" path="res://resources/button.png" id="1_xak7b"]
+[ext_resource type="Texture2D" uid="uid://d2mewpgcxrivn" path="res://resources/button_hovered.png" id="2_qirwo"]
+[ext_resource type="FontFile" uid="uid://c3j6oa1sotgmy" path="res://resources/monogram.ttf" id="3_qcapw"]
+[ext_resource type="Script" path="res://table_button.gd" id="3_tupdc"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ev66y"]
+font = ExtResource("3_qcapw")
+font_size = 64
+font_color = Color(0, 0, 0, 1)
+
+[node name="TableButton" type="TextureButton"]
+offset_right = 208.0
+offset_bottom = 58.0
+texture_normal = ExtResource("1_xak7b")
+texture_hover = ExtResource("2_qirwo")
+script = ExtResource("3_tupdc")
+
+[node name="ButtonLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = -4.0
+offset_right = 2.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_ev66y")
+horizontal_alignment = 1
+vertical_alignment = 1

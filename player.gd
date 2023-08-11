@@ -1,0 +1,75 @@
+extends Node2D
+
+var balance = 0
+var blind_button_value = PokerTypes.BUTTON_NONE
+var cards_dealt = 0
+
+func set_blind_button(new_blind_button):
+    blind_button_value = new_blind_button
+
+    if blind_button_value == PokerTypes.BUTTON_NONE:
+        $BlindButton.visible = false
+    else:
+        if new_blind_button == PokerTypes.BUTTON_DEALER:
+            $BlindButton.set_region_rect(Rect2(0, 0, 36, 36))
+        elif new_blind_button == PokerTypes.BUTTON_SMALL_BLIND:
+            $BlindButton.set_region_rect(Rect2(36, 0, 36, 36))
+        elif new_blind_button == PokerTypes.BUTTON_BIG_BLIND:
+            $BlindButton.set_region_rect(Rect2(72, 0, 36, 36))
+
+        $BlindButton.visible = true
+
+func set_cards(card1_val, card2_val):
+    $Card1.set_region_rect(Rect2(card1_val[0]*130, card1_val[1]*180, 130, 180))
+    $Card2.set_region_rect(Rect2(card2_val[0]*130, card2_val[1]*180, 130, 180))
+
+func deal_next():
+    if cards_dealt < 2:
+        cards_dealt += 1
+
+    if cards_dealt == 1:
+        $Card1.visible = true
+    if cards_dealt == 2:
+        $Card2.visible = true
+
+func fold():
+    # Use modulate to darken cards
+    $Card1.modulate = Color(137.0/255.0, 137.0/255.0, 137.0/255.0)
+    $Card2.modulate = Color(137.0/255.0, 137.0/255.0, 137.0/255.0)
+
+func clear_hand():
+    set_blind_button(PokerTypes.BUTTON_NONE)
+
+    cards_dealt = 0
+
+    $Card1.visible = false
+    $Card2.visible = false
+    $Card1.modulate = Color(1, 1, 1)
+    $Card2.modulate = Color(1, 1, 1)
+
+func set_status(new_status):
+    $StatusBlock/StatusLabel.text = new_status
+
+func set_balance(new_balance):
+    balance = new_balance
+
+    if balance > 0:
+        if balance >= (0.8 * GameProperties.total_game_balance):
+            $StatusBlock/Chips.set_region_rect(Rect2(144, 0, 36, 36))
+        elif balance >= (0.6 * GameProperties.total_game_balance):
+            $StatusBlock/Chips.set_region_rect(Rect2(108, 0, 36, 36))
+        elif balance >= (0.4 * GameProperties.total_game_balance):
+            $StatusBlock/Chips.set_region_rect(Rect2(72, 0, 36, 36))
+        elif balance >= (0.2 * GameProperties.total_game_balance):
+            $StatusBlock/Chips.set_region_rect(Rect2(36, 0, 36, 36))
+        else:
+            $StatusBlock/Chips.set_region_rect(Rect2(12, 0, 24, 36))
+
+        $StatusBlock/Chips.visible = true
+    else:
+        $StatusBlock/Chips.visible = false
+
+    $StatusBlock/BalanceLabel.text = "$" + str(balance)
+
+func set_turn(is_turn):
+    $TurnIndicator.visible = is_turn

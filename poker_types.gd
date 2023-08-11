@@ -1,0 +1,14 @@
+extends Node
+
+# Table button actions
+enum {TABLE_BUTTON_NONE,\
+      TABLE_BUTTON_CALL,\
+      TABLE_BUTTON_RAISE,\
+      TABLE_BUTTON_FOLD,\
+      TABLE_BUTTON_SETTINGS}
+
+# Blind button options
+enum {BUTTON_NONE, BUTTON_DEALER, BUTTON_SMALL_BLIND, BUTTON_BIG_BLIND}
+
+# Suites
+enum {SPADES, CLUBS, DIAMONDS, HEARTS}

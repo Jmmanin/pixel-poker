@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cgei8xdcn8ptd"
-path="res://.godot/imported/blind_buttons.png-6b3a1621ba68c7bd081e3718985d4a9a.ctex"
+uid="uid://dsoa7b3088t1l"
+path="res://.godot/imported/deck.png-a319047850e353d86fe606be00fef260.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/blind_buttons.png"
-dest_files=["res://.godot/imported/blind_buttons.png-6b3a1621ba68c7bd081e3718985d4a9a.ctex"]
+source_file="res://resources/table/deck.png"
+dest_files=["res://.godot/imported/deck.png-a319047850e353d86fe606be00fef260.ctex"]
 
 [params]
 

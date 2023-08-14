@@ -1,45 +1,45 @@
 [gd_scene load_steps=10 format=3 uid="uid://b3edga7bj8n12"]
 
-[ext_resource type="Script" path="res://player.gd" id="1_en22e"]
-[ext_resource type="Texture2D" uid="uid://dsoa7b3088t1l" path="res://resources/deck.png" id="1_hkjc4"]
-[ext_resource type="Texture2D" uid="uid://djap6df1melon" path="res://resources/player_bg.png" id="2_uf38s"]
-[ext_resource type="Texture2D" uid="uid://cgei8xdcn8ptd" path="res://resources/blind_buttons.png" id="2_ujhdm"]
-[ext_resource type="FontFile" uid="uid://c3j6oa1sotgmy" path="res://resources/monogram.ttf" id="4_1vd3e"]
-[ext_resource type="Texture2D" uid="uid://7d5ngu5wdvqg" path="res://resources/big_chips.png" id="5_6742u"]
-[ext_resource type="Texture2D" uid="uid://um5mcbswxtn1" path="res://resources/player_turn.png" id="8_red5y"]
+[ext_resource type="Script" path="res://table/player.gd" id="1_ivspx"]
+[ext_resource type="Texture2D" uid="uid://cgei8xdcn8ptd" path="res://resources/table/blind_buttons.png" id="2_g6jrn"]
+[ext_resource type="Texture2D" uid="uid://dsoa7b3088t1l" path="res://resources/table/deck.png" id="3_fb52s"]
+[ext_resource type="Texture2D" uid="uid://djap6df1melon" path="res://resources/table/player_bg.png" id="4_y37wl"]
+[ext_resource type="FontFile" uid="uid://c3j6oa1sotgmy" path="res://resources/monogram.ttf" id="5_q168y"]
+[ext_resource type="Texture2D" uid="uid://7d5ngu5wdvqg" path="res://resources/table/big_chips.png" id="6_lhxvj"]
+[ext_resource type="Texture2D" uid="uid://um5mcbswxtn1" path="res://resources/table/player_turn.png" id="7_a47hk"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_xb54d"]
-font = ExtResource("4_1vd3e")
+font = ExtResource("5_q168y")
 font_size = 55
 font_color = Color(0, 0, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_wf68b"]
-font = ExtResource("4_1vd3e")
+font = ExtResource("5_q168y")
 font_size = 87
 font_color = Color(0, 0, 0, 1)
 
 [node name="Player" type="Node2D"]
 position = Vector2(65, 0)
-script = ExtResource("1_en22e")
+script = ExtResource("1_ivspx")
 
 [node name="BlindButton" type="Sprite2D" parent="."]
 visible = false
 position = Vector2(-47, 160)
-texture = ExtResource("2_ujhdm")
+texture = ExtResource("2_g6jrn")
 region_enabled = true
 region_rect = Rect2(0, 0, 36, 36)
 
 [node name="Card1" type="Sprite2D" parent="."]
 visible = false
 position = Vector2(65, 90)
-texture = ExtResource("1_hkjc4")
+texture = ExtResource("3_fb52s")
 region_enabled = true
 region_rect = Rect2(0, 0, 130, 180)
 
 [node name="Card2" type="Sprite2D" parent="."]
 visible = false
 position = Vector2(203, 90)
-texture = ExtResource("1_hkjc4")
+texture = ExtResource("3_fb52s")
 region_enabled = true
 region_rect = Rect2(0, 0, 130, 180)
 
@@ -48,7 +48,7 @@ offset_left = 2.0
 offset_top = 189.0
 offset_right = 266.0
 offset_bottom = 277.0
-texture = ExtResource("2_uf38s")
+texture = ExtResource("4_y37wl")
 metadata/_edit_use_anchors_ = true
 
 [node name="StatusLabel" type="Label" parent="StatusBlock"]
@@ -64,7 +64,7 @@ vertical_alignment = 1
 [node name="Chips" type="Sprite2D" parent="StatusBlock"]
 visible = false
 position = Vector2(32, 61)
-texture = ExtResource("5_6742u")
+texture = ExtResource("6_lhxvj")
 region_enabled = true
 region_rect = Rect2(0, 0, 36, 36)
 
@@ -85,4 +85,4 @@ offset_left = 2.0
 offset_top = 189.0
 offset_right = 266.0
 offset_bottom = 277.0
-texture = ExtResource("8_red5y")
+texture = ExtResource("7_a47hk")

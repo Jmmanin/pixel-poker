@@ -54,6 +54,7 @@ func set_balance(new_balance):
     balance = new_balance
 
     if balance > 0:
+        #TO-DO - Adjust percentages
         if balance >= (0.8 * GameProperties.total_game_balance):
             $StatusBlock/Chips.set_region_rect(Rect2(144, 0, 36, 36))
         elif balance >= (0.6 * GameProperties.total_game_balance):

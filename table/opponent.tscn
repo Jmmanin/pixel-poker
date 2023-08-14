@@ -1,36 +1,36 @@
 [gd_scene load_steps=12 format=3 uid="uid://bo666p0hi6ao4"]
 
-[ext_resource type="Texture2D" uid="uid://ccdxfw01ntt24" path="res://resources/opponent_bg.png" id="1_163jf"]
-[ext_resource type="Script" path="res://opponent.gd" id="2_vywlj"]
-[ext_resource type="Texture2D" uid="uid://b6uaxmlvelj0u" path="res://resources/opponent_turn.png" id="3_matk8"]
-[ext_resource type="FontFile" uid="uid://c3j6oa1sotgmy" path="res://resources/monogram.ttf" id="3_tgy0o"]
-[ext_resource type="Texture2D" uid="uid://dh7hsr32iswba" path="res://resources/small_chips.png" id="4_jojoj"]
-[ext_resource type="Texture2D" uid="uid://cgei8xdcn8ptd" path="res://resources/blind_buttons.png" id="5_31h5b"]
-[ext_resource type="Texture2D" uid="uid://djq6cws5w36dd" path="res://resources/small_back.png" id="7_ml5hu"]
-[ext_resource type="Texture2D" uid="uid://cqmqw0fa185ec" path="res://resources/small_deck.png" id="8_akbcf"]
+[ext_resource type="Texture2D" uid="uid://ccdxfw01ntt24" path="res://resources/table/opponent_bg.png" id="1_2w0u4"]
+[ext_resource type="Script" path="res://table/opponent.gd" id="2_fvf8a"]
+[ext_resource type="Texture2D" uid="uid://b6uaxmlvelj0u" path="res://resources/table/opponent_turn.png" id="3_grhin"]
+[ext_resource type="FontFile" uid="uid://c3j6oa1sotgmy" path="res://resources/monogram.ttf" id="4_6g7qa"]
+[ext_resource type="Texture2D" uid="uid://dh7hsr32iswba" path="res://resources/table/small_chips.png" id="5_y3wbd"]
+[ext_resource type="Texture2D" uid="uid://cgei8xdcn8ptd" path="res://resources/table/blind_buttons.png" id="6_4of3v"]
+[ext_resource type="Texture2D" uid="uid://djq6cws5w36dd" path="res://resources/table/small_back.png" id="7_rokl7"]
+[ext_resource type="Texture2D" uid="uid://cqmqw0fa185ec" path="res://resources/table/small_deck.png" id="8_tjg8u"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_hseuh"]
-font = ExtResource("3_tgy0o")
+font = ExtResource("4_6g7qa")
 font_size = 64
 font_color = Color(0, 0, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_xma6u"]
-font = ExtResource("3_tgy0o")
+font = ExtResource("4_6g7qa")
 font_size = 48
 font_color = Color(0, 0, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_ktjah"]
 line_spacing = -6.0
-font = ExtResource("3_tgy0o")
+font = ExtResource("4_6g7qa")
 font_size = 48
 font_color = Color(0, 0, 0, 1)
 
 [node name="Opponent" type="TextureRect"]
 offset_right = 40.0
 offset_bottom = 40.0
-texture = ExtResource("1_163jf")
+texture = ExtResource("1_2w0u4")
 stretch_mode = 2
-script = ExtResource("2_vywlj")
+script = ExtResource("2_fvf8a")
 metadata/_edit_lock_ = true
 
 [node name="TurnIndicator" type="TextureRect" parent="."]
@@ -38,7 +38,7 @@ visible = false
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
-texture = ExtResource("3_matk8")
+texture = ExtResource("3_grhin")
 
 [node name="NameLabel" type="Label" parent="."]
 layout_mode = 0
@@ -53,7 +53,7 @@ vertical_alignment = 1
 [node name="Chips" type="Sprite2D" parent="."]
 visible = false
 position = Vector2(24, 66)
-texture = ExtResource("4_jojoj")
+texture = ExtResource("5_y3wbd")
 region_enabled = true
 region_rect = Rect2(0, 0, 24, 24)
 
@@ -71,7 +71,7 @@ vertical_alignment = 1
 [node name="BlindButton" type="Sprite2D" parent="."]
 visible = false
 position = Vector2(26, 121)
-texture = ExtResource("5_31h5b")
+texture = ExtResource("6_4of3v")
 region_enabled = true
 region_rect = Rect2(0, 0, 36, 36)
 
@@ -83,7 +83,7 @@ offset_left = 28.0
 offset_top = 88.0
 offset_right = 73.0
 offset_bottom = 155.0
-texture = ExtResource("7_ml5hu")
+texture = ExtResource("7_rokl7")
 
 [node name="CardBack2" type="TextureRect" parent="CardParent"]
 visible = false
@@ -91,12 +91,12 @@ offset_left = 77.0
 offset_top = 88.0
 offset_right = 122.0
 offset_bottom = 155.0
-texture = ExtResource("7_ml5hu")
+texture = ExtResource("7_rokl7")
 
 [node name="Card1" type="Sprite2D" parent="CardParent"]
 visible = false
 position = Vector2(50, 121)
-texture = ExtResource("8_akbcf")
+texture = ExtResource("8_tjg8u")
 offset = Vector2(0.5, 0.5)
 region_enabled = true
 region_rect = Rect2(0, 0, 45, 67)
@@ -104,7 +104,7 @@ region_rect = Rect2(0, 0, 45, 67)
 [node name="Card2" type="Sprite2D" parent="CardParent"]
 visible = false
 position = Vector2(99, 121)
-texture = ExtResource("8_akbcf")
+texture = ExtResource("8_tjg8u")
 offset = Vector2(0.5, 0.5)
 region_enabled = true
 region_rect = Rect2(0, 0, 45, 67)

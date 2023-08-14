@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b6uaxmlvelj0u"
-path="res://.godot/imported/opponent_turn.png-79ae4cf6418b05940e2f940d8e8c892a.ctex"
+uid="uid://cqmqw0fa185ec"
+path="res://.godot/imported/small_deck.png-347ab77f8ef8465d598615f7a11b20e5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/opponent_turn.png"
-dest_files=["res://.godot/imported/opponent_turn.png-79ae4cf6418b05940e2f940d8e8c892a.ctex"]
+source_file="res://resources/table/small_deck.png"
+dest_files=["res://.godot/imported/small_deck.png-347ab77f8ef8465d598615f7a11b20e5.ctex"]
 
 [params]
 

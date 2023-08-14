@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://djap6df1melon"
-path="res://.godot/imported/player_bg.png-23af1b539fa9484dded40f48019e024f.ctex"
+uid="uid://cgei8xdcn8ptd"
+path="res://.godot/imported/blind_buttons.png-c3f342cc4fb7b63c9c23b0f675036d1c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/player_bg.png"
-dest_files=["res://.godot/imported/player_bg.png-23af1b539fa9484dded40f48019e024f.ctex"]
+source_file="res://resources/table/blind_buttons.png"
+dest_files=["res://.godot/imported/blind_buttons.png-c3f342cc4fb7b63c9c23b0f675036d1c.ctex"]
 
 [params]
 

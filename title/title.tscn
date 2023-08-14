@@ -1,0 +1,153 @@
+[gd_scene load_steps=10 format=3 uid="uid://qrpkf2mthmlq"]
+
+[ext_resource type="Script" path="res://title/title.gd" id="1_b0eo8"]
+[ext_resource type="Texture2D" uid="uid://b3ixf753idxxq" path="res://resources/title/sign.png" id="2_a8t4a"]
+[ext_resource type="Texture2D" uid="uid://dys8eaaruqbej" path="res://resources/title/sign_mask1a.png" id="3_msw8r"]
+[ext_resource type="Texture2D" uid="uid://dnbnftrwtvbor" path="res://resources/title/sign_mask1b.png" id="4_rsyx8"]
+[ext_resource type="Texture2D" uid="uid://codd1vabbcskf" path="res://resources/title/sign_mask2.png" id="5_8wexs"]
+[ext_resource type="FontFile" uid="uid://c3j6oa1sotgmy" path="res://resources/monogram.ttf" id="5_nfccw"]
+[ext_resource type="Texture2D" uid="uid://cvr8jqmuodqho" path="res://resources/button.png" id="6_4valq"]
+[ext_resource type="Texture2D" uid="uid://d2mewpgcxrivn" path="res://resources/button_hovered.png" id="7_8gcrw"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_g6gsc"]
+font = ExtResource("5_nfccw")
+font_size = 96
+font_color = Color(0, 0, 0, 1)
+
+[node name="Title" type="Node"]
+script = ExtResource("1_b0eo8")
+
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Sign" type="TextureRect" parent="."]
+offset_left = 90.0
+offset_top = 54.0
+offset_right = 1190.0
+offset_bottom = 356.0
+texture = ExtResource("2_a8t4a")
+
+[node name="SignTimer" type="Timer" parent="Sign"]
+autostart = true
+
+[node name="SignMask1" type="Node2D" parent="Sign"]
+visible = false
+
+[node name="SignMask1a" type="TextureRect" parent="Sign/SignMask1"]
+modulate = Color(1, 1, 1, 0.462745)
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("3_msw8r")
+
+[node name="SignMask1b" type="TextureRect" parent="Sign/SignMask1"]
+offset_left = 584.0
+offset_top = 34.0
+offset_right = 1032.0
+offset_bottom = 146.0
+texture = ExtResource("4_rsyx8")
+
+[node name="SignMask2" type="TextureRect" parent="Sign"]
+modulate = Color(1, 1, 1, 0.462745)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("5_8wexs")
+
+[node name="HostGameParent" type="Node2D" parent="."]
+position = Vector2(160, 404)
+
+[node name="HostGameButton" type="TextureButton" parent="HostGameParent"]
+offset_right = 208.0
+offset_bottom = 58.0
+scale = Vector2(2, 2)
+texture_normal = ExtResource("6_4valq")
+texture_hover = ExtResource("7_8gcrw")
+metadata/_edit_use_anchors_ = true
+
+[node name="HostGameLabel" type="Label" parent="HostGameParent"]
+offset_left = 13.0
+offset_top = 14.0
+offset_right = 409.0
+offset_bottom = 93.0
+text = "Host Game"
+label_settings = SubResource("LabelSettings_g6gsc")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="JoinGameParent" type="Node2D" parent="."]
+position = Vector2(704, 404)
+
+[node name="JoinGameButton" type="TextureButton" parent="JoinGameParent"]
+offset_right = 208.0
+offset_bottom = 58.0
+scale = Vector2(2, 2)
+texture_normal = ExtResource("6_4valq")
+texture_hover = ExtResource("7_8gcrw")
+metadata/_edit_use_anchors_ = true
+
+[node name="JoinGameLabel" type="Label" parent="JoinGameParent"]
+offset_left = 13.0
+offset_top = 14.0
+offset_right = 409.0
+offset_bottom = 93.0
+text = "Join Game"
+label_settings = SubResource("LabelSettings_g6gsc")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="SettingsParent" type="Node2D" parent="."]
+position = Vector2(160, 550)
+
+[node name="SettingsButton" type="TextureButton" parent="SettingsParent"]
+offset_right = 208.0
+offset_bottom = 58.0
+scale = Vector2(2, 2)
+texture_normal = ExtResource("6_4valq")
+texture_hover = ExtResource("7_8gcrw")
+metadata/_edit_use_anchors_ = true
+
+[node name="SettingsLabel" type="Label" parent="SettingsParent"]
+offset_left = 13.0
+offset_top = 14.0
+offset_right = 409.0
+offset_bottom = 93.0
+text = "Settings"
+label_settings = SubResource("LabelSettings_g6gsc")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="QuitParent" type="Node2D" parent="."]
+position = Vector2(704, 550)
+
+[node name="QuitButton" type="TextureButton" parent="QuitParent"]
+offset_right = 208.0
+offset_bottom = 58.0
+scale = Vector2(2, 2)
+texture_normal = ExtResource("6_4valq")
+texture_hover = ExtResource("7_8gcrw")
+metadata/_edit_use_anchors_ = true
+
+[node name="QuitLabel" type="Label" parent="QuitParent"]
+offset_left = 13.0
+offset_top = 14.0
+offset_right = 409.0
+offset_bottom = 93.0
+text = "Quit"
+label_settings = SubResource("LabelSettings_g6gsc")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[connection signal="timeout" from="Sign/SignTimer" to="." method="_on_sign_timer_timeout"]
+[connection signal="pressed" from="HostGameParent/HostGameButton" to="." method="_on_host_game_button_pressed"]
+[connection signal="pressed" from="JoinGameParent/JoinGameButton" to="." method="_on_join_game_button_pressed"]
+[connection signal="pressed" from="SettingsParent/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="QuitParent/QuitButton" to="." method="_on_quit_button_pressed"]

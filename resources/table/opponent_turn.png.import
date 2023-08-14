@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://7d5ngu5wdvqg"
-path="res://.godot/imported/big_chips.png-b26d20fd3938c1cbbb8e3db71c2194c3.ctex"
+uid="uid://b6uaxmlvelj0u"
+path="res://.godot/imported/opponent_turn.png-5edaec9b26635acce43b9b0bf1d85611.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/big_chips.png"
-dest_files=["res://.godot/imported/big_chips.png-b26d20fd3938c1cbbb8e3db71c2194c3.ctex"]
+source_file="res://resources/table/opponent_turn.png"
+dest_files=["res://.godot/imported/opponent_turn.png-5edaec9b26635acce43b9b0bf1d85611.ctex"]
 
 [params]
 

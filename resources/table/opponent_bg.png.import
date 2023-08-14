@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://um5mcbswxtn1"
-path="res://.godot/imported/player_turn.png-bbc09f8100da99bfcea14b8ea3a89ae6.ctex"
+uid="uid://ccdxfw01ntt24"
+path="res://.godot/imported/opponent_bg.png-1adc0a4e12c3f5bb0911b2ff53875d9e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/player_turn.png"
-dest_files=["res://.godot/imported/player_turn.png-bbc09f8100da99bfcea14b8ea3a89ae6.ctex"]
+source_file="res://resources/table/opponent_bg.png"
+dest_files=["res://.godot/imported/opponent_bg.png-1adc0a4e12c3f5bb0911b2ff53875d9e.ctex"]
 
 [params]
 

@@ -7,14 +7,15 @@ func _on_sign_timer_timeout():
 
 func _on_host_game_button_pressed():
     print("host")
+    get_tree().change_scene_to_file("res://host/host_game.tscn")
 
 func _on_join_game_button_pressed():
     print("join")
-    get_tree().change_scene_to_file("res://table/table.tscn")
+    get_tree().change_scene_to_file("res://join/join_game.tscn")
 
 func _on_settings_button_pressed():
     print("settings")
+    get_tree().change_scene_to_file("res://table/table.tscn")
 
 func _on_quit_button_pressed():
     get_tree().quit()
- 

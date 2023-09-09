@@ -1,10 +1,10 @@
 [gd_scene load_steps=10 format=3 uid="uid://qrpkf2mthmlq"]
 
 [ext_resource type="Script" path="res://title/title.gd" id="1_b0eo8"]
-[ext_resource type="Texture2D" uid="uid://b3ixf753idxxq" path="res://resources/title/sign.png" id="2_a8t4a"]
-[ext_resource type="Texture2D" uid="uid://dys8eaaruqbej" path="res://resources/title/sign_mask1a.png" id="3_msw8r"]
-[ext_resource type="Texture2D" uid="uid://dnbnftrwtvbor" path="res://resources/title/sign_mask1b.png" id="4_rsyx8"]
-[ext_resource type="Texture2D" uid="uid://codd1vabbcskf" path="res://resources/title/sign_mask2.png" id="5_8wexs"]
+[ext_resource type="Texture2D" uid="uid://b3ixf753idxxq" path="res://resources/title/title_sign.png" id="2_qqhur"]
+[ext_resource type="Texture2D" uid="uid://dys8eaaruqbej" path="res://resources/title/title_sign_mask1a.png" id="3_yfi0n"]
+[ext_resource type="Texture2D" uid="uid://dnbnftrwtvbor" path="res://resources/title/title_sign_mask1b.png" id="4_lq75l"]
+[ext_resource type="Texture2D" uid="uid://codd1vabbcskf" path="res://resources/title/title_sign_mask2.png" id="5_28nwj"]
 [ext_resource type="FontFile" uid="uid://c3j6oa1sotgmy" path="res://resources/monogram.ttf" id="5_nfccw"]
 [ext_resource type="Texture2D" uid="uid://cvr8jqmuodqho" path="res://resources/button.png" id="6_4valq"]
 [ext_resource type="Texture2D" uid="uid://d2mewpgcxrivn" path="res://resources/button_hovered.png" id="7_8gcrw"]
@@ -30,9 +30,10 @@ offset_left = 90.0
 offset_top = 54.0
 offset_right = 1190.0
 offset_bottom = 356.0
-texture = ExtResource("2_a8t4a")
+texture = ExtResource("2_qqhur")
 
 [node name="SignTimer" type="Timer" parent="Sign"]
+wait_time = 0.75
 autostart = true
 
 [node name="SignMask1" type="Node2D" parent="Sign"]
@@ -42,21 +43,21 @@ visible = false
 modulate = Color(1, 1, 1, 0.462745)
 offset_right = 40.0
 offset_bottom = 40.0
-texture = ExtResource("3_msw8r")
+texture = ExtResource("3_yfi0n")
 
 [node name="SignMask1b" type="TextureRect" parent="Sign/SignMask1"]
 offset_left = 584.0
 offset_top = 34.0
 offset_right = 1032.0
 offset_bottom = 146.0
-texture = ExtResource("4_rsyx8")
+texture = ExtResource("4_lq75l")
 
 [node name="SignMask2" type="TextureRect" parent="Sign"]
 modulate = Color(1, 1, 1, 0.462745)
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
-texture = ExtResource("5_8wexs")
+texture = ExtResource("5_28nwj")
 
 [node name="HostGameParent" type="Node2D" parent="."]
 position = Vector2(160, 404)

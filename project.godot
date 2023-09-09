@@ -17,7 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-GameProperties="*res://table/game_properties.gd"
+GameProperties="*res://game_properties.gd"
 PokerTypes="*res://table/poker_types.gd"
 
 [display]

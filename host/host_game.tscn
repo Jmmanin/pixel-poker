@@ -1,0 +1,485 @@
+[gd_scene load_steps=27 format=3 uid="uid://bci78cphedptc"]
+
+[ext_resource type="Script" path="res://host/host_game.gd" id="1_dnos3"]
+[ext_resource type="Texture2D" uid="uid://coa235rmxckds" path="res://resources/host_join/sign.png" id="2_1imvl"]
+[ext_resource type="FontFile" uid="uid://c3j6oa1sotgmy" path="res://resources/monogram.ttf" id="3_70p0n"]
+[ext_resource type="Texture2D" uid="uid://d20hb2fkkte2f" path="res://resources/host_join/sign_mask1.png" id="4_l502j"]
+[ext_resource type="Texture2D" uid="uid://fblj3pmpnoqe" path="res://resources/host_join/sign_mask2.png" id="5_r6kq7"]
+[ext_resource type="Texture2D" uid="uid://cptif5fpm8ika" path="res://resources/host_join/line_edit_bg_15_char.png" id="6_fpyqe"]
+[ext_resource type="Texture2D" uid="uid://cbkm2lxy3defg" path="res://resources/host_join/line_edit_bg_5_char.png" id="7_5yi70"]
+[ext_resource type="Texture2D" uid="uid://bhrmudqvvsvnq" path="res://resources/host_join/line_edit_bg_20_char.png" id="8_ncchk"]
+[ext_resource type="Texture2D" uid="uid://dgdeaveex61bo" path="res://resources/host_join/line_edit_bg_4_char.png" id="8_ptya4"]
+[ext_resource type="Texture2D" uid="uid://cvr8jqmuodqho" path="res://resources/button.png" id="9_47pym"]
+[ext_resource type="Texture2D" uid="uid://x77oenws8hm8" path="res://resources/host_join/adv_settings_button.png" id="11_t30xf"]
+[ext_resource type="Texture2D" uid="uid://cf5vh6ronjd1x" path="res://resources/host_join/adv_settings_button_hovered.png" id="12_d0w35"]
+[ext_resource type="Texture2D" uid="uid://c5vb2ijmitqaw" path="res://resources/host_join/host_join_button.png" id="13_3ujfx"]
+[ext_resource type="Texture2D" uid="uid://wahqjftdg0ga" path="res://resources/host_join/host_join_button_hovered.png" id="14_f37ts"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_8d1rd"]
+font = ExtResource("3_70p0n")
+font_size = 231
+font_color = Color(0.843137, 0.717647, 0.34902, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ng5pq"]
+font = ExtResource("3_70p0n")
+font_size = 64
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_j2ts4"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wbg31"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2hfmu"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_g28fs"]
+font = ExtResource("3_70p0n")
+font_size = 64
+
+[sub_resource type="LabelSettings" id="LabelSettings_ktnbw"]
+font = ExtResource("3_70p0n")
+font_size = 64
+
+[sub_resource type="LabelSettings" id="LabelSettings_0fep2"]
+font = ExtResource("3_70p0n")
+font_size = 64
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_arhbm"]
+font = ExtResource("3_70p0n")
+font_size = 64
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5mevr"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_i1wcf"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mpykp"]
+
+[node name="HostGame" type="Node"]
+script = ExtResource("1_dnos3")
+
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+metadata/_edit_lock_ = true
+
+[node name="Sign" type="TextureRect" parent="."]
+offset_left = 216.0
+offset_top = 29.0
+offset_right = 1064.0
+offset_bottom = 210.0
+texture = ExtResource("2_1imvl")
+metadata/_edit_lock_ = true
+
+[node name="SignTimer" type="Timer" parent="Sign"]
+wait_time = 0.75
+autostart = true
+
+[node name="Label" type="Label" parent="Sign"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = -13.0
+offset_right = 823.0
+offset_bottom = 173.0
+text = "HOST GAME"
+label_settings = SubResource("LabelSettings_8d1rd")
+metadata/_edit_lock_ = true
+
+[node name="SignMask1" type="TextureRect" parent="Sign"]
+visible = false
+modulate = Color(1, 1, 1, 0.462745)
+layout_mode = 0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 845.0
+offset_bottom = 178.0
+texture = ExtResource("4_l502j")
+metadata/_edit_lock_ = true
+
+[node name="SignMask2" type="TextureRect" parent="Sign"]
+modulate = Color(1, 1, 1, 0.462745)
+layout_mode = 0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 845.0
+offset_bottom = 178.0
+texture = ExtResource("5_r6kq7")
+metadata/_edit_lock_ = true
+
+[node name="IP_Parent" type="Node2D" parent="."]
+position = Vector2(268, 224)
+
+[node name="IP_Label" type="Label" parent="IP_Parent"]
+offset_top = 1.0
+offset_right = 72.0
+offset_bottom = 55.0
+text = "IP:"
+label_settings = SubResource("LabelSettings_ng5pq")
+metadata/_edit_lock_ = true
+
+[node name="IP_Background" type="TextureRect" parent="IP_Parent"]
+offset_left = 80.0
+offset_top = 1.0
+offset_right = 456.0
+offset_bottom = 59.0
+texture = ExtResource("6_fpyqe")
+metadata/_edit_lock_ = true
+
+[node name="IP_LineEdit" type="LineEdit" parent="IP_Parent"]
+offset_left = 90.0
+offset_right = 450.0
+offset_bottom = 53.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_70p0n")
+theme_override_font_sizes/font_size = 64
+theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts4")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_wbg31")
+theme_override_styles/read_only = SubResource("StyleBoxEmpty_2hfmu")
+alignment = 1
+max_length = 15
+context_menu_enabled = false
+caret_blink_interval = 0.75
+metadata/_edit_lock_ = true
+
+[node name="PortParent" type="Node2D" parent="."]
+position = Vector2(748, 224)
+
+[node name="PortLabel" type="Label" parent="PortParent"]
+offset_top = 1.0
+offset_right = 120.0
+offset_bottom = 55.0
+text = "Port:"
+label_settings = SubResource("LabelSettings_g28fs")
+metadata/_edit_lock_ = true
+
+[node name="PortBackground" type="TextureRect" parent="PortParent"]
+offset_left = 128.0
+offset_top = 1.0
+offset_right = 264.0
+offset_bottom = 59.0
+texture = ExtResource("7_5yi70")
+metadata/_edit_lock_ = true
+
+[node name="PortLineEdit" type="LineEdit" parent="PortParent"]
+offset_left = 138.0
+offset_right = 259.0
+offset_bottom = 53.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_70p0n")
+theme_override_font_sizes/font_size = 64
+theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts4")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_wbg31")
+theme_override_styles/read_only = SubResource("StyleBoxEmpty_2hfmu")
+alignment = 1
+max_length = 5
+context_menu_enabled = false
+caret_blink_interval = 0.75
+metadata/_edit_lock_ = true
+
+[node name="GameNameParent" type="Node2D" parent="."]
+position = Vector2(268, 292)
+
+[node name="GameNameLabel" type="Label" parent="GameNameParent"]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Game Name:"
+label_settings = SubResource("LabelSettings_g28fs")
+metadata/_edit_lock_ = true
+
+[node name="GameNameBackground" type="TextureRect" parent="GameNameParent"]
+offset_left = 248.0
+offset_top = 1.0
+offset_right = 744.0
+offset_bottom = 59.0
+texture = ExtResource("8_ncchk")
+metadata/_edit_lock_ = true
+
+[node name="GameNameLineEdit" type="LineEdit" parent="GameNameParent"]
+offset_left = 258.0
+offset_right = 738.0
+offset_bottom = 53.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_70p0n")
+theme_override_font_sizes/font_size = 64
+theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts4")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_wbg31")
+theme_override_styles/read_only = SubResource("StyleBoxEmpty_2hfmu")
+alignment = 1
+context_menu_enabled = false
+caret_blink_interval = 0.75
+metadata/_edit_lock_ = true
+
+[node name="PasswordParent" type="Node2D" parent="."]
+position = Vector2(278, 361)
+
+[node name="PasswordLabel" type="Label" parent="PasswordParent"]
+offset_left = 14.0
+offset_right = 230.0
+offset_bottom = 54.0
+text = "Password:"
+label_settings = SubResource("LabelSettings_ktnbw")
+
+[node name="PasswordBackground" type="TextureRect" parent="PasswordParent"]
+modulate = Color(1, 1, 1, 0.462745)
+offset_left = 238.0
+offset_right = 734.0
+offset_bottom = 58.0
+texture = ExtResource("8_ncchk")
+
+[node name="PasswordLineEdit" type="LineEdit" parent="PasswordParent"]
+offset_left = 248.0
+offset_right = 728.0
+offset_bottom = 53.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_70p0n")
+theme_override_font_sizes/font_size = 64
+theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts4")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_wbg31")
+theme_override_styles/read_only = SubResource("StyleBoxEmpty_2hfmu")
+alignment = 1
+context_menu_enabled = false
+caret_blink_interval = 0.75
+
+[node name="StartingBalanceParent" type="Node2D" parent="."]
+position = Vector2(364, 428)
+
+[node name="StartingBalanceLabel" type="Label" parent="StartingBalanceParent"]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Starting Balance:"
+label_settings = SubResource("LabelSettings_g28fs")
+metadata/_edit_lock_ = true
+
+[node name="StartingBalanceBackground" type="TextureRect" parent="StartingBalanceParent"]
+offset_left = 416.0
+offset_top = 1.0
+offset_right = 552.0
+offset_bottom = 59.0
+texture = ExtResource("7_5yi70")
+metadata/_edit_lock_ = true
+
+[node name="StartingBalanceLineEdit" type="LineEdit" parent="StartingBalanceParent"]
+offset_left = 426.0
+offset_right = 547.0
+offset_bottom = 53.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_70p0n")
+theme_override_font_sizes/font_size = 64
+theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts4")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_wbg31")
+theme_override_styles/read_only = SubResource("StyleBoxEmpty_2hfmu")
+text = "$"
+max_length = 5
+context_menu_enabled = false
+caret_blink_interval = 0.75
+metadata/_edit_lock_ = true
+
+[node name="PreBetParent" type="Node2D" parent="."]
+position = Vector2(396, 497)
+
+[node name="AnteButton" type="TextureButton" parent="PreBetParent"]
+offset_right = 40.0
+offset_bottom = 40.0
+texture_normal = ExtResource("9_47pym")
+metadata/_edit_lock_ = true
+
+[node name="AnteLabel" type="Label" parent="PreBetParent/AnteButton"]
+layout_mode = 0
+offset_left = 58.0
+offset_top = -1.0
+offset_right = 154.0
+offset_bottom = 53.0
+text = "Ante"
+label_settings = SubResource("LabelSettings_0fep2")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_lock_ = true
+
+[node name="AnteDisabledMask" type="TextureRect" parent="PreBetParent/AnteButton"]
+modulate = Color(0, 0, 0, 0.462745)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("9_47pym")
+metadata/_edit_lock_ = true
+
+[node name="BlindButton" type="TextureButton" parent="PreBetParent"]
+offset_left = 280.0
+offset_right = 488.0
+offset_bottom = 58.0
+texture_normal = ExtResource("9_47pym")
+metadata/_edit_lock_ = true
+
+[node name="BlindLabel" type="Label" parent="PreBetParent/BlindButton"]
+layout_mode = 0
+offset_left = 46.0
+offset_top = -1.0
+offset_right = 166.0
+offset_bottom = 53.0
+text = "Blind"
+label_settings = SubResource("LabelSettings_0fep2")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_lock_ = true
+
+[node name="BlindDisabledMask" type="TextureRect" parent="PreBetParent/BlindButton"]
+visible = false
+modulate = Color(0, 0, 0, 0.462745)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("9_47pym")
+metadata/_edit_lock_ = true
+
+[node name="AnteParent" type="Node2D" parent="."]
+visible = false
+position = Vector2(412, 564)
+
+[node name="AnteLabel" type="Label" parent="AnteParent"]
+offset_left = 24.0
+offset_right = 312.0
+offset_bottom = 54.0
+text = "Ante Amount:"
+label_settings = SubResource("LabelSettings_g28fs")
+metadata/_edit_lock_ = true
+
+[node name="AnteBackground" type="TextureRect" parent="AnteParent"]
+offset_left = 320.0
+offset_top = 1.0
+offset_right = 432.0
+offset_bottom = 59.0
+texture = ExtResource("8_ptya4")
+metadata/_edit_lock_ = true
+
+[node name="AnteLineEdit" type="LineEdit" parent="AnteParent"]
+offset_left = 330.0
+offset_right = 426.0
+offset_bottom = 53.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_70p0n")
+theme_override_font_sizes/font_size = 64
+theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts4")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_wbg31")
+theme_override_styles/read_only = SubResource("StyleBoxEmpty_2hfmu")
+text = "$"
+max_length = 4
+context_menu_enabled = false
+caret_blink_interval = 0.75
+metadata/_edit_lock_ = true
+
+[node name="BlindParent" type="Node2D" parent="."]
+position = Vector2(244, 565)
+
+[node name="BigBlindLabel" type="Label" parent="BlindParent"]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Big Blind:"
+label_settings = SubResource("LabelSettings_arhbm")
+metadata/_edit_lock_ = true
+
+[node name="BigBlindBackground" type="TextureRect" parent="BlindParent"]
+offset_left = 248.0
+offset_right = 360.0
+offset_bottom = 58.0
+texture = ExtResource("8_ptya4")
+metadata/_edit_lock_ = true
+
+[node name="BigBlindLineEdit" type="LineEdit" parent="BlindParent"]
+offset_left = 258.0
+offset_right = 354.0
+offset_bottom = 51.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_70p0n")
+theme_override_font_sizes/font_size = 64
+theme_override_styles/normal = SubResource("StyleBoxEmpty_5mevr")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_i1wcf")
+theme_override_styles/read_only = SubResource("StyleBoxEmpty_mpykp")
+text = "$"
+max_length = 4
+metadata/_edit_lock_ = true
+
+[node name="SmallBlindLabel" type="Label" parent="BlindParent"]
+offset_left = 384.0
+offset_right = 672.0
+offset_bottom = 54.0
+text = "Small Blind:"
+label_settings = SubResource("LabelSettings_arhbm")
+metadata/_edit_lock_ = true
+
+[node name="SmallBlindBackground" type="TextureRect" parent="BlindParent"]
+offset_left = 680.0
+offset_right = 792.0
+offset_bottom = 58.0
+texture = ExtResource("8_ptya4")
+metadata/_edit_lock_ = true
+
+[node name="SmallBlindLineEdit" type="LineEdit" parent="BlindParent"]
+offset_left = 690.0
+offset_right = 786.0
+offset_bottom = 51.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_70p0n")
+theme_override_font_sizes/font_size = 64
+theme_override_styles/normal = SubResource("StyleBoxEmpty_5mevr")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_i1wcf")
+theme_override_styles/read_only = SubResource("StyleBoxEmpty_mpykp")
+text = "$"
+max_length = 4
+metadata/_edit_lock_ = true
+
+[node name="AdvSettingsButton" type="TextureButton" parent="."]
+offset_left = 268.0
+offset_top = 633.0
+offset_right = 692.0
+offset_bottom = 691.0
+texture_normal = ExtResource("11_t30xf")
+texture_hover = ExtResource("12_d0w35")
+
+[node name="AdvSettingsLabel" type="Label" parent="AdvSettingsButton"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = -1.0
+offset_right = 418.0
+offset_bottom = 53.0
+text = "Advanced Settings"
+label_settings = SubResource("LabelSettings_0fep2")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_lock_ = true
+
+[node name="HostGameButton" type="TextureButton" parent="."]
+offset_left = 732.0
+offset_top = 633.0
+offset_right = 1012.0
+offset_bottom = 691.0
+texture_normal = ExtResource("13_3ujfx")
+texture_hover = ExtResource("14_f37ts")
+
+[node name="HostGameLabel" type="Label" parent="HostGameButton"]
+layout_mode = 0
+offset_left = 34.0
+offset_top = -1.0
+offset_right = 250.0
+offset_bottom = 53.0
+text = "Host Game"
+label_settings = SubResource("LabelSettings_0fep2")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_lock_ = true
+
+[connection signal="gui_input" from="Background" to="." method="_on_background_gui_input"]
+[connection signal="timeout" from="Sign/SignTimer" to="." method="_on_sign_timer_timeout"]
+[connection signal="focus_entered" from="PasswordParent/PasswordLineEdit" to="." method="_on_password_line_edit_focus_entered"]
+[connection signal="focus_exited" from="PasswordParent/PasswordLineEdit" to="." method="_on_password_line_edit_focus_exited"]
+[connection signal="pressed" from="PreBetParent/AnteButton" to="." method="_on_ante_button_pressed"]
+[connection signal="pressed" from="PreBetParent/BlindButton" to="." method="_on_blind_button_pressed"]

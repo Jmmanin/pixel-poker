@@ -1,0 +1,69 @@
+[gd_scene load_steps=7 format=3 uid="uid://c047b3cmcapw0"]
+
+[ext_resource type="Script" path="res://join/join_game.gd" id="1_r5a0d"]
+[ext_resource type="Texture2D" uid="uid://coa235rmxckds" path="res://resources/host_join/sign.png" id="2_v8t07"]
+[ext_resource type="FontFile" uid="uid://c3j6oa1sotgmy" path="res://resources/monogram.ttf" id="3_dxfns"]
+[ext_resource type="Texture2D" uid="uid://d20hb2fkkte2f" path="res://resources/host_join/sign_mask1.png" id="4_dftip"]
+[ext_resource type="Texture2D" uid="uid://fblj3pmpnoqe" path="res://resources/host_join/sign_mask2.png" id="5_d7fhj"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_tfv1f"]
+font = ExtResource("3_dxfns")
+font_size = 231
+font_color = Color(0.843137, 0.717647, 0.34902, 1)
+
+[node name="JoinGame" type="Node"]
+script = ExtResource("1_r5a0d")
+
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+metadata/_edit_lock_ = true
+
+[node name="Sign" type="TextureRect" parent="."]
+offset_left = 216.0
+offset_top = 29.0
+offset_right = 1064.0
+offset_bottom = 210.0
+texture = ExtResource("2_v8t07")
+metadata/_edit_lock_ = true
+
+[node name="SignTimer" type="Timer" parent="Sign"]
+wait_time = 0.75
+autostart = true
+
+[node name="Label" type="Label" parent="Sign"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = -13.0
+offset_right = 823.0
+offset_bottom = 173.0
+text = "JOIN GAME"
+label_settings = SubResource("LabelSettings_tfv1f")
+metadata/_edit_lock_ = true
+
+[node name="SignMask1" type="TextureRect" parent="Sign"]
+visible = false
+modulate = Color(1, 1, 1, 0.462745)
+layout_mode = 0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 845.0
+offset_bottom = 178.0
+texture = ExtResource("4_dftip")
+metadata/_edit_lock_ = true
+
+[node name="SignMask2" type="TextureRect" parent="Sign"]
+modulate = Color(1, 1, 1, 0.462745)
+layout_mode = 0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 845.0
+offset_bottom = 178.0
+texture = ExtResource("5_d7fhj")
+metadata/_edit_lock_ = true
+
+[connection signal="timeout" from="Sign/SignTimer" to="." method="_on_sign_timer_timeout"]

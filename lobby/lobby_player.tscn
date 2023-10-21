@@ -1,0 +1,56 @@
+[gd_scene load_steps=8 format=3 uid="uid://7kyni5ibbeiq"]
+
+[ext_resource type="Texture2D" uid="uid://omv4u8erpyxn" path="res://resources/host_join_lobby/lobby_player_bg.png" id="1_4xst1"]
+[ext_resource type="Script" path="res://lobby/lobby_player.gd" id="2_1agkh"]
+[ext_resource type="FontFile" uid="uid://c3j6oa1sotgmy" path="res://resources/monogram.ttf" id="2_komxb"]
+[ext_resource type="Texture2D" uid="uid://fwnbe21p64n7" path="res://resources/host_join_lobby/ready.png" id="3_c37xi"]
+[ext_resource type="Texture2D" uid="uid://cbrkavhmri0qq" path="res://resources/host_join_lobby/lobby_player_indicator.png" id="5_jooht"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_gfwkc"]
+font = ExtResource("2_komxb")
+font_size = 64
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_7w1c3"]
+font = ExtResource("2_komxb")
+font_size = 64
+font_color = Color(0, 0, 0, 1)
+
+[node name="LobbyPlayer" type="TextureRect"]
+offset_right = 344.0
+offset_bottom = 58.0
+texture = ExtResource("1_4xst1")
+script = ExtResource("2_1agkh")
+
+[node name="NumberLabel" type="Label" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 10.0
+offset_right = 34.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_gfwkc")
+
+[node name="NameLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 46.0
+offset_right = 286.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_7w1c3")
+horizontal_alignment = 1
+
+[node name="ReadyTexture" type="TextureRect" parent="."]
+visible = false
+modulate = Color(0.537255, 0.537255, 0.537255, 1)
+layout_mode = 0
+offset_left = 298.0
+offset_top = 11.0
+offset_right = 334.0
+offset_bottom = 47.0
+texture = ExtResource("3_c37xi")
+
+[node name="IsMeTexture" type="TextureRect" parent="."]
+visible = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("5_jooht")

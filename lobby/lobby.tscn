@@ -1,0 +1,211 @@
+[gd_scene load_steps=13 format=3 uid="uid://wjbw2drmop70"]
+
+[ext_resource type="Script" path="res://lobby/lobby.gd" id="1_u6h7t"]
+[ext_resource type="Texture2D" uid="uid://coa235rmxckds" path="res://resources/host_join_lobby/sign.png" id="2_5j8i0"]
+[ext_resource type="FontFile" uid="uid://c3j6oa1sotgmy" path="res://resources/monogram.ttf" id="3_c1xet"]
+[ext_resource type="Texture2D" uid="uid://d20hb2fkkte2f" path="res://resources/host_join_lobby/sign_mask1.png" id="4_psomp"]
+[ext_resource type="Texture2D" uid="uid://fblj3pmpnoqe" path="res://resources/host_join_lobby/sign_mask2.png" id="5_j1p8n"]
+[ext_resource type="Texture2D" uid="uid://cvr8jqmuodqho" path="res://resources/button.png" id="6_ini4y"]
+[ext_resource type="Texture2D" uid="uid://d2mewpgcxrivn" path="res://resources/button_hovered.png" id="7_5kcah"]
+[ext_resource type="PackedScene" uid="uid://7kyni5ibbeiq" path="res://lobby/lobby_player.tscn" id="8_fryvb"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_6082k"]
+font = ExtResource("3_c1xet")
+font_size = 231
+font_color = Color(0.843137, 0.717647, 0.34902, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_2yiy8"]
+font = ExtResource("3_c1xet")
+font_size = 64
+
+[sub_resource type="LabelSettings" id="LabelSettings_3u33k"]
+font = ExtResource("3_c1xet")
+font_size = 64
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_8kpad"]
+font = ExtResource("3_c1xet")
+font_size = 64
+font_color = Color(0, 0, 0, 1)
+
+[node name="Lobby" type="Node"]
+script = ExtResource("1_u6h7t")
+
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+metadata/_edit_lock_ = true
+
+[node name="Sign" type="TextureRect" parent="."]
+offset_left = 216.0
+offset_top = 29.0
+offset_right = 1064.0
+offset_bottom = 210.0
+texture = ExtResource("2_5j8i0")
+metadata/_edit_lock_ = true
+
+[node name="SignTimer" type="Timer" parent="Sign"]
+wait_time = 0.75
+autostart = true
+
+[node name="Label" type="Label" parent="Sign"]
+layout_mode = 0
+offset_left = 214.0
+offset_top = -13.0
+offset_right = 649.0
+offset_bottom = 173.0
+text = "LOBBY"
+label_settings = SubResource("LabelSettings_6082k")
+
+[node name="SignMask1" type="TextureRect" parent="Sign"]
+visible = false
+modulate = Color(1, 1, 1, 0.462745)
+layout_mode = 0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 845.0
+offset_bottom = 178.0
+texture = ExtResource("4_psomp")
+metadata/_edit_lock_ = true
+
+[node name="SignMask2" type="TextureRect" parent="Sign"]
+modulate = Color(1, 1, 1, 0.462745)
+layout_mode = 0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 845.0
+offset_bottom = 178.0
+texture = ExtResource("5_j1p8n")
+metadata/_edit_lock_ = true
+
+[node name="GameNameLabel" type="Label" parent="."]
+offset_left = 2.0
+offset_top = 215.0
+offset_right = 1282.0
+offset_bottom = 269.0
+text = "Test"
+label_settings = SubResource("LabelSettings_2yiy8")
+horizontal_alignment = 1
+
+[node name="RulesButton" type="TextureButton" parent="."]
+offset_left = 536.0
+offset_top = 278.0
+offset_right = 744.0
+offset_bottom = 336.0
+texture_normal = ExtResource("6_ini4y")
+texture_hover = ExtResource("7_5kcah")
+
+[node name="RulesLabel" type="Label" parent="RulesButton"]
+layout_mode = 0
+offset_left = 46.0
+offset_top = -1.0
+offset_right = 166.0
+offset_bottom = 53.0
+text = "Rules"
+label_settings = SubResource("LabelSettings_3u33k")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LobbyPlayer1" parent="." instance=ExtResource("8_fryvb")]
+offset_left = 238.0
+offset_top = 354.0
+offset_right = 582.0
+offset_bottom = 412.0
+
+[node name="LobbyPlayer2" parent="." instance=ExtResource("8_fryvb")]
+offset_left = 238.0
+offset_top = 422.0
+offset_right = 582.0
+offset_bottom = 480.0
+
+[node name="LobbyPlayer3" parent="." instance=ExtResource("8_fryvb")]
+offset_left = 238.0
+offset_top = 490.0
+offset_right = 582.0
+offset_bottom = 548.0
+
+[node name="LobbyPlayer4" parent="." instance=ExtResource("8_fryvb")]
+offset_left = 238.0
+offset_top = 558.0
+offset_right = 582.0
+offset_bottom = 616.0
+
+[node name="LobbyPlayer5" parent="." instance=ExtResource("8_fryvb")]
+offset_left = 698.0
+offset_top = 354.0
+offset_right = 1042.0
+offset_bottom = 412.0
+
+[node name="LobbyPlayer6" parent="." instance=ExtResource("8_fryvb")]
+offset_left = 698.0
+offset_top = 422.0
+offset_right = 1042.0
+offset_bottom = 480.0
+
+[node name="LobbyPlayer7" parent="." instance=ExtResource("8_fryvb")]
+offset_left = 698.0
+offset_top = 490.0
+offset_right = 1042.0
+offset_bottom = 548.0
+
+[node name="LobbyPlayer8" parent="." instance=ExtResource("8_fryvb")]
+offset_left = 698.0
+offset_top = 558.0
+offset_right = 1042.0
+offset_bottom = 616.0
+
+[node name="LeaveButton" type="TextureButton" parent="."]
+offset_left = 420.0
+offset_top = 634.0
+offset_right = 628.0
+offset_bottom = 692.0
+texture_normal = ExtResource("6_ini4y")
+texture_hover = ExtResource("7_5kcah")
+
+[node name="LeaveLabel" type="Label" parent="LeaveButton"]
+layout_mode = 0
+offset_left = 46.0
+offset_top = -1.0
+offset_right = 166.0
+offset_bottom = 53.0
+text = "Leave"
+label_settings = SubResource("LabelSettings_3u33k")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ReadyButton" type="TextureButton" parent="."]
+offset_left = 652.0
+offset_top = 634.0
+offset_right = 860.0
+offset_bottom = 692.0
+texture_normal = ExtResource("6_ini4y")
+texture_hover = ExtResource("7_5kcah")
+
+[node name="ReadyLabel" type="Label" parent="ReadyButton"]
+layout_mode = 0
+offset_left = 46.0
+offset_top = -1.0
+offset_right = 166.0
+offset_bottom = 53.0
+text = "Ready"
+label_settings = SubResource("LabelSettings_8kpad")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_lock_ = true
+
+[node name="ReadyDisabledMask" type="TextureRect" parent="ReadyButton"]
+modulate = Color(0, 0, 0, 0.462745)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("6_ini4y")
+metadata/_edit_lock_ = true
+
+[connection signal="timeout" from="Sign/SignTimer" to="." method="_on_sign_timer_timeout"]
+[connection signal="pressed" from="RulesButton" to="." method="_on_rules_button_pressed"]
+[connection signal="pressed" from="LeaveButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="ReadyButton" to="." method="_on_ready_button_pressed"]

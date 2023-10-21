@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bhrmudqvvsvnq"
-path="res://.godot/imported/line_edit_bg_20_char.png-ff147e21079f9af00ea61a9796e4442b.ctex"
+uid="uid://gbr4w1fynhc6"
+path="res://.godot/imported/line_edit_bg_5_char.png-24ec03da99815b5eebbc71245c891a8f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/host_join/line_edit_bg_20_char.png"
-dest_files=["res://.godot/imported/line_edit_bg_20_char.png-ff147e21079f9af00ea61a9796e4442b.ctex"]
+source_file="res://resources/host_join_lobby/line_edit_bg_5_char.png"
+dest_files=["res://.godot/imported/line_edit_bg_5_char.png-24ec03da99815b5eebbc71245c891a8f.ctex"]
 
 [params]
 

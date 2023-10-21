@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d20hb2fkkte2f"
-path="res://.godot/imported/sign_mask1.png-cec571ed8453d5caf3236ad7111a6477.ctex"
+uid="uid://fwnbe21p64n7"
+path="res://.godot/imported/ready.png-9f22b7f21d6b0bd4615fbdd570b70ea6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/host_join/sign_mask1.png"
-dest_files=["res://.godot/imported/sign_mask1.png-cec571ed8453d5caf3236ad7111a6477.ctex"]
+source_file="res://resources/host_join_lobby/ready.png"
+dest_files=["res://.godot/imported/ready.png-9f22b7f21d6b0bd4615fbdd570b70ea6.ctex"]
 
 [params]
 

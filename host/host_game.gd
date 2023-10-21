@@ -12,6 +12,7 @@ func _on_background_gui_input(event):
         $PortParent/PortLineEdit.release_focus()
         $GameNameParent/GameNameLineEdit.release_focus()
         $PasswordParent/PasswordLineEdit.release_focus()
+        $PlayerNameParent/PlayerNameLineEdit.release_focus()
         $StartingBalanceParent/StartingBalanceLineEdit.release_focus()
         $AnteParent/AnteLineEdit.release_focus()
         $BlindParent/BigBlindLineEdit.release_focus()
@@ -36,13 +37,6 @@ func _on_blind_button_pressed():
     $AnteParent.visible  = false
     $BlindParent.visible = true
 
-func _on_password_button_pressed():
-    password_enabled = !password_enabled
-    if password_enabled:
-        $PasswordParent/PasswordBackground.modulate = Color(1, 1, 1)
-    else:
-        $PasswordParent/PasswordBackground.modulate = Color(95.0/255.0, 95.0/255.0, 95.0/255.0)
-
 func _on_password_line_edit_focus_entered():
     password_enabled = true
     $PasswordParent/PasswordBackground.modulate = Color(1, 1, 1)
@@ -51,3 +45,9 @@ func _on_password_line_edit_focus_exited():
     if $PasswordParent/PasswordLineEdit.text.is_empty():
         password_enabled = false
         $PasswordParent/PasswordBackground.modulate = Color(95.0/255.0, 95.0/255.0, 95.0/255.0)
+
+func _on_back_button_pressed():
+    get_tree().change_scene_to_file("res://title/title.tscn")
+
+func _on_host_game_button_pressed():
+    get_tree().change_scene_to_file("res://lobby/lobby.tscn")

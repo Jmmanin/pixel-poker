@@ -11,14 +11,14 @@ config_version=5
 [application]
 
 config/name="Pixel-poker"
-run/main_scene="res://title/title.tscn"
+run/main_scene="res://main.tscn"
 config/features=PackedStringArray("4.1", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 GameProperties="*res://game_properties.gd"
-PokerTypes="*res://table/poker_types.gd"
+PokerTypes="*res://poker_types.gd"
 
 [display]
 

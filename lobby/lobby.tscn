@@ -87,7 +87,6 @@ offset_left = 2.0
 offset_top = 215.0
 offset_right = 1282.0
 offset_bottom = 269.0
-text = "Test"
 label_settings = SubResource("LabelSettings_2yiy8")
 horizontal_alignment = 1
 

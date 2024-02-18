@@ -10,7 +10,7 @@ func set_turn(is_turn):
 func set_op_name(op_name):
     # Adjust y pos to properly vertically center name if new name has descenders
     var descender_regex = RegEx.new()
-    descender_regex.compile("(g|j|p|q|y)")
+    descender_regex.compile('(g|j|p|q|y)')
     var has_descenders = descender_regex.search(op_name)
     var had_descenders = descender_regex.search($NameLabel.text)
     if has_descenders and not had_descenders:
@@ -40,24 +40,30 @@ func set_balance(new_balance):
     else:
         $Chips.visible = false
 
-    $BalanceLabel.text = "$" + str(balance)
+    $BalanceLabel.text = '$' + str(balance)
 
 func set_blind_button(new_blind_button):
-    if new_blind_button == PokerTypes.BUTTON_DEALER:
+    if new_blind_button == PokerTypes.BB_DEALER:
         $BlindButton.set_region_rect(Rect2(0, 0, 36, 36))
-    elif new_blind_button == PokerTypes.BUTTON_SMALL_BLIND:
+    elif new_blind_button == PokerTypes.BB_SMALL_BLIND:
         $BlindButton.set_region_rect(Rect2(36, 0, 36, 36))
-    elif new_blind_button == PokerTypes.BUTTON_BIG_BLIND:
+    elif new_blind_button == PokerTypes.BB_BIG_BLIND:
         $BlindButton.set_region_rect(Rect2(72, 0, 36, 36))
+    else:
+        pass # No blind button
 
     # Adjust x pos of cards to properly horizontally center things
     if new_blind_button != blind_button_value:
-        if new_blind_button == PokerTypes.BUTTON_NONE:
+        # On transition to no blind button
+        if new_blind_button == PokerTypes.BB_NONE:
             $CardParent.position -= Vector2(20, 0)
             $BlindButton.visible = false
-        elif blind_button_value == PokerTypes.BUTTON_NONE:
+        # On transition to some blind button
+        elif blind_button_value == PokerTypes.BB_NONE:
             $CardParent.position += Vector2(20, 0)
             $BlindButton.visible = true
+        else:
+            pass # No change needed
 
     blind_button_value = new_blind_button
 

@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://d3opbem63vsxy"]
+
+[ext_resource type="PackedScene" uid="uid://5h5sof55j74v" path="res://scene_switcher.tscn" id="1_g2314"]
+[ext_resource type="PackedScene" uid="uid://b5d5cvl86d65b" path="res://networking.tscn" id="2_7fmpo"]
+
+[node name="Main" type="Node"]
+
+[node name="Scene_Switcher" parent="." instance=ExtResource("1_g2314")]
+
+[node name="Networking" parent="." instance=ExtResource("2_7fmpo")]

@@ -2,6 +2,7 @@ extends Node
 
 signal change_scene
 signal send_new_ready
+signal leave_lobby
 
 var im_readied = false
 var my_index = 0
@@ -10,7 +11,6 @@ var lobby_players = Array()
 var lobby_player_map = {}
 var next_lobby_index = 0
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
     lobby_players = [$LobbyPlayer1, $LobbyPlayer2, $LobbyPlayer3, $LobbyPlayer4,\
                      $LobbyPlayer5, $LobbyPlayer6, $LobbyPlayer7, $LobbyPlayer8]
@@ -23,6 +23,7 @@ func _ready():
     get_node('/root/Main/Networking').connect('player_disconnected', _on_player_disconnected)
 
     connect('send_new_ready', get_node('/root/Main/Networking')._on_update_ready)
+    connect('leave_lobby', get_node('/root/Main/Networking')._on_leave_lobby)
 
 func _on_sign_timer_timeout():
     # 'Blink' sign
@@ -30,11 +31,11 @@ func _on_sign_timer_timeout():
     $Sign/SignMask2.visible = !$Sign/SignMask2.visible
 
 func _on_rules_button_pressed():
+    # TO-DO - Add rules pop-up (need to get game info)
     print('rules')
 
 func _on_back_button_pressed():
-    multiplayer.multiplayer_peer.close()
-    emit_signal('change_scene', 'title')
+    emit_signal('leave_lobby')
 
 func _on_ready_button_pressed():
     $ReadyButton/ReadyDisabledMask.visible = im_readied

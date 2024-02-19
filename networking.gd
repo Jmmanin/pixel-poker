@@ -19,7 +19,7 @@ var players = {}
 func _ready():
     multiplayer.peer_disconnected.connect(_on_player_disconnected)
     multiplayer.connected_to_server.connect(_on_connected_ok)
-    #multiplayer.connection_failed.connect(_on_connected_fail)
+    multiplayer.connection_failed.connect(_on_connected_fail)
 
     get_node('/root/Main/Scene_Switcher').connect('child_entered_tree',
                                                   _on_child_entered_tree)
@@ -100,9 +100,9 @@ func _on_connected_ok():
         # Should not occur if self-hosting
         pass
 
-#func _on_connected_fail():
-#    # TO-DO - Handle connection failure
-#    print('Connection timeout')
+func _on_connected_fail():
+    # TO-DO - Handle connection failure
+    print('Connection timeout')
 
 @rpc('any_peer', 'call_remote', "reliable")
 func process_join_request(joiner_game_info, joiner_player_info):
@@ -149,34 +149,39 @@ func _on_update_ready(new_ready):
 @rpc('any_peer', 'call_remote', 'reliable')
 func server_process_new_ready(new_ready):
     var player_id = multiplayer.get_remote_sender_id()
-    players[player_id]['ready'] = new_ready
-
-    emit_signal('update_player_ready', player_id, new_ready)
     client_process_new_ready.rpc(player_id, new_ready)
 
-@rpc('authority', 'call_remote', 'reliable')
+@rpc('authority', 'call_local', 'reliable')
 func client_process_new_ready(player_id, new_ready):
     players[player_id]['ready'] = new_ready
 
     if player_id != multiplayer.get_unique_id():
         emit_signal('update_player_ready', player_id, new_ready)
 
+func _on_leave_lobby():
+    hosting_type = PokerTypes.HT_JOINING
+    game_info = {}
+    my_info = {}
+    players = {}
+
+    multiplayer.multiplayer_peer.close()
+    emit_signal('change_scene', 'title')
+
 func _on_player_disconnected(leaving_player_id):
-    if leaving_player_id == multiplayer_peer.get_unique_id():
-        if multiplayer.is_server():
-            # TO-DO - Close server
-            pass
-        else:
-            # TO-DO - display dc pop-up if not intentional
-            hosting_type = PokerTypes.HT_JOINING
-            game_info = {}
-            my_info = {}
-            players = {}
-    elif multiplayer.is_server():
+    print(str(multiplayer_peer.get_unique_id()) + ' recv\'d id: ' + str(leaving_player_id) + ' disconnected')
+    if multiplayer.is_server():
         remove_player.rpc(leaving_player_id)
-    else:
-        # Other peers should wait for server to tell them what to do
-        pass
+
+    # Server closed
+    if leaving_player_id == 1:
+        print('server closed')
+        hosting_type = PokerTypes.HT_JOINING
+        game_info = {}
+        my_info = {}
+        players = {}
+
+        multiplayer.multiplayer_peer.close()
+        emit_signal('change_scene', 'title')
 
 @rpc('authority', 'call_local', 'reliable')
 func remove_player(leaving_player_id):

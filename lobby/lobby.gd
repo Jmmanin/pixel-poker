@@ -38,9 +38,14 @@ func _on_back_button_pressed():
     emit_signal('leave_lobby')
 
 func _on_ready_button_pressed():
-    $ReadyButton/ReadyDisabledMask.visible = im_readied
     im_readied = !im_readied
     lobby_players[my_index].set_is_ready(im_readied)
+
+    if im_readied:
+        $ReadyButton/ReadyLabel.text = 'Unready'
+    else:
+        $ReadyButton/ReadyLabel.text = 'Ready'
+
     emit_signal('send_new_ready', im_readied)
 
 func _on_player_connected(new_players):

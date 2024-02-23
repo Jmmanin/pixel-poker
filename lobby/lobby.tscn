@@ -186,23 +186,14 @@ texture_hover = ExtResource("7_5kcah")
 
 [node name="ReadyLabel" type="Label" parent="ReadyButton"]
 layout_mode = 0
-offset_left = 46.0
+offset_left = 22.0
 offset_top = -1.0
-offset_right = 166.0
+offset_right = 190.0
 offset_bottom = 53.0
 text = "Ready"
 label_settings = SubResource("LabelSettings_8kpad")
 horizontal_alignment = 1
 vertical_alignment = 1
-metadata/_edit_lock_ = true
-
-[node name="ReadyDisabledMask" type="TextureRect" parent="ReadyButton"]
-modulate = Color(0, 0, 0, 0.462745)
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-texture = ExtResource("6_ini4y")
-metadata/_edit_lock_ = true
 
 [connection signal="timeout" from="Sign/SignTimer" to="." method="_on_sign_timer_timeout"]
 [connection signal="pressed" from="RulesButton" to="." method="_on_rules_button_pressed"]

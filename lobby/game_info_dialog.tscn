@@ -1,0 +1,307 @@
+[gd_scene load_steps=12 format=3 uid="uid://ceshqgw1u0lkj"]
+
+[ext_resource type="Script" path="res://lobby/game_info_dialog.gd" id="1_ybuyq"]
+[ext_resource type="Texture2D" uid="uid://67v6tiaqqe5j" path="res://resources/big_dialog_bg.png" id="2_6k1ww"]
+[ext_resource type="FontFile" uid="uid://c3j6oa1sotgmy" path="res://resources/monogram.ttf" id="3_bndhx"]
+[ext_resource type="Texture2D" uid="uid://cvr8jqmuodqho" path="res://resources/button.png" id="4_33qdn"]
+[ext_resource type="Texture2D" uid="uid://d2mewpgcxrivn" path="res://resources/button_hovered.png" id="5_gjdcq"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_h33an"]
+font = ExtResource("3_bndhx")
+font_size = 96
+font_color = Color(0.843137, 0.717647, 0.34902, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_4a23w"]
+font = ExtResource("3_bndhx")
+font_size = 48
+font_color = Color(0.839844, 0.714844, 0.347656, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_y3xkc"]
+font = ExtResource("3_bndhx")
+font_size = 48
+font_color = Color(0.839844, 0.714844, 0.347656, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_wbbrh"]
+font = ExtResource("3_bndhx")
+font_size = 48
+font_color = Color(0.839844, 0.714844, 0.347656, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_0f32q"]
+font = ExtResource("3_bndhx")
+font_size = 32
+font_color = Color(0.613281, 0.503906, 0.1875, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_cljrb"]
+font = ExtResource("3_bndhx")
+font_size = 64
+font_color = Color(0, 0, 0, 1)
+
+[node name="GameInfoDialog" type="Node2D"]
+script = ExtResource("1_ybuyq")
+
+[node name="Background" type="ColorRect" parent="."]
+offset_right = 1280.0
+offset_bottom = 720.0
+color = Color(0, 0, 0, 0.705882)
+metadata/_edit_lock_ = true
+
+[node name="DialogBoxFrame" type="TextureRect" parent="."]
+offset_left = 320.0
+offset_top = 64.0
+offset_right = 960.0
+offset_bottom = 656.0
+texture = ExtResource("2_6k1ww")
+
+[node name="TitleLabel" type="Label" parent="DialogBoxFrame"]
+layout_mode = 0
+offset_left = 73.0
+offset_top = -4.0
+offset_right = 573.0
+offset_bottom = 75.0
+text = "Game Info"
+label_settings = SubResource("LabelSettings_h33an")
+horizontal_alignment = 1
+
+[node name="StartingBalance" type="Node2D" parent="DialogBoxFrame"]
+position = Vector2(14, 74)
+
+[node name="HeaderLabel" type="Label" parent="DialogBoxFrame/StartingBalance"]
+offset_right = 384.0
+offset_bottom = 54.0
+text = "Starting Balance"
+label_settings = SubResource("LabelSettings_4a23w")
+
+[node name="ValueLabel" type="Label" parent="DialogBoxFrame/StartingBalance"]
+offset_left = 507.0
+offset_right = 615.0
+offset_bottom = 41.0
+label_settings = SubResource("LabelSettings_4a23w")
+horizontal_alignment = 2
+
+[node name="PrebetType" type="Node2D" parent="DialogBoxFrame"]
+position = Vector2(14, 110)
+
+[node name="HeaderLabel" type="Label" parent="DialogBoxFrame/PrebetType"]
+offset_right = 384.0
+offset_bottom = 54.0
+text = "Prebet Type"
+label_settings = SubResource("LabelSettings_4a23w")
+
+[node name="ValueLabel" type="Label" parent="DialogBoxFrame/PrebetType"]
+offset_left = 471.0
+offset_right = 615.0
+offset_bottom = 41.0
+label_settings = SubResource("LabelSettings_4a23w")
+horizontal_alignment = 2
+
+[node name="PrebetAmount" type="Node2D" parent="DialogBoxFrame"]
+position = Vector2(14, 146)
+
+[node name="HeaderLabel" type="Label" parent="DialogBoxFrame/PrebetAmount"]
+offset_right = 384.0
+offset_bottom = 54.0
+text = "Prebet Amount"
+label_settings = SubResource("LabelSettings_4a23w")
+
+[node name="ValueLabel" type="Label" parent="DialogBoxFrame/PrebetAmount"]
+offset_left = 447.0
+offset_right = 615.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_4a23w")
+horizontal_alignment = 2
+
+[node name="TurnTimer" type="Node2D" parent="DialogBoxFrame"]
+position = Vector2(14, 182)
+
+[node name="HeaderLabel" type="Label" parent="DialogBoxFrame/TurnTimer"]
+offset_right = 198.0
+offset_bottom = 41.0
+text = "Turn Timer"
+label_settings = SubResource("LabelSettings_y3xkc")
+
+[node name="ValueLabel" type="Label" parent="DialogBoxFrame/TurnTimer"]
+offset_left = 471.0
+offset_right = 615.0
+offset_bottom = 41.0
+text = "Disabled"
+label_settings = SubResource("LabelSettings_wbbrh")
+horizontal_alignment = 2
+
+[node name="HouseRulesSeparator" type="Node2D" parent="DialogBoxFrame"]
+position = Vector2(14, 228)
+
+[node name="LeftSeparator" type="ColorRect" parent="DialogBoxFrame/HouseRulesSeparator"]
+offset_right = 233.0
+offset_bottom = 6.0
+color = Color(0.613281, 0.503906, 0.1875, 1)
+
+[node name="SeparatorLabel" type="Label" parent="DialogBoxFrame/HouseRulesSeparator"]
+offset_left = 241.0
+offset_top = -12.0
+offset_right = 373.0
+offset_bottom = 17.0
+text = "House Rules"
+label_settings = SubResource("LabelSettings_0f32q")
+
+[node name="RightSeparator" type="ColorRect" parent="DialogBoxFrame/HouseRulesSeparator"]
+offset_left = 379.0
+offset_right = 612.0
+offset_bottom = 6.0
+color = Color(0.613281, 0.503906, 0.1875, 1)
+
+[node name="MinimumBet" type="Node2D" parent="DialogBoxFrame"]
+position = Vector2(14, 238)
+
+[node name="HeaderLabel" type="Label" parent="DialogBoxFrame/MinimumBet"]
+offset_right = 360.0
+offset_bottom = 41.0
+text = "Minimum Bet"
+label_settings = SubResource("LabelSettings_y3xkc")
+
+[node name="ValueLabel" type="Label" parent="DialogBoxFrame/MinimumBet"]
+offset_left = 381.0
+offset_right = 615.0
+offset_bottom = 41.0
+text = "Prebet Amount"
+label_settings = SubResource("LabelSettings_wbbrh")
+horizontal_alignment = 2
+
+[node name="MinimumRaise" type="Node2D" parent="DialogBoxFrame"]
+position = Vector2(14, 274)
+
+[node name="HeaderLabel" type="Label" parent="DialogBoxFrame/MinimumRaise"]
+offset_right = 360.0
+offset_bottom = 41.0
+text = "Minimum Raise"
+label_settings = SubResource("LabelSettings_y3xkc")
+
+[node name="ValueLabel" type="Label" parent="DialogBoxFrame/MinimumRaise"]
+offset_left = 381.0
+offset_right = 615.0
+offset_bottom = 41.0
+text = "Current Bet"
+label_settings = SubResource("LabelSettings_wbbrh")
+horizontal_alignment = 2
+
+[node name="SplitPots" type="Node2D" parent="DialogBoxFrame"]
+position = Vector2(14, 310)
+
+[node name="HeaderLabel" type="Label" parent="DialogBoxFrame/SplitPots"]
+offset_right = 360.0
+offset_bottom = 41.0
+text = "Split Pots"
+label_settings = SubResource("LabelSettings_y3xkc")
+
+[node name="ValueLabel" type="Label" parent="DialogBoxFrame/SplitPots"]
+offset_left = 381.0
+offset_right = 615.0
+offset_bottom = 41.0
+text = "Enabled"
+label_settings = SubResource("LabelSettings_wbbrh")
+horizontal_alignment = 2
+
+[node name="WraparoundStraights" type="Node2D" parent="DialogBoxFrame"]
+position = Vector2(14, 346)
+
+[node name="HeaderLabel" type="Label" parent="DialogBoxFrame/WraparoundStraights"]
+offset_right = 360.0
+offset_bottom = 41.0
+text = "Wraparound Straights"
+label_settings = SubResource("LabelSettings_y3xkc")
+
+[node name="ValueLabel" type="Label" parent="DialogBoxFrame/WraparoundStraights"]
+offset_left = 381.0
+offset_right = 615.0
+offset_bottom = 41.0
+text = "Disabled"
+label_settings = SubResource("LabelSettings_wbbrh")
+horizontal_alignment = 2
+
+[node name="ConnectionDetailsSeparator" type="Node2D" parent="DialogBoxFrame"]
+position = Vector2(14, 393)
+
+[node name="LeftSeparator" type="ColorRect" parent="DialogBoxFrame/ConnectionDetailsSeparator"]
+offset_right = 191.0
+offset_bottom = 6.0
+color = Color(0.613281, 0.503906, 0.1875, 1)
+
+[node name="SeparatorLabel" type="Label" parent="DialogBoxFrame/ConnectionDetailsSeparator"]
+offset_left = 199.0
+offset_top = -12.0
+offset_right = 415.0
+offset_bottom = 17.0
+text = "Connection Details"
+label_settings = SubResource("LabelSettings_0f32q")
+
+[node name="RightSeparator" type="ColorRect" parent="DialogBoxFrame/ConnectionDetailsSeparator"]
+offset_left = 421.0
+offset_right = 612.0
+offset_bottom = 6.0
+color = Color(0.613281, 0.503906, 0.1875, 1)
+
+[node name="IP" type="Node2D" parent="DialogBoxFrame"]
+position = Vector2(14, 403)
+
+[node name="HeaderLabel" type="Label" parent="DialogBoxFrame/IP"]
+offset_right = 72.0
+offset_bottom = 41.0
+text = "IP"
+label_settings = SubResource("LabelSettings_y3xkc")
+
+[node name="ValueLabel" type="Label" parent="DialogBoxFrame/IP"]
+offset_left = 345.0
+offset_right = 615.0
+offset_bottom = 41.0
+label_settings = SubResource("LabelSettings_y3xkc")
+horizontal_alignment = 2
+
+[node name="Port" type="Node2D" parent="DialogBoxFrame"]
+position = Vector2(14, 439)
+
+[node name="HeaderLabel" type="Label" parent="DialogBoxFrame/Port"]
+offset_right = 72.0
+offset_bottom = 41.0
+text = "Port"
+label_settings = SubResource("LabelSettings_y3xkc")
+
+[node name="ValueLabel" type="Label" parent="DialogBoxFrame/Port"]
+offset_left = 525.0
+offset_right = 615.0
+offset_bottom = 41.0
+label_settings = SubResource("LabelSettings_y3xkc")
+horizontal_alignment = 2
+
+[node name="MaxPlayers" type="Node2D" parent="DialogBoxFrame"]
+position = Vector2(14, 475)
+
+[node name="HeaderLabel" type="Label" parent="DialogBoxFrame/MaxPlayers"]
+offset_right = 198.0
+offset_bottom = 41.0
+text = "Max Players"
+label_settings = SubResource("LabelSettings_y3xkc")
+
+[node name="ValueLabel" type="Label" parent="DialogBoxFrame/MaxPlayers"]
+offset_left = 597.0
+offset_right = 615.0
+offset_bottom = 41.0
+text = "8"
+label_settings = SubResource("LabelSettings_wbbrh")
+horizontal_alignment = 2
+
+[node name="DismissButton" type="TextureButton" parent="DialogBoxFrame"]
+layout_mode = 0
+offset_left = 216.0
+offset_top = 520.0
+offset_right = 424.0
+offset_bottom = 578.0
+texture_normal = ExtResource("4_33qdn")
+texture_hover = ExtResource("5_gjdcq")
+
+[node name="DismissLabel" type="Label" parent="DialogBoxFrame/DismissButton"]
+layout_mode = 0
+offset_left = 6.0
+offset_right = 206.0
+offset_bottom = 54.0
+text = "Dismiss"
+label_settings = SubResource("LabelSettings_cljrb")
+horizontal_alignment = 1

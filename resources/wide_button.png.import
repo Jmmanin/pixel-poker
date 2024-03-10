@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c5vb2ijmitqaw"
-path="res://.godot/imported/host_join_button.png-4630ed3a3fae2bd666e72693102b0670.ctex"
+path="res://.godot/imported/wide_button.png-7908065431b535f14c33ff40bc8c1ba3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/host_join_lobby/host_join_button.png"
-dest_files=["res://.godot/imported/host_join_button.png-4630ed3a3fae2bd666e72693102b0670.ctex"]
+source_file="res://resources/wide_button.png"
+dest_files=["res://.godot/imported/wide_button.png-7908065431b535f14c33ff40bc8c1ba3.ctex"]
 
 [params]
 

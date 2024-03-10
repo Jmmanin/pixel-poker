@@ -1,14 +1,24 @@
 extends Node
 
 signal change_scene
-signal do_host
+signal init_self_host
 
 var self_host = true
 var password_enabled = false
 var prebet = PokerTypes.PB_BLIND
 
+var my_ip = ''
+
 func _ready():
-    connect('do_host', get_node('/root/Main/Networking')._on_do_host)
+    connect('init_self_host', get_node('/root/Main/Networking')._on_init_self_host)
+
+    # Get my public IP address for use if self-hosting
+    var http = HTTPRequest.new()
+    add_child(http)
+    http.request_completed.connect(_http_request_completed)
+    http.request('http://api.ipify.org/')
+    await(http.request_completed)
+    http.queue_free()
 
 func _on_background_gui_input(event):
     # Release focus from all line edits if background is clicked
@@ -71,7 +81,6 @@ func _on_password_line_edit_focus_exited():
         $PasswordParent/PasswordLineEdit.text = 'No Password'
 
 func _on_back_button_pressed():
-    print('back clicked from host')
     emit_signal('change_scene', 'title')
 
 func _on_host_game_button_pressed():
@@ -103,17 +112,46 @@ func _on_host_game_button_pressed():
             && !stripped_password.is_empty() \
             && prebet_valid \
             && !stripped_player_name.is_empty()):
-        emit_signal('do_host',
-                    stripped_ip if not self_host else '',
-                    port,
-                    stripped_game_name,
-                    stripped_password if password_enabled else '',
-                    starting_balance,
-                    prebet,
-                    ante,
-                    small_blind,
-                    big_blind,
-                    stripped_player_name)
+        if self_host:
+            var multiplayer_peer = ENetMultiplayerPeer.new()
+            var error = multiplayer_peer.create_server(port)
+
+            if error:
+                var dialog = load('res://dialog_box.tscn').instantiate()
+                dialog.set_title('Error')
+                dialog.set_message('Failed to create server with error code ' + str(error) + '.')
+                dialog.set_single_button_text('Dismiss')
+                dialog.get_node('DialogBoxFrame/CenterButton').pressed.connect(func(): dialog.queue_free())
+                add_child(dialog)
+            else:
+                multiplayer.multiplayer_peer = multiplayer_peer
+
+                emit_signal('init_self_host',
+                            stripped_ip if not self_host else my_ip,
+                            port,
+                            stripped_game_name,
+                            stripped_password if password_enabled else '',
+                            starting_balance,
+                            prebet,
+                            ante,
+                            small_blind,
+                            big_blind,
+                            stripped_player_name)
+        else:
+            # TO-DO - implement hosting games by connecting to separate server application
+            var dialog = load('res://dialog_box.tscn').instantiate()
+            dialog.set_title('Unsupported')
+            dialog.set_message('Only self-hosting is supported currently.')
+            dialog.set_single_button_text('Dismiss')
+            dialog.get_node('DialogBoxFrame/CenterButton').pressed.connect(func(): dialog.queue_free())
+            add_child(dialog)
     else:
-        # TO-DO - show error message
-        print('Bad host input')
+        var dialog = load('res://dialog_box.tscn').instantiate()
+        dialog.set_title('Error')
+        dialog.set_message('Invalid input provided.\nCheck input\nand try again.')
+        dialog.set_single_button_text('Dismiss')
+        dialog.get_node('DialogBoxFrame/CenterButton').pressed.connect(func(): dialog.queue_free())
+        add_child(dialog)
+
+func _http_request_completed(_result, _response_code, _headers, body):
+    my_ip = body.get_string_from_utf8()

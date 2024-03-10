@@ -29,14 +29,18 @@ func _ready():
     connect('send_new_ready', get_node('/root/Main/Networking')._on_update_ready)
     connect('leave_lobby', get_node('/root/Main/Networking')._on_leave_lobby)
 
+    $GameInfoDialog/DialogBoxFrame/DismissButton.pressed.connect(_on_game_info_dialog_dismiss)
+
 func _on_sign_timer_timeout():
     # 'Blink' sign
     $Sign/SignMask1.visible = !$Sign/SignMask1.visible
     $Sign/SignMask2.visible = !$Sign/SignMask2.visible
 
-func _on_rules_button_pressed():
-    # TO-DO - Add rules pop-up (need to get game info)
-    print('rules')
+func _on_game_info_button_pressed():
+    $GameInfoDialog.visible = true
+
+func _on_game_info_dialog_dismiss():
+    $GameInfoDialog.visible = false
 
 func _on_back_button_pressed():
     emit_signal('leave_lobby')
@@ -88,6 +92,7 @@ func _on_player_disconnected(player_id):
 
 func _on_set_game_info(game_info):
     $GameNameLabel.text = game_info['name']
+    $GameInfoDialog.set_game_info(game_info)
 
 func _on_update_player_ready(player_id, new_ready):
     var index = lobby_player_map[player_id]
@@ -102,9 +107,7 @@ func _on_do_start_lobby_countdown():
     dialog.get_node('DialogBoxFrame/CenterButton').pressed.connect(_on_countdown_dialog_button_pressed)
 
     var countdown_timer = Timer.new()
-    countdown_timer.name = 'CountdownTimer'
     countdown_timer.autostart = true
-    countdown_timer.one_shot = true
     countdown_timer.timeout.connect(_on_countdown_timer_timeout)
 
     dialog.add_child(countdown_timer)
@@ -114,7 +117,6 @@ func _on_countdown_timer_timeout():
     if countdown_remaining > 0:
         countdown_remaining -= 1
         get_node('CountdownDialog').set_message('Game Starting in ' + str(countdown_remaining) + ' seconds.')
-        get_node('CountdownDialog/CountdownTimer').start()
 
 func _on_countdown_dialog_button_pressed():
     update_my_ready(false)
@@ -122,8 +124,6 @@ func _on_countdown_dialog_button_pressed():
 func _on_do_stop_lobby_countdown():
     var dialog = get_node('CountdownDialog')
     if dialog:
-        var timer = dialog.get_node('CountdownTimer')
-        timer.queue_free()
         dialog.queue_free()
 
     countdown_remaining = 10

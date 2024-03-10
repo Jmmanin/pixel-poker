@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://wjbw2drmop70"]
+[gd_scene load_steps=16 format=3 uid="uid://wjbw2drmop70"]
 
 [ext_resource type="Script" path="res://lobby/lobby.gd" id="1_u6h7t"]
 [ext_resource type="Texture2D" uid="uid://coa235rmxckds" path="res://resources/host_join_lobby/sign.png" id="2_5j8i0"]
@@ -6,8 +6,11 @@
 [ext_resource type="Texture2D" uid="uid://d20hb2fkkte2f" path="res://resources/host_join_lobby/sign_mask1.png" id="4_psomp"]
 [ext_resource type="Texture2D" uid="uid://fblj3pmpnoqe" path="res://resources/host_join_lobby/sign_mask2.png" id="5_j1p8n"]
 [ext_resource type="Texture2D" uid="uid://cvr8jqmuodqho" path="res://resources/button.png" id="6_ini4y"]
+[ext_resource type="Texture2D" uid="uid://c5vb2ijmitqaw" path="res://resources/wide_button.png" id="6_m1256"]
 [ext_resource type="Texture2D" uid="uid://d2mewpgcxrivn" path="res://resources/button_hovered.png" id="7_5kcah"]
+[ext_resource type="Texture2D" uid="uid://wahqjftdg0ga" path="res://resources/wide_button_hovered.png" id="7_b6iek"]
 [ext_resource type="PackedScene" uid="uid://7kyni5ibbeiq" path="res://lobby/lobby_player.tscn" id="8_fryvb"]
+[ext_resource type="PackedScene" uid="uid://ceshqgw1u0lkj" path="res://lobby/game_info_dialog.tscn" id="9_rg35d"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_6082k"]
 font = ExtResource("3_c1xet")
@@ -90,21 +93,21 @@ offset_bottom = 269.0
 label_settings = SubResource("LabelSettings_2yiy8")
 horizontal_alignment = 1
 
-[node name="RulesButton" type="TextureButton" parent="."]
-offset_left = 536.0
+[node name="GameInfoButton" type="TextureButton" parent="."]
+offset_left = 500.0
 offset_top = 278.0
-offset_right = 744.0
+offset_right = 780.0
 offset_bottom = 336.0
-texture_normal = ExtResource("6_ini4y")
-texture_hover = ExtResource("7_5kcah")
+texture_normal = ExtResource("6_m1256")
+texture_hover = ExtResource("7_b6iek")
 
-[node name="RulesLabel" type="Label" parent="RulesButton"]
+[node name="GameInfoLabel" type="Label" parent="GameInfoButton"]
 layout_mode = 0
-offset_left = 46.0
+offset_left = 34.0
 offset_top = -1.0
-offset_right = 166.0
+offset_right = 250.0
 offset_bottom = 53.0
-text = "Rules"
+text = "Game Info"
 label_settings = SubResource("LabelSettings_3u33k")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -195,7 +198,10 @@ label_settings = SubResource("LabelSettings_8kpad")
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="GameInfoDialog" parent="." instance=ExtResource("9_rg35d")]
+visible = false
+
 [connection signal="timeout" from="Sign/SignTimer" to="." method="_on_sign_timer_timeout"]
-[connection signal="pressed" from="RulesButton" to="." method="_on_rules_button_pressed"]
+[connection signal="pressed" from="GameInfoButton" to="." method="_on_game_info_button_pressed"]
 [connection signal="pressed" from="LeaveButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="ReadyButton" to="." method="_on_ready_button_pressed"]

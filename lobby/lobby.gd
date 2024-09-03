@@ -116,7 +116,7 @@ func _on_do_start_lobby_countdown():
 func _on_countdown_timer_timeout():
     if countdown_remaining > 0:
         countdown_remaining -= 1
-        get_node('CountdownDialog').set_message('Game Starting in ' + str(countdown_remaining) + ' seconds.')
+        get_node('CountdownDialog').set_message('Game starting in ' + str(countdown_remaining) + (' seconds.' if (countdown_remaining > 1) else ' second.'))
 
 func _on_countdown_dialog_button_pressed():
     update_my_ready(false)

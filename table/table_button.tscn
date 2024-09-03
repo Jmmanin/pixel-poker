@@ -31,3 +31,12 @@ grow_vertical = 2
 label_settings = SubResource("LabelSettings_ev66y")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="DisabledMask" type="TextureRect" parent="."]
+visible = false
+modulate = Color(0, 0, 0, 0.462745)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_spr1a")
+metadata/_edit_lock_ = true

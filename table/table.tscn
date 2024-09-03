@@ -1,7 +1,6 @@
-[gd_scene load_steps=11 format=3 uid="uid://dfn5dw3q3b5hp"]
+[gd_scene load_steps=10 format=3 uid="uid://dfn5dw3q3b5hp"]
 
 [ext_resource type="Script" path="res://table/table.gd" id="1_krf1e"]
-[ext_resource type="PackedScene" uid="uid://bo666p0hi6ao4" path="res://table/opponent.tscn" id="2_3av41"]
 [ext_resource type="Texture2D" uid="uid://mt5xy7snaqs4" path="res://resources/table/table_bg.png" id="3_aj22k"]
 [ext_resource type="PackedScene" uid="uid://cipkeb6hjsgkf" path="res://table/pot.tscn" id="4_721qg"]
 [ext_resource type="PackedScene" uid="uid://dlprm8me7eowj" path="res://table/community_cards.tscn" id="5_ylukq"]
@@ -15,7 +14,6 @@ font = ExtResource("8_r7uli")
 
 [node name="Table" type="Node"]
 script = ExtResource("1_krf1e")
-opponent_scene = ExtResource("2_3av41")
 
 [node name="Background" type="TextureRect" parent="."]
 offset_right = 1280.0

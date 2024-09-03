@@ -5,7 +5,7 @@ signal init_self_host
 
 var self_host = true
 var password_enabled = false
-var prebet = PokerTypes.PB_BLIND
+var prebet = PokerTypes.PrebetTypes.PB_BLIND
 
 var my_ip = ''
 
@@ -51,7 +51,7 @@ func _on_ip_line_edit_focus_exited():
         $IP_Parent/IP_LineEdit.text = 'Self-Host'
 
 func _on_ante_button_pressed():
-    prebet = PokerTypes.PB_ANTE
+    prebet = PokerTypes.PrebetTypes.PB_ANTE
     $IP_Parent/IP_LineEdit.focus_previous = $AnteParent/AnteLineEdit.get_path()
     $StartingBalanceParent/StartingBalanceLineEdit.focus_next = $AnteParent/AnteLineEdit.get_path()
     $PreBetParent/AnteButton/AnteDisabledMask.visible   = false
@@ -60,7 +60,7 @@ func _on_ante_button_pressed():
     $BlindParent.visible = false
 
 func _on_blind_button_pressed():
-    prebet = PokerTypes.PB_BLIND
+    prebet = PokerTypes.PrebetTypes.PB_BLIND
     $IP_Parent/IP_LineEdit.focus_previous = $BlindParent/BigBlindLineEdit.get_path()
     $StartingBalanceParent/StartingBalanceLineEdit.focus_next = $BlindParent/SmallBlindLineEdit.get_path()
     $PreBetParent/AnteButton/AnteDisabledMask.visible   = true
@@ -95,7 +95,7 @@ func _on_host_game_button_pressed():
     var stripped_player_name = $PlayerNameParent/PlayerNameLineEdit.text.rstrip(' ')
 
     var prebet_valid = false
-    if prebet == PokerTypes.PB_ANTE:
+    if prebet == PokerTypes.PrebetTypes.PB_ANTE:
         prebet_valid = (starting_balance > 0) \
                        && (ante >= 0) \
                        && (starting_balance >= ante)

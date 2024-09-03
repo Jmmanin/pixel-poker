@@ -1,20 +1,20 @@
 extends Node2D
 
 var balance = 0
-var blind_button_value = PokerTypes.BUTTON_NONE
+var blind_button_value = PokerTypes.BlindButtons.BB_NONE
 var cards_dealt = 0
 
 func set_blind_button(new_blind_button):
     blind_button_value = new_blind_button
 
-    if blind_button_value == PokerTypes.BUTTON_NONE:
+    if blind_button_value == PokerTypes.BlindButtons.BB_NONE:
         $BlindButton.visible = false
     else:
-        if new_blind_button == PokerTypes.BUTTON_DEALER:
+        if new_blind_button == PokerTypes.BlindButtons.BB_DEALER:
             $BlindButton.set_region_rect(Rect2(0, 0, 36, 36))
-        elif new_blind_button == PokerTypes.BUTTON_SMALL_BLIND:
+        elif new_blind_button == PokerTypes.BlindButtons.BB_SMALL_BLIND:
             $BlindButton.set_region_rect(Rect2(36, 0, 36, 36))
-        elif new_blind_button == PokerTypes.BUTTON_BIG_BLIND:
+        elif new_blind_button == PokerTypes.BlindButtons.BB_BIG_BLIND:
             $BlindButton.set_region_rect(Rect2(72, 0, 36, 36))
 
         $BlindButton.visible = true
@@ -38,7 +38,7 @@ func fold():
     $Card2.modulate = Color(137.0/255.0, 137.0/255.0, 137.0/255.0)
 
 func clear_hand():
-    set_blind_button(PokerTypes.BUTTON_NONE)
+    set_blind_button(PokerTypes.BlindButtons.BB_NONE)
 
     cards_dealt = 0
 

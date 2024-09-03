@@ -1,7 +1,7 @@
 extends TextureRect
 
 var balance = 0
-var blind_button_value = PokerTypes.BUTTON_NONE
+var blind_button_value = PokerTypes.BlindButtons.BB_NONE
 var cards_dealt = 0
 
 func set_turn(is_turn):
@@ -43,11 +43,11 @@ func set_balance(new_balance):
     $BalanceLabel.text = '$' + str(balance)
 
 func set_blind_button(new_blind_button):
-    if new_blind_button == PokerTypes.BB_DEALER:
+    if new_blind_button == PokerTypes.BlindButtons.BB_DEALER:
         $BlindButton.set_region_rect(Rect2(0, 0, 36, 36))
-    elif new_blind_button == PokerTypes.BB_SMALL_BLIND:
+    elif new_blind_button == PokerTypes.BlindButtons.BB_SMALL_BLIND:
         $BlindButton.set_region_rect(Rect2(36, 0, 36, 36))
-    elif new_blind_button == PokerTypes.BB_BIG_BLIND:
+    elif new_blind_button == PokerTypes.BlindButtons.BB_BIG_BLIND:
         $BlindButton.set_region_rect(Rect2(72, 0, 36, 36))
     else:
         pass # No blind button
@@ -55,11 +55,11 @@ func set_blind_button(new_blind_button):
     # Adjust x pos of cards to properly horizontally center things
     if new_blind_button != blind_button_value:
         # On transition to no blind button
-        if new_blind_button == PokerTypes.BB_NONE:
+        if new_blind_button == PokerTypes.BlindButtons.BB_NONE:
             $CardParent.position -= Vector2(20, 0)
             $BlindButton.visible = false
         # On transition to some blind button
-        elif blind_button_value == PokerTypes.BB_NONE:
+        elif blind_button_value == PokerTypes.BlindButtons.BB_NONE:
             $CardParent.position += Vector2(20, 0)
             $BlindButton.visible = true
         else:
@@ -91,7 +91,7 @@ func show_hand():
     $CardParent/Card2.visible = true
 
 func clear_hand():
-    set_blind_button(PokerTypes.BUTTON_NONE)
+    set_blind_button(PokerTypes.BlindButtons.BB_NONE)
 
     cards_dealt = 0
 

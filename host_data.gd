@@ -5,7 +5,11 @@ var port : int
 var game_name : String
 var game_pw : String
 var starting_balance : int
-var prebet_type : int # PokerTypes.PrebetTypes
+
+var prebet_type : int: # PokerTypes.PrebetTypes
+    get:
+        return prebet_type
+
 var ante_amount : int
 var small_blind_amount : int
 var big_blind_amount : int
@@ -17,6 +21,11 @@ var game_starting : bool:
         game_starting = new_value
 
 var players : Dictionary # [int, player_data]
+
+var dealer : int
+var player_turn : int
+
+var deck : Array
 
 func _init(p_address : String,
            p_port : int,
@@ -101,6 +110,50 @@ func get_all_ready():
 func remove_player(leaving_player_id : int) -> void:
     players.erase(leaving_player_id)
 
+func get_player_ids() -> Array:
+    return(players.keys())
+
+func get_player_names() -> Dictionary:
+    var player_names : Dictionary = {}
+    for player_id in players:
+        player_names[player_id] = players[player_id].player_name
+
+    return player_names
+
+func get_starting_dealer() -> int:
+    var player_ids = players.keys()
+    dealer = player_ids.pick_random()
+    player_turn = (player_ids.find(dealer) + 1) % players.size()
+    return dealer
+
+func get_opponent_order(player_id : int) -> Array:
+    var player_ids = players.keys()
+    var player_index = player_ids.find(player_id)
+    var curr_index = (player_index + 1) % players.size()
+
+    var opponent_order = Array()
+    while curr_index != player_index:
+        opponent_order.append(player_ids[curr_index])
+        curr_index = (curr_index + 1) % players.size()
+
+    return opponent_order
+
+func suffle_and_deal():
+    deck = Array()
+    for i in range(13):
+        for j in range(4):
+            deck.append([i, j])
+
+    deck.shuffle()
+
+    var player_ids = get_player_ids()
+    while not players[player_ids[player_turn]].is_full_dealt():
+        players[player_ids[player_turn]].deal_card(deck.pop_front())
+        player_turn = (player_turn + 1) % player_ids.size()
+
+func get_player_hand(player_id : int) -> Array:
+    return players[player_id].hand
+
 class player_data:
     var player_name : String:
         get:
@@ -118,7 +171,17 @@ class player_data:
         set(new_value):
             ready = new_value
 
+    var hand : Array = Array():
+        get:
+            return hand
+
     func _init(p_player_name : String, starting_balance) -> void:
         player_name = p_player_name
         balance = starting_balance
         ready = false
+
+    func deal_card(card : Array):
+        hand.push_back(card)
+
+    func is_full_dealt() -> bool:
+        return hand.size() == 2

@@ -128,10 +128,22 @@ func _server_tranistion_to_table():
     get_node('LobbyCountdownTimer').queue_free()
     print('transition to table')
 
-@rpc('authority', 'call_remote', 'reliable')
-func client_transition_to_table(opponent_ids, opponent_names, starting_balance):
+    var player_ids = self_host_data.get_player_ids()
+    var player_names = self_host_data.get_player_names()
+    var starting_balance = self_host_data.starting_balance
+    var prebet_type = self_host_data.prebet_type
+    var starting_dealer_id = self_host_data.get_starting_dealer()
+
+    self_host_data.suffle_and_deal()
+
+    for player_id in player_ids:
+        var opponent_order = self_host_data.get_opponent_order(player_id)
+        client_transition_to_table.rpc_id(player_id, opponent_order, player_names, starting_balance, prebet_type, starting_dealer_id, self_host_data.get_player_hand(player_id))
+
+@rpc('authority', 'call_local', 'reliable')
+func client_transition_to_table(opponent_order, player_names, starting_balance, prebet_type, starting_dealer_id, player_hand):
     emit_signal('change_scene', 'table')
-    emit_signal('set_table_players', opponent_ids, opponent_names, starting_balance)
+    emit_signal('set_table_players', opponent_order, player_names, starting_balance, prebet_type, starting_dealer_id, player_hand)
 
 func _on_leave_lobby():
     # Destroy old game data obj if we're the server (i.e. self-hosting)

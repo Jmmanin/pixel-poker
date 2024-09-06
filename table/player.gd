@@ -19,18 +19,23 @@ func set_blind_button(new_blind_button):
 
         $BlindButton.visible = true
 
-func set_cards(card1_val, card2_val):
-    $Card1.set_region_rect(Rect2(card1_val[0]*130, card1_val[1]*180, 130, 180))
-    $Card2.set_region_rect(Rect2(card2_val[0]*130, card2_val[1]*180, 130, 180))
+func set_hand(hand):
+    print('hand: ' + str(hand[0][0]) + ',' + str(hand[0][1]) + ';' + str(hand[1][0]) + ',' + str(hand[1][1]))
+    $Card1.set_region_rect(Rect2(hand[0][0]*130, hand[0][1]*180, 130, 180))
+    $Card2.set_region_rect(Rect2(hand[1][0]*130, hand[1][1]*180, 130, 180))
 
 func deal_next():
-    if cards_dealt < 2:
-        cards_dealt += 1
+    assert(cards_dealt < 2)
+
+    cards_dealt += 1
 
     if cards_dealt == 1:
         $Card1.visible = true
     if cards_dealt == 2:
         $Card2.visible = true
+
+func get_full_dealt():
+    return cards_dealt == 2
 
 func fold():
     # Use modulate to darken cards

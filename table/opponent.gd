@@ -72,13 +72,17 @@ func set_cards(card1_val, card2_val):
     $CardParent/Card2.set_region_rect(Rect2(card2_val[0]*45, card2_val[1]*67, 45, 67))
 
 func deal_next():
-    if cards_dealt < 2:
-        cards_dealt += 1
+    assert(cards_dealt < 2)
+
+    cards_dealt += 1
 
     if cards_dealt == 1:
         $CardParent/CardBack1.visible = true
     if cards_dealt == 2:
         $CardParent/CardBack2.visible = true
+
+func get_full_dealt():
+    return cards_dealt == 2
 
 func fold():
     $CardParent/CardBack1.modulate = Color(137.0/255.0, 137.0/255.0, 137.0/255.0)

@@ -179,7 +179,7 @@ label_settings = SubResource("LabelSettings_y3xkc")
 offset_left = 381.0
 offset_right = 615.0
 offset_bottom = 41.0
-text = "Current Bet"
+text = "Last Raise"
 label_settings = SubResource("LabelSettings_wbbrh")
 horizontal_alignment = 2
 

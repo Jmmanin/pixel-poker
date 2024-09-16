@@ -35,5 +35,3 @@ func set_pot(new_pot):
         $Chips1.visible = false
         $Chips2.visible = false
         $PotLabel.text = ""
-
-

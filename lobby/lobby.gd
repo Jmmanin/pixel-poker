@@ -63,7 +63,7 @@ func _on_player_connected(new_players):
     for player_id in new_players:
         lobby_player_map[player_id] = next_lobby_index
 
-        lobby_players[next_lobby_index].set_player_name(new_players[player_id]['name'])
+        lobby_players[next_lobby_index].set_player_name(new_players[player_id]['player_name'])
         lobby_players[next_lobby_index].set_is_ready(new_players[player_id]['ready'])
 
         if player_id == multiplayer.get_unique_id():
@@ -91,7 +91,7 @@ func _on_player_disconnected(player_id):
     next_lobby_index -= 1
 
 func _on_set_game_info(game_info):
-    $GameNameLabel.text = game_info['name']
+    $GameNameLabel.text = game_info.game_name
     $GameInfoDialog.set_game_info(game_info)
 
 func _on_update_player_ready(player_id, new_ready):

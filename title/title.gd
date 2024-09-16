@@ -15,7 +15,6 @@ func _on_join_game_button_pressed():
 
 func _on_settings_button_pressed():
     print("settings clicked from title")
-    #get_tree().change_scene_to_file("res://table/table.tscn")
 
 func _on_quit_button_pressed():
     get_tree().quit()

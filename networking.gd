@@ -16,33 +16,17 @@ func _ready():
 
     connect('change_scene', get_node('/root/Main/Scene_Switcher')._on_change_scene)
 
-func _on_init_self_host(address,
-                        port,
-                        game_name,
-                        game_pw,
-                        starting_balance,
-                        prebet_type,
-                        ante_amount,
-                        small_blind_amount,
-                        big_blind_amount,
+func _on_init_self_host(game_info,
                         player_name):
-    self_host_data = host_data.new(address,
-                                   port,
-                                   game_name,
-                                   game_pw,
-                                   starting_balance,
-                                   prebet_type,
-                                   ante_amount,
-                                   small_blind_amount,
-                                   big_blind_amount)
+    self_host_data = host_data.new(game_info)
 
     var my_id = multiplayer.get_unique_id()
     self_host_data.add_player(multiplayer.get_unique_id(), player_name)
 
     # Add self to lobby scene
     emit_signal('change_scene', 'lobby')
-    emit_signal('set_game_info', self_host_data.get_game_info())
-    emit_signal('player_connected', {my_id : {'name' : player_name, 'ready' : false}})
+    emit_signal('set_game_info', self_host_data.game_info)
+    emit_signal('player_connected', self_host_data.get_player_lobby_data(my_id))
 
 func _do_join_request(game_name, game_pw, player_name):
     join_request.rpc_id(1, game_name, game_pw, player_name)
@@ -59,24 +43,24 @@ func join_request(joiner_game_name, joiner_game_pw, joiner_name):
 
         emit_signal('player_connected', self_host_data.get_player_lobby_data(new_player_id))
 
-        enter_lobby.rpc_id(new_player_id, self_host_data.get_game_info())
+        enter_lobby.rpc_id(new_player_id, self_host_data.game_info.to_dict())
         add_new_players.rpc(new_player_id, self_host_data.get_players_lobby_data())
     else:
         pass
 
 @rpc('authority', 'call_remote', 'reliable')
-func enter_lobby(p_game_info):
+func enter_lobby(game_info_dict):
     emit_signal('change_scene', 'lobby')
-    emit_signal('set_game_info', p_game_info)
+    emit_signal('set_game_info', game_info_dict)
 
 @rpc('authority', 'call_remote', 'reliable')
-func add_new_players(new_player_id, p_players):
+func add_new_players(new_player_id, player_info_dict):
     # Set up newly joined player with existing players
     if new_player_id == multiplayer.get_unique_id():
-        emit_signal('player_connected', p_players)
+        emit_signal('player_connected', player_info_dict)
     # Players who already joined just need to add newly joined player
     else:
-        emit_signal('player_connected', {new_player_id : p_players[new_player_id]})
+        emit_signal('player_connected', {new_player_id : player_info_dict[new_player_id]})
 
 func _on_update_ready(new_ready):
     if multiplayer.is_server():
@@ -126,24 +110,38 @@ func stop_lobby_countdown():
 
 func _server_tranistion_to_table():
     get_node('LobbyCountdownTimer').queue_free()
-    print('transition to table')
 
-    var player_ids = self_host_data.get_player_ids()
-    var player_names = self_host_data.get_player_names()
-    var starting_balance = self_host_data.starting_balance
-    var prebet_type = self_host_data.prebet_type
-    var starting_dealer_id = self_host_data.get_starting_dealer()
+    self_host_data.start_round()
+    var player_info_dict = self_host_data.get_client_player_table_data()
 
-    self_host_data.suffle_and_deal()
-
-    for player_id in player_ids:
+    for player_id in self_host_data.players.keys():
         var opponent_order = self_host_data.get_opponent_order(player_id)
-        client_transition_to_table.rpc_id(player_id, opponent_order, player_names, starting_balance, prebet_type, starting_dealer_id, self_host_data.get_player_hand(player_id))
+        client_transition_to_table.rpc_id(player_id,
+                                          opponent_order,
+                                          player_info_dict,
+                                          self_host_data.get_player_hand(player_id),
+                                          self_host_data.game_info.prebet_type,
+                                          self_host_data.dealer,
+                                          self_host_data.pot,
+                                          self_host_data.min_raise)
 
 @rpc('authority', 'call_local', 'reliable')
-func client_transition_to_table(opponent_order, player_names, starting_balance, prebet_type, starting_dealer_id, player_hand):
+func client_transition_to_table(opponent_order,
+                                client_player_table_data,
+                                player_hand,
+                                prebet_type,
+                                dealer_id,
+                                starting_pot,
+                                min_raise):
     emit_signal('change_scene', 'table')
-    emit_signal('set_table_players', opponent_order, player_names, starting_balance, prebet_type, starting_dealer_id, player_hand)
+    emit_signal('set_table_players',
+                opponent_order,
+                client_player_table_data,
+                player_hand,
+                prebet_type,
+                dealer_id,
+                starting_pot,
+                min_raise)
 
 func _on_leave_lobby():
     # Destroy old game data obj if we're the server (i.e. self-hosting)
@@ -155,6 +153,13 @@ func _on_leave_lobby():
 
     emit_signal('change_scene', 'title')
 
+func _on_send_player_action(action):
+    server_process_player_action.rpc_id(1, action)
+
+@rpc('any_peer', 'call_remote', 'reliable')
+func server_process_player_action(action):
+    self_host_data.process_player_action(multiplayer.get_remote_sender_id(), action)
+
 func _on_player_disconnected(leaving_player_id):
     if multiplayer.is_server():
         self_host_data.remove_player(leaving_player_id)
@@ -162,6 +167,7 @@ func _on_player_disconnected(leaving_player_id):
 
     # Server closed
     if leaving_player_id == 1:
+        # TO-DO - ADD DIALOG BOX
         multiplayer.multiplayer_peer.close()
         emit_signal('change_scene', 'title')
 

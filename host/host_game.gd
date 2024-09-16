@@ -126,17 +126,17 @@ func _on_host_game_button_pressed():
             else:
                 multiplayer.multiplayer_peer = multiplayer_peer
 
-                emit_signal('init_self_host',
-                            stripped_ip if not self_host else my_ip,
-                            port,
-                            stripped_game_name,
-                            stripped_password if password_enabled else '',
-                            starting_balance,
-                            prebet,
-                            ante,
-                            small_blind,
-                            big_blind,
-                            stripped_player_name)
+                var game_info = PokerTypes.GameInfo.new(stripped_ip if not self_host else my_ip,
+                                                        port,
+                                                        stripped_game_name,
+                                                        stripped_password if password_enabled else '',
+                                                        starting_balance,
+                                                        prebet,
+                                                        ante,
+                                                        small_blind,
+                                                        big_blind)
+
+                emit_signal('init_self_host', game_info, stripped_player_name)
         else:
             # TO-DO - implement hosting games by connecting to separate server application
             var dialog = load('res://dialog_box.tscn').instantiate()

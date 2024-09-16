@@ -20,7 +20,6 @@ func set_blind_button(new_blind_button):
         $BlindButton.visible = true
 
 func set_hand(hand):
-    print('hand: ' + str(hand[0][0]) + ',' + str(hand[0][1]) + ';' + str(hand[1][0]) + ',' + str(hand[1][1]))
     $Card1.set_region_rect(Rect2(hand[0][0]*130, hand[0][1]*180, 130, 180))
     $Card2.set_region_rect(Rect2(hand[1][0]*130, hand[1][1]*180, 130, 180))
 

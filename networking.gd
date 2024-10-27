@@ -7,7 +7,9 @@ signal set_game_info
 signal update_player_ready
 signal do_start_lobby_countdown
 signal do_stop_lobby_countdown
-signal set_table_players
+signal do_start_game
+signal continue_betting_round
+signal start_new_betting_round
 
 var self_host_data : host_data = null # Only used if self-hosting
 
@@ -111,7 +113,7 @@ func stop_lobby_countdown():
 func _server_tranistion_to_table():
     get_node('LobbyCountdownTimer').queue_free()
 
-    self_host_data.start_round()
+    self_host_data.start_game()
     var player_info_dict = self_host_data.get_client_player_table_data()
 
     for player_id in self_host_data.players.keys():
@@ -134,7 +136,7 @@ func client_transition_to_table(opponent_order,
                                 starting_pot,
                                 min_raise):
     emit_signal('change_scene', 'table')
-    emit_signal('set_table_players',
+    emit_signal('do_start_game',
                 opponent_order,
                 client_player_table_data,
                 player_hand,
@@ -156,9 +158,47 @@ func _on_leave_lobby():
 func _on_send_player_action(action):
     server_process_player_action.rpc_id(1, action)
 
-@rpc('any_peer', 'call_remote', 'reliable')
+@rpc('any_peer', 'call_local', 'reliable')
 func server_process_player_action(action):
     self_host_data.process_player_action(multiplayer.get_remote_sender_id(), action)
+
+    if self_host_data.phase_complete:
+        if self_host_data.game_phase == PokerTypes.GamePhases.GP_FLOP:
+            client_start_new_betting_round.rpc(self_host_data.get_client_player_table_data(),
+                                               self_host_data.get_turn_player_id(),
+                                               self_host_data.community_cards,
+                                               self_host_data.pot,
+                                               self_host_data.min_raise)
+        elif self_host_data.game_phase == PokerTypes.GamePhases.GP_TURN:
+            client_start_new_betting_round.rpc(self_host_data.get_client_player_table_data(),
+                                               self_host_data.get_turn_player_id(),
+                                               [self_host_data.community_cards[3]],
+                                               self_host_data.pot,
+                                               self_host_data.min_raise)
+        elif self_host_data.game_phase == PokerTypes.GamePhases.GP_RIVER:
+            client_start_new_betting_round.rpc(self_host_data.get_client_player_table_data(),
+                                               self_host_data.get_turn_player_id(),
+                                               [self_host_data.community_cards[4]],
+                                               self_host_data.pot,
+                                               self_host_data.min_raise)
+        elif self_host_data.game_phase == PokerTypes.GamePhases.GP_END:
+            pass
+        else:
+            pass # TO-DO - Should not enter this phase. Crash the game or something...
+    else:
+        client_continue_betting_round.rpc(self_host_data.get_client_player_table_data(),
+                                          self_host_data.get_turn_player_id(),
+                                          self_host_data.pot,
+                                          self_host_data.curr_bet != 0,
+                                          self_host_data.min_raise)
+
+@rpc('authority', 'call_local', 'reliable')
+func client_continue_betting_round(new_player_data, turn_player_id, new_pot, new_prev_bet_made, new_min_raise):
+    emit_signal('continue_betting_round', new_player_data, turn_player_id, new_pot, new_prev_bet_made, new_min_raise)
+
+@rpc('authority', 'call_local', 'reliable')
+func client_start_new_betting_round(new_player_data, turn_player_id, new_community_cards, new_pot, new_min_raise):
+    emit_signal('start_new_betting_round', new_player_data, turn_player_id, new_community_cards, new_pot, new_min_raise)
 
 func _on_player_disconnected(leaving_player_id):
     if multiplayer.is_server():

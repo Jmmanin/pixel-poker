@@ -1,21 +1,41 @@
 extends Node2D
 
-func show_flop(flop1_val, flop2_val, flop3_val):
-    $Flop1.set_region_rect(Rect2(flop1_val[0]*130, flop1_val[1]*180, 130, 180))
-    $Flop2.set_region_rect(Rect2(flop2_val[0]*130, flop2_val[1]*180, 130, 180))
-    $Flop3.set_region_rect(Rect2(flop3_val[0]*130, flop3_val[1]*180, 130, 180))
-    $Flop1.visible = true
-    $Flop2.visible = true
-    $Flop3.visible = true
-    $Burn.visible = true
+var cards = Array()
+var cards_dealt = -1
 
-func show_turn(turn_val):
-    $Turn.set_region_rect(Rect2(turn_val[0]*130, turn_val[1]*180, 130, 180))
-    $Turn.visible = true
+func add_cards(p_cards):
+    cards.append_array(p_cards)
 
-func show_river(river_val):
-    $River.set_region_rect(Rect2(river_val[0]*130, river_val[1]*180, 130, 180))
-    $River.visible = true
+func deal_next():
+    if cards.size() >= cards_dealt + 1:
+        if cards_dealt == -1:
+            $Burn.visible = true
+            cards_dealt += 1
+        elif cards_dealt == 0:
+            $Flop1.set_region_rect(Rect2(cards[0][0]*130, cards[0][1]*180, 130, 180))
+            $Flop1.visible = true
+            cards_dealt += 1
+        elif cards_dealt == 1:
+            $Flop2.set_region_rect(Rect2(cards[1][0]*130, cards[1][1]*180, 130, 180))
+            $Flop2.visible = true
+            cards_dealt += 1
+        elif cards_dealt == 2:
+            $Flop3.set_region_rect(Rect2(cards[2][0]*130, cards[2][1]*180, 130, 180))
+            $Flop3.visible = true
+            cards_dealt += 1
+        elif cards_dealt == 3:
+            $Turn.set_region_rect(Rect2(cards[3][0]*130, cards[3][1]*180, 130, 180))
+            $Turn.visible = true
+            cards_dealt += 1
+        elif cards_dealt == 4:
+            $River.set_region_rect(Rect2(cards[4][0]*130, cards[4][1]*180, 130, 180))
+            $River.visible = true
+            cards_dealt += 1
+        else:
+            pass # There are only 5 cards to be dealt max
+
+func is_full_dealt():
+    return cards.size() == cards_dealt
 
 func clear_cards():
     $Flop1.visible = false

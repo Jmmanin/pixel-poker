@@ -33,7 +33,7 @@ func deal_next():
     if cards_dealt == 2:
         $Card2.visible = true
 
-func get_full_dealt():
+func is_full_dealt():
     return cards_dealt == 2
 
 func fold():

@@ -56,6 +56,7 @@ func _on_do_start_game(opponent_order,
     for opponent_id in opponent_order:
         var op_scene = opponent_scene.instantiate()
 
+        op_scene.name = 'Opponent' + str(opponent_id)
         op_scene.set_op_name(player_info_dict[opponent_id]['player_name'])
         op_scene.set_balance(player_info_dict[opponent_id]['balance'])
         op_scene.set_status(player_info_dict[opponent_id]['status'])

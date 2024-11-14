@@ -1,5 +1,7 @@
 class_name host_data
 
+enum PokerHands {PH_HIGH_CARD, PH_PAIR, PH_TWO_PAIR, PH_THREE_OF_A_KIND, PH_STRAIGHT, PH_FLUSH, PH_FULL_HOUSE, PH_FOUR_OF_A_KIND, PH_STRAIGHT_FLUSH, PH_ROYAL_FLUSH}
+
 var game_info : PokerTypes.GameInfo
 
 var game_starting : bool
@@ -154,8 +156,8 @@ func get_opponent_order(player_id : int) -> Array:
 
     return opponent_order
 
-func get_player_hand(player_id : int) -> Array:
-    return players[player_id].hand
+func get_player_pocket(player_id : int) -> Array:
+    return players[player_id].pocket
 
 func process_player_action(player_id : int, action : int):
     phase_complete = false
@@ -230,6 +232,7 @@ func process_player_action(player_id : int, action : int):
 
             game_phase = PokerTypes.GamePhases.GP_RIVER
         elif game_phase == PokerTypes.GamePhases.GP_RIVER:
+            score_game()
             # TO-DO - SCORE GAME AND PAY OUT POT
             game_phase = PokerTypes.GamePhases.GP_END
             print('game ended')
@@ -241,13 +244,193 @@ func process_player_action(player_id : int, action : int):
 func get_turn_player_id() -> int:
     return players_in_hand[player_turn_index]
 
+func score_game():
+    for player in players:
+        # Sort all cards available for player to make hand from by value
+        var hand_value = players[player].pocket.duplicate(true)
+        hand_value.append_array(community_cards)
+        hand_value.sort_custom(func(a, b): return a[0] < b[0])
+
+        # Sort all cards available for player to make hand from by suit
+        var hand_suit = [[], [], [], []]
+        for card in hand_value:
+            hand_suit[card[1]].append(card)
+
+        # Get longest, sequence from set of all sequences
+        var flush = hand_suit.reduce(get_longest)
+
+        # A player's hand can only be 5 cards, so get the highest sequence if there are more
+        while flush.size() > 5:
+            flush.pop_front()
+
+        # Remove cards with the same value for purposes of finding straights
+        var hand_value_no_repeat = [hand_value[0]]
+        for i in range(1, hand_value.size()):
+            if hand_value[i][0] != hand_value[i-1][0]:
+                hand_value_no_repeat.append(hand_value[i])
+
+        if hand_value_no_repeat[-1][0] == 12: # Add ace to front of array if applicable to cover low straights
+            hand_value_no_repeat.push_front(hand_value_no_repeat[-1])
+
+        # Find all incrementing sequences of cards in available set
+        var possible_straights = [[]]
+        for card in hand_value_no_repeat:
+            # Add card to current sequence if one value higher than previous, otherwise create new sequence
+            if not possible_straights[-1] \
+               or ((card[0] - possible_straights[-1][-1][0]) == 1) \
+               or (card[0] == 2 and possible_straights[-1].size() == 1 and possible_straights[-1][-1][0] == 12): # Handle straights starting with ace
+                possible_straights[-1].append(card)
+            else:
+                possible_straights.append([card])
+
+        # Get longest, highest-value sequence from set of all sequences
+        var straight = possible_straights.reduce(get_longest)
+
+        # A player's hand can only be 5 cards, so get the highest sequence if there are more
+        while straight.size() > 5:
+            straight.pop_front()
+
+        # Find all multiples in available set of cards
+        var multiples = [[]]
+        for card in hand_value:
+            # Add card to current sequence if equal to previous, otherwise create new sequence
+            if not multiples[-1] or card[0] == multiples[-1][-1][0]:
+                multiples[-1].append(card)
+            else:
+                multiples.append([card])
+
+        # Iterate through list of multiples and pull out those of interest
+        var first_pair_index = -1
+        var second_pair_index = -1
+        var toak_index = -1
+        var foak_index = -1
+        for index in multiples.size():
+            if multiples[index].size() == 2:
+                if first_pair_index == -1:
+                    first_pair_index = index
+                elif second_pair_index == -1:
+                    second_pair_index = index
+                else:
+                    first_pair_index = second_pair_index
+                    second_pair_index = index
+            elif multiples[index].size() == 3:
+                toak_index = index
+            elif multiples[index].size() == 4:
+                foak_index = index
+            else:
+                pass # Do nothing
+
+        if straight.size() == 5:
+            var straight_flush = true
+            for index in range(1, straight.size()):
+                straight_flush = straight_flush and (straight[index][1] == straight[index-1][1])
+                if not straight_flush:
+                    break
+    
+            if straight_flush and straight[4][0] == 9:
+                players[player].hand = straight
+                players[player].hand_type = PokerHands.PH_ROYAL_FLUSH
+                continue
+
+            if straight_flush:
+                players[player].hand = straight
+                players[player].hand_type = PokerHands.PH_STRAIGHT_FLUSH
+                continue
+
+        if foak_index != -1:
+            players[player].hand.append_array(multiples[foak_index])
+
+            # Add highest value card available to fill out rest of hand
+            multiples.remove_at(foak_index)
+            players[player].hand.append(multiples[-1][-1])
+
+            players[player].hand_type = PokerHands.PH_FOUR_OF_A_KIND
+            continue
+
+        if toak_index != -1 and first_pair_index != -1:
+            players[player].hand.append_array(multiples[toak_index])
+            players[player].hand_type = PokerHands.PH_FULL_HOUSE
+            if second_pair_index != -1:
+                players[player].hand.append_array(multiples[second_pair_index])
+            else:
+                players[player].hand.append_array(multiples[first_pair_index])
+            continue
+
+        if flush.size() == 5:
+            players[player].hand = flush
+            players[player].hand_type = PokerHands.PH_FLUSH
+            continue
+
+        if straight.size() == 5:
+            players[player].hand = straight
+            players[player].hand_type = PokerHands.PH_STRAIGHT
+            continue
+
+        if toak_index != -1:
+            players[player].hand.append_array(multiples[toak_index])
+
+            # Add two highest value cards available to fill out rest of hand
+            multiples.remove_at(toak_index)
+            players[player].hand.append(multiples[-1].pop_back())
+            if multiples[-1].is_empty():
+                multiples.resize(multiples.size() - 1)
+            players[player].hand.append(multiples[-1][-1])
+
+            players[player].hand_type = PokerHands.PH_THREE_OF_A_KIND
+            continue
+
+        if second_pair_index != -1 and first_pair_index != -1:
+            players[player].hand.append_array(multiples[second_pair_index])
+            players[player].hand.append_array(multiples[first_pair_index])
+
+            # Add highest value card available to fill out rest of hand
+            multiples.remove_at(second_pair_index)
+            multiples.remove_at(first_pair_index)
+            players[player].hand.append(multiples[-1][-1])
+
+            players[player].hand_type = PokerHands.PH_TWO_PAIR
+            continue
+
+        if first_pair_index != -1:
+            players[player].hand.append_array(multiples[first_pair_index])
+
+            # Add three highest value cards available to fill out rest of hand
+            multiples.remove_at(first_pair_index)
+            players[player].hand.append(multiples[-1].pop_back())
+            if multiples[-1].is_empty():
+                multiples.resize(multiples.size() - 1)
+            players[player].hand.append(multiples[-1].pop_back())
+            if multiples[-1].is_empty():
+                multiples.resize(multiples.size() - 1)
+            players[player].hand.append(multiples[-1][-1])
+
+            players[player].hand_type = PokerHands.PH_PAIR
+            continue
+
+        hand_value.reverse().resize(5)
+        players[player].hand = hand_value
+        players[player].hand_type = PokerHands.PH_HIGH_CARD
+
+func sort_value(a : Array, b : Array) -> bool:
+    if a[0] < b[0]:
+        return true
+    return false
+
+func get_longest(longest : Array, next : Array) -> Array:
+    if next.size() >= longest.size():
+        return next
+    else:
+        return longest
+
 class player_data:
     var player_name : String
     var ready : bool
     var balance : int
-    var hand : Array = Array()
+    var pocket : Array = Array()
     var curr_bet : int
     var status : String
+    var hand : Array = Array()
+    var hand_type : int
 
     func _init(p_player_name : String, starting_balance) -> void:
         player_name = p_player_name
@@ -255,9 +438,10 @@ class player_data:
         balance = starting_balance
         curr_bet = 0
         status = ''
+        hand_type = -1
 
     func deal_card(card : Array):
-        hand.push_back(card)
+        pocket.push_back(card)
 
     func is_full_dealt() -> bool:
-        return hand.size() == 2
+        return pocket.size() == 2

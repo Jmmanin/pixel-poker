@@ -121,7 +121,7 @@ func _server_tranistion_to_table():
         client_transition_to_table.rpc_id(player_id,
                                           opponent_order,
                                           player_info_dict,
-                                          self_host_data.get_player_hand(player_id),
+                                          self_host_data.get_player_pocket(player_id),
                                           self_host_data.game_info.prebet_type,
                                           self_host_data.dealer,
                                           self_host_data.pot,

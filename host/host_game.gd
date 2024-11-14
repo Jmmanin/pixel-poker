@@ -9,6 +9,8 @@ var prebet = PokerTypes.PrebetTypes.PB_BLIND
 
 var my_ip = ''
 
+var dialog_shown = false
+
 func _ready():
     connect('init_self_host', get_node('/root/Main/Networking')._on_init_self_host)
 
@@ -32,7 +34,18 @@ func _on_background_gui_input(event):
         $AnteParent/AnteLineEdit.release_focus()
         $BlindParent/BigBlindLineEdit.release_focus()
         $BlindParent/SmallBlindLineEdit.release_focus()
-   
+
+func _input(event):
+    if not dialog_shown:
+        if event.is_action_pressed("ui_accept"):
+            _on_host_game_button_pressed()
+        elif event.is_action_pressed("ui_cancel"):
+            _on_back_button_pressed()
+        else:
+            pass # Do nothing
+    else:
+        pass # Do nothing
+
 func _on_sign_timer_timeout():
     # 'Blink' sign
     $Sign/SignMask1.visible = !$Sign/SignMask1.visible
@@ -121,7 +134,8 @@ func _on_host_game_button_pressed():
                 dialog.set_title('Error')
                 dialog.set_message('Failed to create server with error code ' + str(error) + '.')
                 dialog.set_single_button_text('Dismiss')
-                dialog.get_node('DialogBoxFrame/CenterButton').pressed.connect(func(): dialog.queue_free())
+                dialog.get_node('DialogBoxFrame/CenterButton').pressed.connect(func(): dialog.queue_free(); dialog_shown = false)
+                dialog_shown = true
                 add_child(dialog)
             else:
                 multiplayer.multiplayer_peer = multiplayer_peer
@@ -140,17 +154,19 @@ func _on_host_game_button_pressed():
         else:
             # TO-DO - implement hosting games by connecting to separate server application
             var dialog = load('res://dialog_box.tscn').instantiate()
-            dialog.set_title('Unsupported')
+            dialog.set_title('Error')
             dialog.set_message('Only self-hosting is supported currently.')
             dialog.set_single_button_text('Dismiss')
-            dialog.get_node('DialogBoxFrame/CenterButton').pressed.connect(func(): dialog.queue_free())
+            dialog.get_node('DialogBoxFrame/CenterButton').pressed.connect(func(): dialog.queue_free(); dialog_shown = false)
+            dialog_shown = true
             add_child(dialog)
     else:
         var dialog = load('res://dialog_box.tscn').instantiate()
         dialog.set_title('Error')
         dialog.set_message('Invalid input provided.\nCheck input\nand try again.')
         dialog.set_single_button_text('Dismiss')
-        dialog.get_node('DialogBoxFrame/CenterButton').pressed.connect(func(): dialog.queue_free())
+        dialog.get_node('DialogBoxFrame/CenterButton').pressed.connect(func(): dialog.queue_free(); dialog_shown = false)
+        dialog_shown = true
         add_child(dialog)
 
 func _http_request_completed(_result, _response_code, _headers, body):

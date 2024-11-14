@@ -12,6 +12,8 @@ var stripped_player_name = ''
 var joining_period_count = 0
 var suppress_connected_fail = false
 
+var dialog_shown = false
+
 func _ready():
     multiplayer.connected_to_server.connect(_on_connected_ok)
     multiplayer.connection_failed.connect(_on_connected_fail)
@@ -26,6 +28,17 @@ func _on_background_gui_input(event):
         $GameNameParent/GameNameLineEdit.release_focus()
         $PasswordParent/PasswordLineEdit.release_focus()
         $PlayerNameParent/PlayerNameLineEdit.release_focus()
+
+func _input(event):
+    if not dialog_shown:
+        if event.is_action_pressed("ui_accept"):
+            _on_join_game_button_pressed()
+        elif event.is_action_pressed("ui_cancel"):
+            _on_back_button_pressed()
+        else:
+            pass # Do nothing
+    else:
+        pass # Do nothing
 
 func _on_sign_timer_timeout():
     # 'Blink' sign
@@ -70,7 +83,8 @@ func _on_join_game_button_pressed():
             dialog.set_title('Error')
             dialog.set_message('Failed to create client with error code ' + str(error) + '.')
             dialog.set_single_button_text('Dismiss')
-            dialog.get_node('DialogBoxFrame/CenterButton').pressed.connect(func(): dialog.queue_free())
+            dialog.get_node('DialogBoxFrame/CenterButton').pressed.connect(func(): dialog.queue_free(); dialog_shown = false)
+            dialog_shown = true
             add_child(dialog)
         else:
             multiplayer.multiplayer_peer = multiplayer_peer
@@ -82,7 +96,7 @@ func _on_join_game_button_pressed():
             dialog.name = 'JoiningDialog'
             dialog.set_message('Joining game')
             dialog.set_single_button_text('Cancel')
-            dialog.get_node('DialogBoxFrame/CenterButton').pressed.connect(_on_cancel_join)
+            dialog.get_node('DialogBoxFrame/CenterButton').pressed.connect(func(): _on_cancel_join(); dialog_shown = false)
 
             var dialog_timer = Timer.new()
             dialog_timer.autostart = true
@@ -90,13 +104,15 @@ func _on_join_game_button_pressed():
             dialog_timer.timeout.connect(_on_join_dialog_timer_timeout)
 
             dialog.add_child(dialog_timer)
+            dialog_shown = true
             add_child(dialog)
     else:
         var dialog = load('res://dialog_box.tscn').instantiate()
         dialog.set_title('Error')
         dialog.set_message('Invalid input provided.\nCheck input\nand try again.')
         dialog.set_single_button_text('Dismiss')
-        dialog.get_node('DialogBoxFrame/CenterButton').pressed.connect(func(): dialog.queue_free())
+        dialog.get_node('DialogBoxFrame/CenterButton').pressed.connect(func(): dialog.queue_free(); dialog_shown = false)
+        dialog_shown = true
         add_child(dialog)
 
 func _on_cancel_join():
@@ -122,7 +138,8 @@ func _on_connected_fail():
         dialog.set_title('Error')
         dialog.set_message('Connection attempt timed out.')
         dialog.set_single_button_text('Dismiss')
-        dialog.get_node('DialogBoxFrame/CenterButton').pressed.connect(_on_timeout_dialog_button_pressed)
+        dialog.get_node('DialogBoxFrame/CenterButton').pressed.connect(func(): _on_timeout_dialog_button_pressed(); dialog_shown = false)
+        dialog_shown = true
         add_child(dialog)
 
 func _on_timeout_dialog_button_pressed():

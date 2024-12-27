@@ -1,5 +1,7 @@
 extends Node
 
+var DEBUG = true
+
 enum PrebetTypes {PB_ANTE, PB_BLIND}
 
 enum BlindButtons {BB_NONE, BB_DEALER, BB_SMALL_BLIND, BB_BIG_BLIND}

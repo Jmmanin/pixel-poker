@@ -24,7 +24,8 @@ func _ready():
     get_node('/root/Main/Networking').connect('do_start_game', _on_do_start_game)
     get_node('/root/Main/Networking').connect('continue_betting_round', _on_continue_betting_round)
     get_node('/root/Main/Networking').connect('start_new_betting_round', _on_start_new_betting_round)
-    
+    get_node('/root/Main/Networking').connect('end_game', _on_end_game)
+
     connect('send_player_action', get_node('/root/Main/Networking')._on_send_player_action)
 
     # Set initial button labels and behavior
@@ -71,6 +72,7 @@ func _on_do_start_game(opponent_order,
         index += 1
 
     $Player.set_balance(player_info_dict[multiplayer.get_unique_id()]['balance'])
+    $Player.set_status(player_info_dict[multiplayer.get_unique_id()]['status'])
 
     # Clear out blind buttons
     $Player.set_blind_button(PokerTypes.BlindButtons.BB_NONE)
@@ -135,13 +137,9 @@ func _on_do_start_game(opponent_order,
 func _on_hand_deal_timer_timeout():
     var to_be_dealt = opponents[deal_index] if deal_index >= 0 else $Player
 
-    if not to_be_dealt.is_full_dealt():
-        to_be_dealt.deal_next()
-        deal_index = (deal_index + 1) if (deal_index + 1) < opponents.size() else -1
-    else:
+    if to_be_dealt.is_full_dealt():
         var deal_timer = get_node('HandDealTimer')
-        if deal_timer:
-            deal_timer.queue_free()
+        deal_timer.queue_free()
 
         # Once we are back around to the start of dealing a second time, the first round of betting can start
         # Highlight whose turn it is and enable betting buttons for self if it's our turn
@@ -152,11 +150,15 @@ func _on_hand_deal_timer_timeout():
             $TableButton1.enable_button()
             $TableButton2.enable_button()
             $TableButton3.enable_button()
+    else:
+        to_be_dealt.deal_next()
+        deal_index = (deal_index + 1) if (deal_index + 1) < opponents.size() else -1
 
 func _on_continue_betting_round(new_player_data, turn_player_id, new_pot, new_prev_bet_made, new_min_raise):
     for player_id in new_player_data:
         if player_id == multiplayer.get_unique_id():
             $Player.set_balance(new_player_data[player_id]['balance'])
+            $Player.set_status(new_player_data[player_id]['status'])
         else:
             opponents[opponents_index_map[player_id]].set_balance(new_player_data[player_id]['balance'])
             opponents[opponents_index_map[player_id]].set_status(new_player_data[player_id]['status'])
@@ -191,12 +193,13 @@ func _on_continue_betting_round(new_player_data, turn_player_id, new_pot, new_pr
         $TableButton3.enable_button()
 
 func _on_start_new_betting_round(new_player_data, turn_player_id, new_community_cards, new_pot, new_min_raise):
-    # Sleep for a second to let people see the final state of the last round of betting before clearing stuff out to prepare for the next one
+    # Sleep for a bit to let people see the final state of the last round of betting before clearing stuff out to prepare for the next one
     await get_tree().create_timer(0.75).timeout
 
     for player_id in new_player_data:
         if player_id == multiplayer.get_unique_id():
             $Player.set_balance(new_player_data[player_id]['balance'])
+            $Player.set_status(new_player_data[player_id]['status'])
         else:
             opponents[opponents_index_map[player_id]].set_balance(new_player_data[player_id]['balance'])
             opponents[opponents_index_map[player_id]].set_status(new_player_data[player_id]['status'])
@@ -235,12 +238,10 @@ func _on_flop_deal_timer_timeout():
 
     if not $CommunityCards.is_full_dealt():
         $CommunityCards.deal_next()
-        if deal_timer:
-            deal_timer.start()
+        deal_timer.start()
 
     if $CommunityCards.is_full_dealt():
-        if deal_timer:
-            deal_timer.queue_free()
+        deal_timer.queue_free()
 
         # Once all new community cards have been dealt the next betting round can begin
         if current_player_turn >= 0:
@@ -250,6 +251,85 @@ func _on_flop_deal_timer_timeout():
             $TableButton1.enable_button()
             $TableButton2.enable_button()
             $TableButton3.enable_button()
+
+func _on_end_game(end_game_table_data, end_game_results_data, player_pockets, lone_player_in_hand):
+    $TableButton1.disable_button()
+    $TableButton2.disable_button()
+    $TableButton3.disable_button()
+    $TableButton1.set_text('Results')
+    $TableButton1.pressed.disconnect(_do_check_call)
+    $TableButton1.pressed.connect(_on_results_button_pressed)
+    $TableButton2.set_text('')
+    $TableButton3.set_text('')
+
+    var results_dialog = load("res://table/results_dialog.tscn").instantiate()
+    results_dialog.name = 'ResultsDialog'
+    results_dialog.set_results(end_game_results_data)
+    add_child(results_dialog)
+
+    if lone_player_in_hand:
+        # Sleep for a bit to let people see the final state of the last round of betting before showing results
+        await get_tree().create_timer(0.75).timeout
+
+        # Go straight to results if there's only one player left in the hand (i.e. everyone else folded)
+        results_dialog.visible = true
+        $TableButton1.enable_button()
+    else:
+        for player_id in end_game_table_data:
+            var new_status = end_game_table_data[player_id]['status']
+            var folded = new_status == 'Fold'
+            if player_id == multiplayer.get_unique_id():
+                $Player.set_turn(false)
+                $Player.set_status(new_status, folded)
+                $Player.hand_indices = end_game_table_data[player_id]['hand_indices']
+            else:
+                opponents[opponents_index_map[player_id]].set_turn(false)
+                opponents[opponents_index_map[player_id]].set_status(new_status, folded)
+                opponents[opponents_index_map[player_id]].hand_indices = end_game_table_data[player_id]['hand_indices']
+                if not folded:
+                    opponents[opponents_index_map[player_id]].set_hand(player_pockets[player_id])
+
+        # Set up reveals and get first hand to reveal
+        var first_player_id = end_game_results_data[0]['id']
+        deal_index = -1 if first_player_id == multiplayer.get_unique_id() else opponents_index_map[first_player_id]
+        current_player_turn = -1 if first_player_id == multiplayer.get_unique_id() else opponents_index_map[first_player_id]
+        while true:
+            var revealed = $Player.revealed if deal_index == -1 else opponents[deal_index].revealed
+            if revealed:
+                deal_index = (deal_index + 1) if (deal_index + 1) < opponents.size() else -1
+            else:
+                break
+
+        # Create timer to handle reveal animation
+        var reveal_timer = Timer.new()
+        reveal_timer.name = 'HandRevealTimer'
+        reveal_timer.autostart = true
+        reveal_timer.wait_time = 0.75
+        reveal_timer.timeout.connect(_on_hand_reveal_timer_timeout)
+        add_child(reveal_timer)
+
+func _on_hand_reveal_timer_timeout():
+    var reveal_timer = get_node('HandRevealTimer')
+
+    var revealed = $Player.revealed if deal_index == -1 else opponents[deal_index].revealed
+    if revealed:
+        reveal_timer.queue_free()
+        get_node('ResultsDialog').visible = true
+        $TableButton1.enable_button()
+    else:
+        if deal_index == -1:
+            $Player.reveal_hand()
+        else:
+            opponents[deal_index].reveal_hand()
+
+        deal_index = (deal_index + 1) if (deal_index + 1) < opponents.size() else -1
+        while true:
+            revealed = $Player.revealed if deal_index == -1 else opponents[deal_index].revealed
+            if not revealed or (deal_index == current_player_turn):
+                reveal_timer.start()
+                break
+            else:
+                deal_index = (deal_index + 1) if (deal_index + 1) < opponents.size() else -1
 
 func _do_check_call():
     $TableButton1.disable_button()
@@ -309,6 +389,9 @@ func _do_settings():
 
 func _on_help_button_pressed():
     print('help')
+
+func _on_results_button_pressed():
+    get_node('ResultsDialog').visible = true
 
 # 'Brighten' help button when hovering over it
 func _on_help_button_mouse_entered():

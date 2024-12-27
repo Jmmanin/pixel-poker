@@ -44,3 +44,10 @@ func clear_cards():
     $Turn.visible = false
     $River.visible = false
     $Burn.visible = false
+
+func set_card_highlight(highlight1, highlight2, highlight3, highlight4, highlight5):
+    $Flop1/CardHighlight.visible = highlight1
+    $Flop2/CardHighlight.visible = highlight2
+    $Flop3/CardHighlight.visible = highlight3
+    $Turn/CardHighlight.visible = highlight4
+    $River/CardHighlight.visible = highlight5

@@ -3,6 +3,8 @@ extends Node2D
 var balance = 0
 var blind_button_value = PokerTypes.BlindButtons.BB_NONE
 var cards_dealt = 0
+var revealed = false
+var hand_indices = Array()
 
 func set_blind_button(new_blind_button):
     blind_button_value = new_blind_button
@@ -40,6 +42,7 @@ func fold():
     # Use modulate to darken cards
     $Card1.modulate = Color(137.0/255.0, 137.0/255.0, 137.0/255.0)
     $Card2.modulate = Color(137.0/255.0, 137.0/255.0, 137.0/255.0)
+    revealed = true
 
 func clear_hand():
     set_blind_button(PokerTypes.BlindButtons.BB_NONE)
@@ -51,8 +54,9 @@ func clear_hand():
     $Card1.modulate = Color(1, 1, 1)
     $Card2.modulate = Color(1, 1, 1)
 
-func set_status(new_status):
-    $StatusBlock/StatusLabel.text = new_status
+func set_status(new_status, make_visible = true):
+    $StatusBlock/StatusLabel.visible = make_visible
+    $StatusBlock/StatusLabel.text = new_status.replace('\n', ' ') # Player status is only one line high
 
 func set_balance(new_balance):
     balance = new_balance
@@ -78,3 +82,11 @@ func set_balance(new_balance):
 
 func set_turn(is_turn):
     $TurnIndicator.visible = is_turn
+
+func reveal_hand():
+    $StatusBlock/StatusLabel.visible = true
+    revealed = true
+
+func set_card_highlight(highlight1, highlight2):
+    $Card1/CardHighlight.visible = highlight1
+    $Card2/CardHighlight.visible = highlight2

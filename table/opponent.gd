@@ -3,6 +3,8 @@ extends TextureRect
 var balance = 0
 var blind_button_value = PokerTypes.BlindButtons.BB_NONE
 var cards_dealt = 0
+var revealed = false
+var hand_indices = Array()
 
 func set_turn(is_turn):
     $TurnIndicator.visible = is_turn
@@ -67,10 +69,6 @@ func set_blind_button(new_blind_button):
 
     blind_button_value = new_blind_button
 
-func set_cards(card1_val, card2_val):
-    $CardParent/Card1.set_region_rect(Rect2(card1_val[0]*45, card1_val[1]*67, 45, 67))
-    $CardParent/Card2.set_region_rect(Rect2(card2_val[0]*45, card2_val[1]*67, 45, 67))
-
 func deal_next():
     assert(cards_dealt < 2)
 
@@ -84,28 +82,41 @@ func deal_next():
 func is_full_dealt():
     return cards_dealt == 2
 
+func set_status(new_status, make_visible = true):
+    $StatusLabel.visible = make_visible
+
+    var long_string = false
+    for line in new_status.split('\n'):
+        if line.length() >= 7:
+            long_string = true
+            break
+
+    $StatusLabel.label_settings.font_size = 32 if long_string else 48
+#    var ls = $StatusLabel.label_settings
+#    if long_string:
+#        ls.font_size = 32
+#    else:
+#        ls.font_size = 48
+
+    $StatusLabel.text = new_status
+
 func fold():
     $CardParent/CardBack1.modulate = Color(137.0/255.0, 137.0/255.0, 137.0/255.0)
     $CardParent/CardBack2.modulate = Color(137.0/255.0, 137.0/255.0, 137.0/255.0)
+    revealed = true
 
-func show_hand():
-    $CardParent/CardBack1.visible = false
-    $CardParent/CardBack2.visible = false
+func set_hand(cards):
+    $CardParent/Card1.set_region_rect(Rect2(cards[0][0]*45, cards[0][1]*67, 45, 67))
+    $CardParent/Card2.set_region_rect(Rect2(cards[1][0]*45, cards[1][1]*67, 45, 67))
+
+func reveal_hand():
     $CardParent/Card1.visible = true
     $CardParent/Card2.visible = true
-
-func clear_hand():
-    set_blind_button(PokerTypes.BlindButtons.BB_NONE)
-
-    cards_dealt = 0
-
     $CardParent/CardBack1.visible = false
     $CardParent/CardBack2.visible = false
-    $CardParent/CardBack1.modulate = Color(1, 1, 1)
-    $CardParent/CardBack2.modulate = Color(1, 1, 1)
+    $StatusLabel.visible = true
+    revealed = true
 
-    $CardParent/Card1.visible = false
-    $CardParent/Card2.visible = false
-
-func set_status(new_status):
-    $StatusLabel.text = new_status
+func set_card_highlight(highlight1, highlight2):
+    $CardParent/Card1/CardHighlight.visible = highlight1
+    $CardParent/Card2/CardHighlight.visible = highlight2

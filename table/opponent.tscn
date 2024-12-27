@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bo666p0hi6ao4"]
+[gd_scene load_steps=13 format=3 uid="uid://bo666p0hi6ao4"]
 
 [ext_resource type="Texture2D" uid="uid://ccdxfw01ntt24" path="res://resources/table/opponent_bg.png" id="1_2w0u4"]
 [ext_resource type="Script" path="res://table/opponent.gd" id="2_fvf8a"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://cgei8xdcn8ptd" path="res://resources/table/blind_buttons.png" id="6_4of3v"]
 [ext_resource type="Texture2D" uid="uid://djq6cws5w36dd" path="res://resources/table/small_back.png" id="7_rokl7"]
 [ext_resource type="Texture2D" uid="uid://cqmqw0fa185ec" path="res://resources/table/small_deck.png" id="8_tjg8u"]
+[ext_resource type="Texture2D" uid="uid://cheydy76g4wgo" path="res://resources/table/small_card_highlight.png" id="9_1mc3w"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_hseuh"]
 font = ExtResource("4_6g7qa")
@@ -19,7 +20,8 @@ font = ExtResource("4_6g7qa")
 font_size = 48
 font_color = Color(0, 0, 0, 1)
 
-[sub_resource type="LabelSettings" id="LabelSettings_ktjah"]
+[sub_resource type="LabelSettings" id="LabelSettings_5as1i"]
+resource_local_to_scene = true
 line_spacing = -6.0
 font = ExtResource("4_6g7qa")
 font_size = 48
@@ -101,6 +103,14 @@ offset = Vector2(0.5, 0.5)
 region_enabled = true
 region_rect = Rect2(0, 0, 45, 67)
 
+[node name="CardHighlight" type="TextureRect" parent="CardParent/Card1"]
+visible = false
+offset_left = -22.0
+offset_top = -33.0
+offset_right = 23.0
+offset_bottom = 34.0
+texture = ExtResource("9_1mc3w")
+
 [node name="Card2" type="Sprite2D" parent="CardParent"]
 visible = false
 position = Vector2(99, 121)
@@ -109,13 +119,21 @@ offset = Vector2(0.5, 0.5)
 region_enabled = true
 region_rect = Rect2(0, 0, 45, 67)
 
+[node name="CardHighlight" type="TextureRect" parent="CardParent/Card2"]
+visible = false
+offset_left = -22.0
+offset_top = -33.0
+offset_right = 23.0
+offset_bottom = 34.0
+texture = ExtResource("9_1mc3w")
+
 [node name="StatusLabel" type="Label" parent="."]
 layout_mode = 0
 offset_left = 151.0
 offset_top = 79.0
 offset_right = 264.0
 offset_bottom = 159.0
-label_settings = SubResource("LabelSettings_ktjah")
+label_settings = SubResource("LabelSettings_5as1i")
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2

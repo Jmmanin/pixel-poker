@@ -1,0 +1,582 @@
+[gd_scene load_steps=11 format=3 uid="uid://deox1scfyw4p0"]
+
+[ext_resource type="Script" path="res://table/results_dialog.gd" id="1_ghcj8"]
+[ext_resource type="Texture2D" uid="uid://67v6tiaqqe5j" path="res://resources/big_dialog_bg.png" id="2_nosmm"]
+[ext_resource type="FontFile" uid="uid://c3j6oa1sotgmy" path="res://resources/monogram.ttf" id="3_cgaa7"]
+[ext_resource type="Texture2D" uid="uid://cvr8jqmuodqho" path="res://resources/button.png" id="4_u5tiw"]
+[ext_resource type="Texture2D" uid="uid://d2mewpgcxrivn" path="res://resources/button_hovered.png" id="5_n4gfy"]
+[ext_resource type="Texture2D" uid="uid://fwnbe21p64n7" path="res://resources/host_join_lobby/ready.png" id="6_7irmo"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_h33an"]
+font = ExtResource("3_cgaa7")
+font_size = 96
+font_color = Color(0.843137, 0.717647, 0.34902, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_r4wgw"]
+font = ExtResource("3_cgaa7")
+font_size = 32
+font_color = Color(0.613281, 0.503906, 0.1875, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_2oqkc"]
+font = ExtResource("3_cgaa7")
+font_size = 48
+
+[sub_resource type="LabelSettings" id="LabelSettings_cljrb"]
+font = ExtResource("3_cgaa7")
+font_size = 64
+font_color = Color(0, 0, 0, 1)
+
+[node name="ResultsDialog" type="Node2D"]
+visible = false
+script = ExtResource("1_ghcj8")
+
+[node name="Background" type="ColorRect" parent="."]
+offset_right = 1280.0
+offset_bottom = 720.0
+color = Color(0, 0, 0, 0.705882)
+metadata/_edit_lock_ = true
+
+[node name="ResultsFrame" type="TextureRect" parent="."]
+offset_left = 320.0
+offset_top = 64.0
+offset_right = 960.0
+offset_bottom = 656.0
+texture = ExtResource("2_nosmm")
+
+[node name="TitleLabel" type="Label" parent="ResultsFrame"]
+layout_mode = 0
+offset_left = 73.0
+offset_top = -4.0
+offset_right = 573.0
+offset_bottom = 75.0
+text = "Results"
+label_settings = SubResource("LabelSettings_h33an")
+horizontal_alignment = 1
+
+[node name="ResultTable" type="Node2D" parent="ResultsFrame"]
+position = Vector2(26, 100)
+
+[node name="TopBar" type="ColorRect" parent="ResultsFrame/ResultTable"]
+offset_right = 588.0
+offset_bottom = 6.0
+color = Color(0.613281, 0.503906, 0.1875, 1)
+
+[node name="LeftBar" type="ColorRect" parent="ResultsFrame/ResultTable"]
+offset_left = 249.0
+offset_top = -20.0
+offset_right = 255.0
+offset_bottom = 400.0
+color = Color(0.613281, 0.503906, 0.1875, 1)
+
+[node name="RightBar" type="ColorRect" parent="ResultsFrame/ResultTable"]
+offset_left = 426.0
+offset_top = -20.0
+offset_right = 432.0
+offset_bottom = 400.0
+color = Color(0.613281, 0.503906, 0.1875, 1)
+
+[node name="PlayerHeader" type="Label" parent="ResultsFrame/ResultTable"]
+offset_left = 90.0
+offset_top = -28.0
+offset_right = 162.0
+offset_bottom = 1.0
+text = "Player"
+label_settings = SubResource("LabelSettings_r4wgw")
+
+[node name="WinningsHeading" type="Label" parent="ResultsFrame/ResultTable"]
+offset_left = 293.0
+offset_top = -28.0
+offset_right = 389.0
+offset_bottom = 1.0
+text = "Winnings"
+label_settings = SubResource("LabelSettings_r4wgw")
+
+[node name="BalanceHeading" type="Label" parent="ResultsFrame/ResultTable"]
+offset_left = 469.0
+offset_top = -28.0
+offset_right = 553.0
+offset_bottom = 1.0
+text = "Balance"
+label_settings = SubResource("LabelSettings_r4wgw")
+
+[node name="PlayerResults1" type="Node2D" parent="ResultsFrame"]
+position = Vector2(26, 112)
+
+[node name="PlayerName" type="Label" parent="ResultsFrame/PlayerResults1"]
+offset_left = 36.0
+offset_right = 216.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerWinnings" type="Label" parent="ResultsFrame/PlayerResults1"]
+offset_left = 288.0
+offset_right = 432.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerBalance" type="Label" parent="ResultsFrame/PlayerResults1"]
+offset_left = 467.0
+offset_right = 587.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerResults2" type="Node2D" parent="ResultsFrame"]
+position = Vector2(26, 160)
+
+[node name="PlayerName" type="Label" parent="ResultsFrame/PlayerResults2"]
+offset_left = 36.0
+offset_right = 216.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerWinnings" type="Label" parent="ResultsFrame/PlayerResults2"]
+offset_left = 288.0
+offset_right = 432.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerBalance" type="Label" parent="ResultsFrame/PlayerResults2"]
+offset_left = 467.0
+offset_right = 587.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerResults3" type="Node2D" parent="ResultsFrame"]
+position = Vector2(26, 208)
+
+[node name="PlayerName" type="Label" parent="ResultsFrame/PlayerResults3"]
+offset_left = 36.0
+offset_right = 216.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerWinnings" type="Label" parent="ResultsFrame/PlayerResults3"]
+offset_left = 288.0
+offset_right = 432.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerBalance" type="Label" parent="ResultsFrame/PlayerResults3"]
+offset_left = 467.0
+offset_right = 587.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerResults4" type="Node2D" parent="ResultsFrame"]
+position = Vector2(26, 256)
+
+[node name="PlayerName" type="Label" parent="ResultsFrame/PlayerResults4"]
+offset_left = 36.0
+offset_right = 216.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerWinnings" type="Label" parent="ResultsFrame/PlayerResults4"]
+offset_left = 288.0
+offset_right = 432.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerBalance" type="Label" parent="ResultsFrame/PlayerResults4"]
+offset_left = 467.0
+offset_right = 587.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerResults5" type="Node2D" parent="ResultsFrame"]
+position = Vector2(26, 304)
+
+[node name="PlayerName" type="Label" parent="ResultsFrame/PlayerResults5"]
+offset_left = 36.0
+offset_right = 216.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerWinnings" type="Label" parent="ResultsFrame/PlayerResults5"]
+offset_left = 288.0
+offset_right = 432.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerBalance" type="Label" parent="ResultsFrame/PlayerResults5"]
+offset_left = 467.0
+offset_right = 587.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerResults6" type="Node2D" parent="ResultsFrame"]
+position = Vector2(26, 352)
+
+[node name="PlayerName" type="Label" parent="ResultsFrame/PlayerResults6"]
+offset_left = 36.0
+offset_right = 216.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerWinnings" type="Label" parent="ResultsFrame/PlayerResults6"]
+offset_left = 288.0
+offset_right = 432.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerBalance" type="Label" parent="ResultsFrame/PlayerResults6"]
+offset_left = 467.0
+offset_right = 587.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerResults7" type="Node2D" parent="ResultsFrame"]
+position = Vector2(26, 400)
+
+[node name="PlayerName" type="Label" parent="ResultsFrame/PlayerResults7"]
+offset_left = 36.0
+offset_right = 216.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerWinnings" type="Label" parent="ResultsFrame/PlayerResults7"]
+offset_left = 288.0
+offset_right = 432.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerBalance" type="Label" parent="ResultsFrame/PlayerResults7"]
+offset_left = 467.0
+offset_right = 587.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerResults8" type="Node2D" parent="ResultsFrame"]
+position = Vector2(26, 448)
+
+[node name="PlayerName" type="Label" parent="ResultsFrame/PlayerResults8"]
+offset_left = 36.0
+offset_right = 216.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerWinnings" type="Label" parent="ResultsFrame/PlayerResults8"]
+offset_left = 288.0
+offset_right = 432.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerBalance" type="Label" parent="ResultsFrame/PlayerResults8"]
+offset_left = 467.0
+offset_right = 587.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="TableButton" type="TextureButton" parent="ResultsFrame"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 514.0
+offset_right = 298.0
+offset_bottom = 572.0
+texture_normal = ExtResource("4_u5tiw")
+texture_hover = ExtResource("5_n4gfy")
+
+[node name="ButtonLabel" type="Label" parent="ResultsFrame/TableButton"]
+layout_mode = 0
+offset_left = 6.0
+offset_right = 206.0
+offset_bottom = 54.0
+text = "Table"
+label_settings = SubResource("LabelSettings_cljrb")
+horizontal_alignment = 1
+
+[node name="ContinueButton" type="TextureButton" parent="ResultsFrame"]
+layout_mode = 0
+offset_left = 342.0
+offset_top = 514.0
+offset_right = 550.0
+offset_bottom = 572.0
+texture_normal = ExtResource("4_u5tiw")
+texture_hover = ExtResource("5_n4gfy")
+
+[node name="ButtonLabel" type="Label" parent="ResultsFrame/ContinueButton"]
+layout_mode = 0
+offset_left = 6.0
+offset_right = 206.0
+offset_bottom = 54.0
+text = "Continue"
+label_settings = SubResource("LabelSettings_cljrb")
+horizontal_alignment = 1
+
+[node name="LobbyFrame" type="TextureRect" parent="."]
+visible = false
+offset_left = 320.0
+offset_top = 64.0
+offset_right = 960.0
+offset_bottom = 656.0
+texture = ExtResource("2_nosmm")
+
+[node name="TitleLabel" type="Label" parent="LobbyFrame"]
+layout_mode = 0
+offset_left = 73.0
+offset_top = -4.0
+offset_right = 573.0
+offset_bottom = 75.0
+text = "Next Hand"
+label_settings = SubResource("LabelSettings_h33an")
+horizontal_alignment = 1
+
+[node name="ReadyTable" type="Node2D" parent="LobbyFrame"]
+position = Vector2(147, 100)
+
+[node name="TopBar" type="ColorRect" parent="LobbyFrame/ReadyTable"]
+offset_right = 346.0
+offset_bottom = 6.0
+color = Color(0.613281, 0.503906, 0.1875, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="LeftBar" type="ColorRect" parent="LobbyFrame/ReadyTable"]
+offset_left = 249.0
+offset_top = -20.0
+offset_right = 255.0
+offset_bottom = 400.0
+color = Color(0.613281, 0.503906, 0.1875, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerHeader" type="Label" parent="LobbyFrame/ReadyTable"]
+offset_left = 90.0
+offset_top = -28.0
+offset_right = 162.0
+offset_bottom = 1.0
+text = "Player"
+label_settings = SubResource("LabelSettings_r4wgw")
+metadata/_edit_use_anchors_ = true
+
+[node name="ReadyHeading" type="Label" parent="LobbyFrame/ReadyTable"]
+offset_left = 272.0
+offset_top = -28.0
+offset_right = 368.0
+offset_bottom = 1.0
+text = "Ready"
+label_settings = SubResource("LabelSettings_r4wgw")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerReady1" type="Node2D" parent="LobbyFrame"]
+position = Vector2(147, 112)
+
+[node name="PlayerName" type="Label" parent="LobbyFrame/PlayerReady1"]
+offset_left = 36.0
+offset_right = 216.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="ReadyTexture" type="TextureRect" parent="LobbyFrame/PlayerReady1"]
+visible = false
+modulate = Color(0.537255, 0.537255, 0.537255, 1)
+offset_left = 283.0
+offset_top = 4.0
+offset_right = 319.0
+offset_bottom = 40.0
+texture = ExtResource("6_7irmo")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerReady2" type="Node2D" parent="LobbyFrame"]
+position = Vector2(147, 160)
+
+[node name="PlayerName" type="Label" parent="LobbyFrame/PlayerReady2"]
+offset_left = 36.0
+offset_right = 216.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="ReadyTexture" type="TextureRect" parent="LobbyFrame/PlayerReady2"]
+visible = false
+modulate = Color(0.537255, 0.537255, 0.537255, 1)
+offset_left = 283.0
+offset_top = 4.0
+offset_right = 319.0
+offset_bottom = 40.0
+texture = ExtResource("6_7irmo")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerReady3" type="Node2D" parent="LobbyFrame"]
+position = Vector2(147, 208)
+
+[node name="PlayerName" type="Label" parent="LobbyFrame/PlayerReady3"]
+offset_left = 36.0
+offset_right = 216.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="ReadyTexture" type="TextureRect" parent="LobbyFrame/PlayerReady3"]
+visible = false
+modulate = Color(0.537255, 0.537255, 0.537255, 1)
+offset_left = 283.0
+offset_top = 4.0
+offset_right = 319.0
+offset_bottom = 40.0
+texture = ExtResource("6_7irmo")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerReady4" type="Node2D" parent="LobbyFrame"]
+position = Vector2(147, 256)
+
+[node name="PlayerName" type="Label" parent="LobbyFrame/PlayerReady4"]
+offset_left = 36.0
+offset_right = 216.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="ReadyTexture" type="TextureRect" parent="LobbyFrame/PlayerReady4"]
+visible = false
+modulate = Color(0.537255, 0.537255, 0.537255, 1)
+offset_left = 283.0
+offset_top = 4.0
+offset_right = 319.0
+offset_bottom = 40.0
+texture = ExtResource("6_7irmo")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerReady5" type="Node2D" parent="LobbyFrame"]
+position = Vector2(147, 304)
+
+[node name="PlayerName" type="Label" parent="LobbyFrame/PlayerReady5"]
+offset_left = 36.0
+offset_right = 216.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="ReadyTexture" type="TextureRect" parent="LobbyFrame/PlayerReady5"]
+visible = false
+modulate = Color(0.537255, 0.537255, 0.537255, 1)
+offset_left = 283.0
+offset_top = 4.0
+offset_right = 319.0
+offset_bottom = 40.0
+texture = ExtResource("6_7irmo")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerReady6" type="Node2D" parent="LobbyFrame"]
+position = Vector2(147, 352)
+
+[node name="PlayerName" type="Label" parent="LobbyFrame/PlayerReady6"]
+offset_left = 36.0
+offset_right = 216.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="ReadyTexture" type="TextureRect" parent="LobbyFrame/PlayerReady6"]
+visible = false
+modulate = Color(0.537255, 0.537255, 0.537255, 1)
+offset_left = 283.0
+offset_top = 4.0
+offset_right = 319.0
+offset_bottom = 40.0
+texture = ExtResource("6_7irmo")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerReady7" type="Node2D" parent="LobbyFrame"]
+position = Vector2(147, 400)
+
+[node name="PlayerName" type="Label" parent="LobbyFrame/PlayerReady7"]
+offset_left = 36.0
+offset_right = 216.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="ReadyTexture" type="TextureRect" parent="LobbyFrame/PlayerReady7"]
+visible = false
+modulate = Color(0.537255, 0.537255, 0.537255, 1)
+offset_left = 283.0
+offset_top = 4.0
+offset_right = 319.0
+offset_bottom = 40.0
+texture = ExtResource("6_7irmo")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerReady8" type="Node2D" parent="LobbyFrame"]
+position = Vector2(147, 448)
+
+[node name="PlayerName" type="Label" parent="LobbyFrame/PlayerReady8"]
+offset_left = 36.0
+offset_right = 216.0
+offset_bottom = 54.0
+label_settings = SubResource("LabelSettings_2oqkc")
+metadata/_edit_use_anchors_ = true
+
+[node name="ReadyTexture" type="TextureRect" parent="LobbyFrame/PlayerReady8"]
+visible = false
+modulate = Color(0.537255, 0.537255, 0.537255, 1)
+offset_left = 283.0
+offset_top = 4.0
+offset_right = 319.0
+offset_bottom = 40.0
+texture = ExtResource("6_7irmo")
+metadata/_edit_use_anchors_ = true
+
+[node name="ResultsButton" type="TextureButton" parent="LobbyFrame"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 514.0
+offset_right = 298.0
+offset_bottom = 572.0
+texture_normal = ExtResource("4_u5tiw")
+texture_hover = ExtResource("5_n4gfy")
+
+[node name="ButtonLabel" type="Label" parent="LobbyFrame/ResultsButton"]
+layout_mode = 0
+offset_left = 6.0
+offset_right = 206.0
+offset_bottom = 54.0
+text = "Results"
+label_settings = SubResource("LabelSettings_cljrb")
+horizontal_alignment = 1
+
+[node name="ReadyButton" type="TextureButton" parent="LobbyFrame"]
+layout_mode = 0
+offset_left = 342.0
+offset_top = 514.0
+offset_right = 550.0
+offset_bottom = 572.0
+texture_normal = ExtResource("4_u5tiw")
+texture_hover = ExtResource("5_n4gfy")
+
+[node name="ButtonLabel" type="Label" parent="LobbyFrame/ReadyButton"]
+layout_mode = 0
+offset_left = 6.0
+offset_right = 206.0
+offset_bottom = 54.0
+text = "Ready"
+label_settings = SubResource("LabelSettings_cljrb")
+horizontal_alignment = 1
+
+[connection signal="pressed" from="ResultsFrame/TableButton" to="." method="_on_table_button_pressed"]
+[connection signal="pressed" from="ResultsFrame/ContinueButton" to="." method="_on_continue_button_pressed"]
+[connection signal="pressed" from="LobbyFrame/ResultsButton" to="." method="_on_results_button_pressed"]
+[connection signal="pressed" from="LobbyFrame/ReadyButton" to="." method="_on_ready_button_pressed"]

@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://dlprm8me7eowj"]
+[gd_scene load_steps=5 format=3 uid="uid://dlprm8me7eowj"]
 
 [ext_resource type="Script" path="res://table/community_cards.gd" id="1_r7e7x"]
 [ext_resource type="Texture2D" uid="uid://dsoa7b3088t1l" path="res://resources/table/deck.png" id="2_7kjj6"]
 [ext_resource type="Texture2D" uid="uid://d1q5c6s7kyotc" path="res://resources/table/big_back.png" id="3_64xlh"]
+[ext_resource type="Texture2D" uid="uid://b7xvau70q8vjb" path="res://resources/table/card_highlight.png" id="3_etfgm"]
 
 [node name="CommunityCards" type="Node2D"]
 script = ExtResource("1_r7e7x")
@@ -14,12 +15,28 @@ texture = ExtResource("2_7kjj6")
 region_enabled = true
 region_rect = Rect2(0, 0, 130, 180)
 
+[node name="CardHighlight" type="TextureRect" parent="Flop1"]
+visible = false
+offset_left = -65.0
+offset_top = -90.0
+offset_right = 65.0
+offset_bottom = 90.0
+texture = ExtResource("3_etfgm")
+
 [node name="Flop2" type="Sprite2D" parent="."]
 visible = false
 position = Vector2(204, 90)
 texture = ExtResource("2_7kjj6")
 region_enabled = true
 region_rect = Rect2(0, 0, 130, 180)
+
+[node name="CardHighlight" type="TextureRect" parent="Flop2"]
+visible = false
+offset_left = -65.0
+offset_top = -90.0
+offset_right = 65.0
+offset_bottom = 90.0
+texture = ExtResource("3_etfgm")
 
 [node name="Flop3" type="Sprite2D" parent="."]
 visible = false
@@ -28,6 +45,14 @@ texture = ExtResource("2_7kjj6")
 region_enabled = true
 region_rect = Rect2(0, 0, 130, 180)
 
+[node name="CardHighlight" type="TextureRect" parent="Flop3"]
+visible = false
+offset_left = -65.0
+offset_top = -90.0
+offset_right = 65.0
+offset_bottom = 90.0
+texture = ExtResource("3_etfgm")
+
 [node name="Turn" type="Sprite2D" parent="."]
 visible = false
 position = Vector2(482, 90)
@@ -35,12 +60,28 @@ texture = ExtResource("2_7kjj6")
 region_enabled = true
 region_rect = Rect2(0, 0, 130, 180)
 
+[node name="CardHighlight" type="TextureRect" parent="Turn"]
+visible = false
+offset_left = -65.0
+offset_top = -90.0
+offset_right = 65.0
+offset_bottom = 90.0
+texture = ExtResource("3_etfgm")
+
 [node name="River" type="Sprite2D" parent="."]
 visible = false
 position = Vector2(621, 90)
 texture = ExtResource("2_7kjj6")
 region_enabled = true
 region_rect = Rect2(0, 0, 130, 180)
+
+[node name="CardHighlight" type="TextureRect" parent="River"]
+visible = false
+offset_left = -65.0
+offset_top = -90.0
+offset_right = 65.0
+offset_bottom = 90.0
+texture = ExtResource("3_etfgm")
 
 [node name="Deck" type="TextureRect" parent="."]
 offset_top = 320.0

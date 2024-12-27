@@ -10,6 +10,7 @@ signal do_stop_lobby_countdown
 signal do_start_game
 signal continue_betting_round
 signal start_new_betting_round
+signal end_game
 
 var self_host_data : host_data = null # Only used if self-hosting
 
@@ -182,7 +183,10 @@ func server_process_player_action(action):
                                                self_host_data.pot,
                                                self_host_data.min_raise)
         elif self_host_data.game_phase == PokerTypes.GamePhases.GP_END:
-            pass
+            client_end_game.rpc(self_host_data.get_client_end_game_table_data(),
+                                self_host_data.get_client_end_game_results_data(),
+                                self_host_data.get_player_pockets(),
+                                self_host_data.players_in_hand.size() == 1)
         else:
             pass # TO-DO - Should not enter this phase. Crash the game or something...
     else:
@@ -199,6 +203,10 @@ func client_continue_betting_round(new_player_data, turn_player_id, new_pot, new
 @rpc('authority', 'call_local', 'reliable')
 func client_start_new_betting_round(new_player_data, turn_player_id, new_community_cards, new_pot, new_min_raise):
     emit_signal('start_new_betting_round', new_player_data, turn_player_id, new_community_cards, new_pot, new_min_raise)
+
+@rpc('authority', 'call_local', 'reliable')
+func client_end_game(end_game_table_data, end_game_results_data, player_pockets, lone_player_in_hand):
+    emit_signal('end_game', end_game_table_data, end_game_results_data, player_pockets, lone_player_in_hand)
 
 func _on_player_disconnected(leaving_player_id):
     if multiplayer.is_server():

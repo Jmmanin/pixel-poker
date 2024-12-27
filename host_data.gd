@@ -1,6 +1,6 @@
 class_name host_data
 
-enum PokerHands {PH_HIGH_CARD, PH_PAIR, PH_TWO_PAIR, PH_THREE_OF_A_KIND, PH_STRAIGHT, PH_FLUSH, PH_FULL_HOUSE, PH_FOUR_OF_A_KIND, PH_STRAIGHT_FLUSH, PH_ROYAL_FLUSH}
+enum PokerHands {PH_FOLD = -1, PH_DEFAULT = 0, PH_HIGH_CARD, PH_PAIR, PH_TWO_PAIR, PH_THREE_OF_A_KIND, PH_STRAIGHT, PH_FLUSH, PH_FULL_HOUSE, PH_FOUR_OF_A_KIND, PH_STRAIGHT_FLUSH, PH_ROYAL_FLUSH}
 
 var game_info : PokerTypes.GameInfo
 
@@ -30,6 +30,9 @@ func _init(p_game_info : PokerTypes.GameInfo) -> void:
 
 func add_player(player_id : int, player_name : String) -> void:
     players[player_id] = player_data.new(player_name, game_info.starting_balance)
+
+func remove_player(leaving_player_id : int) -> void:
+    players.erase(leaving_player_id)
 
 func process_join_request(joiner_game_name, joiner_game_pw, joiner_id, joiner_name) -> bool:
     var creds_good = true
@@ -67,9 +70,6 @@ func get_all_ready() -> bool:
 
     return all_ready
 
-func remove_player(leaving_player_id : int) -> void:
-    players.erase(leaving_player_id)
-
 func get_player_ids() -> Array:
     return(players.keys())
 
@@ -91,17 +91,31 @@ func start_game() -> void:
         player_turn_index = (player_turn_index + 1) % players.size()
     players_in_hand.append(dealer)
 
-    # Deal
-    for i in players.size() * 2:
-        players[players_in_hand[i % players.size()]].deal_card(deck.pop_front())
+    # Deal first card and reset player state
+    for i in players.size():
+        var player_id = players_in_hand[i]
+
+        players[player_id].pocket.push_back(deck.pop_front())
+
+        players[player_id].ready = false
+        players[player_id].initial_balance = players[player_id].balance
+        players[player_id].curr_bet = 0
+        players[player_id].status  = ""
+        players[player_id].hand = Array()
+        players[player_id].hand_type = PokerHands.PH_DEFAULT
+        players[player_id].hand_indices = Array()
+        players[player_id].winner = false
+
+    # Deal second card
+    for i in players.size():
+        players[players_in_hand[i]].pocket.push_back(deck.pop_front())
 
     # Set up initial game parameters based on prebet type
-    # TO-DO - MAKE SURE ALL RELEVANT VALUES HAVE BEEN RESET PROPERLY
+    # TO-DO - Handle cases where player can't afford anter/blind (immediately all-in)
     if game_info.prebet_type == PokerTypes.PrebetTypes.PB_ANTE:
         for player in players:
             player.balance -= game_info.ante_amount
             player.curr_bet = 0
-            player.status = ''
 
         pot = game_info.ante_amount * players.size()
         curr_bet = 0
@@ -131,9 +145,11 @@ func start_game() -> void:
         min_raise = curr_bet * 2
         player_turn_index = 2
 
+    game_starting = false
     game_phase = PokerTypes.GamePhases.GP_PRE_FLOP
     once_around_the_table = false
     phase_complete = false
+    community_cards = Array()
 
 func get_client_player_table_data() -> Dictionary:
     var client_player_table_data = {}
@@ -181,6 +197,8 @@ func process_player_action(player_id : int, action : int):
         if curr_bet == players[player_id].balance:
             players[player_id].status = 'All-in'
             # TO-DO - HANDLE SPLIT POTS
+        elif curr_bet == 0:
+            players[player_id].status = 'Bet $' + str(action)
         else:
             players[player_id].status = 'Raise\n$' + str(action)
 
@@ -209,7 +227,8 @@ func process_player_action(player_id : int, action : int):
 
         for player in players:
             players[player].curr_bet = 0
-            players[player].status = ''
+            if players[player].status != 'Fold':
+                players[player].status = ''
 
         curr_bet = 0
         min_raise = game_info.ante_amount if game_info.prebet_type == PokerTypes.PrebetTypes.PB_ANTE else game_info.big_blind_amount
@@ -233,9 +252,7 @@ func process_player_action(player_id : int, action : int):
             game_phase = PokerTypes.GamePhases.GP_RIVER
         elif game_phase == PokerTypes.GamePhases.GP_RIVER:
             score_game()
-            # TO-DO - SCORE GAME AND PAY OUT POT
             game_phase = PokerTypes.GamePhases.GP_END
-            print('game ended')
         else:
             pass # TO-DO - should not get here. Crash the game or something...
     else:
@@ -245,23 +262,30 @@ func get_turn_player_id() -> int:
     return players_in_hand[player_turn_index]
 
 func score_game():
-    for player in players:
-        # Sort all cards available for player to make hand from by value
+    for player in players_in_hand:
+        # A hand of five cards can be made from the players pocket and the community cards
         var hand_value = players[player].pocket.duplicate(true)
         hand_value.append_array(community_cards)
-        hand_value.sort_custom(func(a, b): return a[0] < b[0])
+
+        # Create dictionary of cards to where they came from (0-1 = pocket, 2-6 = community cards)
+        var hand_dict = {}
+        for index in hand_value.size():
+            hand_dict[hand_value[index]] = index
+
+        # Sort available cards by value, greatest to least
+        hand_value.sort_custom(func(a, b): return a[0] > b[0])
 
         # Sort all cards available for player to make hand from by suit
         var hand_suit = [[], [], [], []]
         for card in hand_value:
             hand_suit[card[1]].append(card)
 
-        # Get longest, sequence from set of all sequences
+        # Get longest sequence from set of all sequences
         var flush = hand_suit.reduce(get_longest)
 
         # A player's hand can only be 5 cards, so get the highest sequence if there are more
         while flush.size() > 5:
-            flush.pop_front()
+            flush.pop_back()
 
         # Remove cards with the same value for purposes of finding straights
         var hand_value_no_repeat = [hand_value[0]]
@@ -269,16 +293,16 @@ func score_game():
             if hand_value[i][0] != hand_value[i-1][0]:
                 hand_value_no_repeat.append(hand_value[i])
 
-        if hand_value_no_repeat[-1][0] == 12: # Add ace to front of array if applicable to cover low straights
-            hand_value_no_repeat.push_front(hand_value_no_repeat[-1])
+        if hand_value_no_repeat[0][0] == 12: # Add ace to back of array if applicable to cover low straights
+            hand_value_no_repeat.push_back(hand_value_no_repeat[0])
 
-        # Find all incrementing sequences of cards in available set
+        # Find all decrementing sequences of cards in available set
         var possible_straights = [[]]
         for card in hand_value_no_repeat:
-            # Add card to current sequence if one value higher than previous, otherwise create new sequence
+            # Add card to current sequence if one value lower than previous, otherwise create new sequence
             if not possible_straights[-1] \
-               or ((card[0] - possible_straights[-1][-1][0]) == 1) \
-               or (card[0] == 2 and possible_straights[-1].size() == 1 and possible_straights[-1][-1][0] == 12): # Handle straights starting with ace
+               or ((possible_straights[-1][-1][0] - card[0]) == 1) \
+               or (card[0] == 12 and (possible_straights[-1].size() == 4) and (possible_straights[-1][-1][0] == 2)): # Handle straights with low card ace
                 possible_straights[-1].append(card)
             else:
                 possible_straights.append([card])
@@ -288,7 +312,7 @@ func score_game():
 
         # A player's hand can only be 5 cards, so get the highest sequence if there are more
         while straight.size() > 5:
-            straight.pop_front()
+            straight.pop_back()
 
         # Find all multiples in available set of cards
         var multiples = [[]]
@@ -311,9 +335,8 @@ func score_game():
                 elif second_pair_index == -1:
                     second_pair_index = index
                 else:
-                    first_pair_index = second_pair_index
-                    second_pair_index = index
-            elif multiples[index].size() == 3:
+                    pass # Don't nothing, subsequent pairs have a lower value
+            elif (multiples[index].size() == 3) and (toak_index == -1):
                 toak_index = index
             elif multiples[index].size() == 4:
                 foak_index = index
@@ -326,122 +349,297 @@ func score_game():
                 straight_flush = straight_flush and (straight[index][1] == straight[index-1][1])
                 if not straight_flush:
                     break
-    
-            if straight_flush and straight[4][0] == 9:
-                players[player].hand = straight
+
+            players[player].hand = straight
+            players[player].hand_indices = get_hand_indices(hand_dict, straight)
+
+            if straight_flush and straight[0][0] == 12:
                 players[player].hand_type = PokerHands.PH_ROYAL_FLUSH
+                players[player].status = 'Royal\nFlush'
                 continue
 
             if straight_flush:
-                players[player].hand = straight
                 players[player].hand_type = PokerHands.PH_STRAIGHT_FLUSH
+                players[player].status = 'Straight\nFlush'
                 continue
 
         if foak_index != -1:
-            players[player].hand.append_array(multiples[foak_index])
+            players[player].hand.append_array(multiples.pop_at(foak_index))
 
             # Add highest value card available to fill out rest of hand
-            multiples.remove_at(foak_index)
-            players[player].hand.append(multiples[-1][-1])
+            players[player].hand.append(multiples[0][0])
+
+            players[player].hand_indices = get_hand_indices(hand_dict, players[player].hand)
 
             players[player].hand_type = PokerHands.PH_FOUR_OF_A_KIND
+            players[player].status = 'Four of\na Kind'
             continue
 
         if toak_index != -1 and first_pair_index != -1:
             players[player].hand.append_array(multiples[toak_index])
+            players[player].hand.append_array(multiples[first_pair_index])
+
+            players[player].hand_indices = get_hand_indices(hand_dict, players[player].hand)
+
             players[player].hand_type = PokerHands.PH_FULL_HOUSE
-            if second_pair_index != -1:
-                players[player].hand.append_array(multiples[second_pair_index])
-            else:
-                players[player].hand.append_array(multiples[first_pair_index])
+            players[player].status = 'Full\nHouse'
             continue
 
         if flush.size() == 5:
             players[player].hand = flush
+            players[player].hand_indices = get_hand_indices(hand_dict, flush)
             players[player].hand_type = PokerHands.PH_FLUSH
+            players[player].status = 'Flush'
             continue
 
         if straight.size() == 5:
             players[player].hand = straight
+            players[player].hand_indices = get_hand_indices(hand_dict, straight)
             players[player].hand_type = PokerHands.PH_STRAIGHT
+            players[player].status = 'Straight'
             continue
 
         if toak_index != -1:
-            players[player].hand.append_array(multiples[toak_index])
+            players[player].hand.append_array(multiples.pop_at(toak_index))
 
             # Add two highest value cards available to fill out rest of hand
-            multiples.remove_at(toak_index)
-            players[player].hand.append(multiples[-1].pop_back())
-            if multiples[-1].is_empty():
-                multiples.resize(multiples.size() - 1)
-            players[player].hand.append(multiples[-1][-1])
+            players[player].hand.append(multiples[0].pop_front())
+            if multiples[0].is_empty():
+                multiples.pop_front()
+            players[player].hand.append(multiples[0][0])
+
+            players[player].hand_indices = get_hand_indices(hand_dict, players[player].hand)
 
             players[player].hand_type = PokerHands.PH_THREE_OF_A_KIND
+            players[player].status = 'Three of\na Kind'
             continue
 
-        if second_pair_index != -1 and first_pair_index != -1:
-            players[player].hand.append_array(multiples[second_pair_index])
-            players[player].hand.append_array(multiples[first_pair_index])
+        if first_pair_index != -1 and second_pair_index != -1:
+            players[player].hand.append_array(multiples.pop_at(first_pair_index))
+            players[player].hand.append_array(multiples.pop_at(second_pair_index - 1))
 
             # Add highest value card available to fill out rest of hand
-            multiples.remove_at(second_pair_index)
-            multiples.remove_at(first_pair_index)
-            players[player].hand.append(multiples[-1][-1])
+            players[player].hand.append(multiples[0][0])
+
+            players[player].hand_indices = get_hand_indices(hand_dict, players[player].hand)
 
             players[player].hand_type = PokerHands.PH_TWO_PAIR
+            players[player].status = 'Two\nPair'
             continue
 
         if first_pair_index != -1:
-            players[player].hand.append_array(multiples[first_pair_index])
+            players[player].hand.append_array(multiples.pop_at(first_pair_index))
 
             # Add three highest value cards available to fill out rest of hand
-            multiples.remove_at(first_pair_index)
-            players[player].hand.append(multiples[-1].pop_back())
-            if multiples[-1].is_empty():
-                multiples.resize(multiples.size() - 1)
-            players[player].hand.append(multiples[-1].pop_back())
-            if multiples[-1].is_empty():
-                multiples.resize(multiples.size() - 1)
-            players[player].hand.append(multiples[-1][-1])
+            players[player].hand.append(multiples[0].pop_front())
+            if multiples[0].is_empty():
+                multiples.pop_front()
+            players[player].hand.append(multiples[0].pop_front())
+            if multiples[0].is_empty():
+                multiples.pop_front()
+            players[player].hand.append(multiples[0][0])
+
+            players[player].hand_indices = get_hand_indices(hand_dict, players[player].hand)
 
             players[player].hand_type = PokerHands.PH_PAIR
+            players[player].status = 'Pair'
             continue
 
-        hand_value.reverse().resize(5)
+        hand_value.resize(5)
         players[player].hand = hand_value
+        players[player].hand_indices = get_hand_indices(hand_dict, players[player].hand)
         players[player].hand_type = PokerHands.PH_HIGH_CARD
+        players[player].status = 'High\nCard'
 
-func sort_value(a : Array, b : Array) -> bool:
-    if a[0] < b[0]:
-        return true
-    return false
+    # Determine the winner(s) of the hand
+    var winners = Array()
+    for player in players_in_hand:
+        if not winners:
+            winners.append(player)
+        elif players[winners[-1]].hand_type == players[player].hand_type:
+            # Check to see who has the better hand of the two (or if both players have the exact same hand)
+            var hand_type = players[player].hand_type
+            if hand_type == PokerHands.PH_ROYAL_FLUSH:
+                winners.append(player) # Royal flush is unique (i.e. nothing to compare)
+            elif    hand_type == PokerHands.PH_STRAIGHT_FLUSH \
+                 or hand_type == PokerHands.PH_STRAIGHT:
+                if (players[player].hand[0][0] == players[winners[-1]].hand[0][0]):
+                    winners.append(player) # Players have same hand
+                elif (players[player].hand[0][0] > players[winners[-1]].hand[0][0]):
+                    winners = [player] # Player has better hand
+                else:
+                    pass # Current player has worse hand
+            elif    hand_type == PokerHands.PH_FOUR_OF_A_KIND \
+                 or hand_type == PokerHands.PH_FULL_HOUSE:
+                if (players[player].hand[0][0] == players[winners[-1]].hand[0][0]): # Check F/ToaK value
+                    if (players[player].hand[-1][0] == players[winners[-1]].hand[-1][0]): # Check high card/pair value
+                        winners.append(player)
+                    elif (players[player].hand[-1][0] > players[winners[-1]].hand[-1][0]):
+                        winners = [player]
+                    else:
+                        pass # Current player has worse hand
+                elif (players[player].hand[0][0] > players[winners[-1]].hand[0][0]):
+                    winners = [player]
+                else:
+                    pass # Current player has worse hand
+            elif    hand_type == PokerHands.PH_FLUSH \
+                 or hand_type == PokerHands.PH_HIGH_CARD:
+                var better = false
+                var worse = false
+                # Compare each card in hand, player with higher "straight" has better hand
+                for index in players[player].hand.size():
+                    if (players[player].hand[index][0] > players[winners[-1]].hand[index][0]):
+                        better = true
+                        break
+
+                    if (players[player].hand[index][0] < players[winners[-1]].hand[index][0]):
+                        worse = true
+                        break
+
+                if better:
+                    winners = [player]
+                elif not worse:
+                    winners.append(player)
+                else:
+                    pass # Current player has worse hand
+            elif hand_type == PokerHands.PH_THREE_OF_A_KIND:
+                if (players[player].hand[0][0] == players[winners[-1]].hand[0][0]): # Check ToaK value
+                    if (players[player].hand[-2][0] == players[winners[-1]].hand[-2][0]): # Check high card
+                        if (players[player].hand[-1][0] == players[winners[-1]].hand[-1][0]): # Check next high card
+                            winners.append(player)
+                        elif (players[player].hand[-1][0] > players[winners[-1]].hand[-1][0]):
+                            winners = [player]
+                        else:
+                            pass # Current player has worse hand
+                    elif (players[player].hand[-2][0] > players[winners[-1]].hand[-2][0]):
+                        winners = [player]
+                    else:
+                        pass # Current player has worse hand
+                elif (players[player].hand[0][0] > players[winners[-1]].hand[0][0]):
+                    winners = [player]
+                else:
+                    pass # Current player has worse hand
+            elif hand_type == PokerHands.PH_TWO_PAIR:
+                if (players[player].hand[0][0] == players[winners[-1]].hand[0][0]): # Check first pair value
+                    if (players[player].hand[2][0] == players[winners[-1]].hand[2][0]): # Check second pair value
+                        if (players[player].hand[-1][0] == players[winners[-1]].hand[-1][0]): # Check high card
+                            winners.append(player)
+                        elif (players[player].hand[-1][0] > players[winners[-1]].hand[-1][0]):
+                            winners = [player]
+                        else:
+                            pass # Current player has worse hand
+                    elif (players[player].hand[2][0] > players[winners[-1]].hand[2][0]):
+                        winners = [player]
+                    else:
+                        pass # Current player has worse hand
+                elif (players[player].hand[0][0] > players[winners[-1]].hand[0][0]):
+                    winners = [player]
+                else:
+                    pass # Current player has worse hand
+            elif hand_type == PokerHands.PH_PAIR:
+                if (players[player].hand[0][0] == players[winners[-1]].hand[0][0]): # Check pair
+                    if (players[player].hand[-3][0] == players[winners[-1]].hand[-3][0]): # Check high card
+                        if (players[player].hand[-2][0] == players[winners[-1]].hand[-2][0]): # Check next high card
+                            if (players[player].hand[-1][0] == players[winners[-1]].hand[-1][0]): # Check next next high card
+                                winners.append(player)
+                            elif (players[player].hand[-1][0] > players[winners[-1]].hand[-1][0]):
+                                winners = [player]
+                            else:
+                                pass # Current player has worse hand
+                        elif (players[player].hand[-2][0] > players[winners[-1]].hand[-2][0]):
+                            winners = [player]
+                        else:
+                            pass # Current player has worse hand
+                    elif (players[player].hand[-3][0] > players[winners[-1]].hand[-3][0]):
+                        winners = [player]
+                    else:
+                        pass # Current player has worse hand
+                elif (players[player].hand[0][0] > players[winners[-1]].hand[0][0]):
+                    winners = [player]
+                else:
+                    pass # Current player has worse hand
+            else:
+                pass # All enum options already covered
+        elif players[player].hand_type > players[winners[-1]].hand_type:
+            winners = [player] # Player has better hand
+        else:
+            pass # Player has worse hand
+
+    # Award winnings
+    if winners.size() > 1:
+        # Integer division and modulo used to handle a pot that must be split unevenly
+        @warning_ignore("integer_division")
+        var split_winnings = pot / winners.size()
+        var split_remainder = pot % winners.size()
+        for winner in winners:
+            players[winner].balance += split_winnings
+            if split_remainder:
+                players[winner].balance += 1
+                split_remainder -= 1
+    else:
+        players[winners[0]].balance += pot
+
+    for winner in winners:
+        players[winner].winner = true
 
 func get_longest(longest : Array, next : Array) -> Array:
-    if next.size() >= longest.size():
+    if next.size() > longest.size():
         return next
     else:
-        return longest
+        return longest # Assumes earlier array has higher value if equal in size
+
+func get_hand_indices(hand_dict : Dictionary, hand : Array) -> Array:
+    var hand_indices = Array()
+    for card in hand:
+        hand_indices.append(hand_dict[card])
+    return hand_indices
+
+func get_client_end_game_table_data() -> Dictionary:
+    var end_game_table_data = {}
+    for player in players:
+        end_game_table_data[player] = {'status': players[player].status,
+                                       'hand_indices': players[player].hand_indices,
+                                       'winner': players[player].winner}
+    return end_game_table_data
+
+func get_client_end_game_results_data() -> Array:
+    var end_game_results_dialog_data = Array()
+    for player in players:
+        end_game_results_dialog_data.append({'id': player,
+                                             'name': players[player].player_name,
+                                             'winnings': players[player].balance - players[player].initial_balance,
+                                             'balance': players[player].balance})
+    return end_game_results_dialog_data
+
+func get_player_pockets() -> Dictionary:
+    var player_pockets = {}
+    if players_in_hand.size() > 1: # Player does not reveal hand if everyone else folds
+        for player in players_in_hand:
+            player_pockets[player] = players[player].pocket
+    return player_pockets
 
 class player_data:
     var player_name : String
     var ready : bool
     var balance : int
+    var initial_balance : int
     var pocket : Array = Array()
     var curr_bet : int
     var status : String
     var hand : Array = Array()
     var hand_type : int
+    var hand_indices : Array = Array()
+    var winner : bool
 
     func _init(p_player_name : String, starting_balance) -> void:
         player_name = p_player_name
         ready = false
         balance = starting_balance
+        initial_balance = balance
         curr_bet = 0
         status = ''
-        hand_type = -1
-
-    func deal_card(card : Array):
-        pocket.push_back(card)
+        hand_type = PokerHands.PH_DEFAULT
+        winner = false
 
     func is_full_dealt() -> bool:
         return pocket.size() == 2

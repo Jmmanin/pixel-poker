@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://b3edga7bj8n12"]
+[gd_scene load_steps=11 format=3 uid="uid://b3edga7bj8n12"]
 
 [ext_resource type="Script" path="res://table/player.gd" id="1_ivspx"]
 [ext_resource type="Texture2D" uid="uid://cgei8xdcn8ptd" path="res://resources/table/blind_buttons.png" id="2_g6jrn"]
 [ext_resource type="Texture2D" uid="uid://dsoa7b3088t1l" path="res://resources/table/deck.png" id="3_fb52s"]
+[ext_resource type="Texture2D" uid="uid://b7xvau70q8vjb" path="res://resources/table/card_highlight.png" id="4_w6ndn"]
 [ext_resource type="Texture2D" uid="uid://djap6df1melon" path="res://resources/table/player_bg.png" id="4_y37wl"]
 [ext_resource type="FontFile" uid="uid://c3j6oa1sotgmy" path="res://resources/monogram.ttf" id="5_q168y"]
 [ext_resource type="Texture2D" uid="uid://7d5ngu5wdvqg" path="res://resources/table/big_chips.png" id="6_lhxvj"]
@@ -10,12 +11,12 @@
 
 [sub_resource type="LabelSettings" id="LabelSettings_xb54d"]
 font = ExtResource("5_q168y")
-font_size = 55
+font_size = 48
 font_color = Color(0, 0, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_wf68b"]
 font = ExtResource("5_q168y")
-font_size = 87
+font_size = 80
 font_color = Color(0, 0, 0, 1)
 
 [node name="Player" type="Node2D"]
@@ -31,17 +32,33 @@ region_rect = Rect2(0, 0, 36, 36)
 
 [node name="Card1" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(65, 90)
+position = Vector2(67, 90)
 texture = ExtResource("3_fb52s")
 region_enabled = true
 region_rect = Rect2(0, 0, 130, 180)
 
+[node name="CardHighlight" type="TextureRect" parent="Card1"]
+visible = false
+offset_left = -65.0
+offset_top = -90.0
+offset_right = 65.0
+offset_bottom = 90.0
+texture = ExtResource("4_w6ndn")
+
 [node name="Card2" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(203, 90)
+position = Vector2(217, 90)
 texture = ExtResource("3_fb52s")
 region_enabled = true
 region_rect = Rect2(0, 0, 130, 180)
+
+[node name="CardHighlight" type="TextureRect" parent="Card2"]
+visible = false
+offset_left = -65.0
+offset_top = -90.0
+offset_right = 65.0
+offset_bottom = 90.0
+texture = ExtResource("4_w6ndn")
 
 [node name="StatusBlock" type="TextureRect" parent="."]
 offset_left = 2.0
@@ -55,7 +72,7 @@ metadata/_edit_use_anchors_ = true
 layout_mode = 0
 offset_left = 6.0
 offset_top = -10.0
-offset_right = 262.0
+offset_right = 276.0
 offset_bottom = 44.0
 label_settings = SubResource("LabelSettings_xb54d")
 horizontal_alignment = 1
@@ -69,7 +86,10 @@ region_enabled = true
 region_rect = Rect2(0, 0, 36, 36)
 
 [node name="BalanceLabel" type="Label" parent="StatusBlock"]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0285714
+anchor_right = 0.0285714
 offset_left = 66.0
 offset_top = 21.0
 offset_right = 263.0

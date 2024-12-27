@@ -40,9 +40,9 @@ position = Vector2(335, 195)
 position = Vector2(297, 244)
 
 [node name="TableBetEntry" type="TextureRect" parent="."]
-offset_left = 30.0
+offset_left = 28.0
 offset_top = 638.0
-offset_right = 238.0
+offset_right = 236.0
 offset_bottom = 696.0
 texture = ExtResource("5_2u6s3")
 
@@ -87,30 +87,30 @@ position = Vector2(8, 0)
 metadata/_edit_lock_ = true
 
 [node name="TableButton1" parent="." instance=ExtResource("6_x3dvf")]
-offset_left = 30.0
+offset_left = 28.0
 offset_top = 638.0
-offset_right = 238.0
+offset_right = 236.0
 offset_bottom = 696.0
 
 [node name="TableButton2" parent="." instance=ExtResource("6_x3dvf")]
-offset_left = 269.0
+offset_left = 264.0
 offset_top = 638.0
-offset_right = 477.0
+offset_right = 472.0
 offset_bottom = 696.0
 
 [node name="Player" parent="." instance=ExtResource("7_283aj")]
-position = Vector2(506, 434)
+position = Vector2(498, 434)
 
 [node name="TableButton3" parent="." instance=ExtResource("6_x3dvf")]
-offset_left = 803.0
+offset_left = 808.0
 offset_top = 638.0
-offset_right = 1011.0
+offset_right = 1016.0
 offset_bottom = 696.0
 
 [node name="TableButton4" parent="." instance=ExtResource("6_x3dvf")]
-offset_left = 1042.0
+offset_left = 1044.0
 offset_top = 638.0
-offset_right = 1250.0
+offset_right = 1252.0
 offset_bottom = 696.0
 
 [node name="VersionLabel" type="Label" parent="."]

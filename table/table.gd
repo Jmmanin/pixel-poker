@@ -319,8 +319,12 @@ func _on_hand_reveal_timer_timeout():
     else:
         if deal_index == -1:
             $Player.reveal_hand()
+            $Player/StatusBlock.mouse_entered.connect(_on_mouse_entered_player)
+            $Player/StatusBlock.mouse_exited.connect(_on_mouse_exited_player)
         else:
             opponents[deal_index].reveal_hand()
+            opponents[deal_index].mouse_entered.connect(_on_mouse_entered_opponent.bind(deal_index))
+            opponents[deal_index].mouse_exited.connect(_on_mouse_exited_opponent.bind(deal_index))
 
         deal_index = (deal_index + 1) if (deal_index + 1) < opponents.size() else -1
         while true:
@@ -330,6 +334,28 @@ func _on_hand_reveal_timer_timeout():
                 break
             else:
                 deal_index = (deal_index + 1) if (deal_index + 1) < opponents.size() else -1
+
+func _on_mouse_entered_player():
+    for card_index in $Player.hand_indices:
+        if card_index < 2:
+            $Player.highlight_card(card_index + 1) # Normalize to player pocket card 1 or 2
+        else:
+            $CommunityCards.highlight_card(card_index - 1) # Normalize to community cards 1-5
+
+func _on_mouse_exited_player():
+    $Player.clear_card_highlighting()
+    $CommunityCards.clear_card_highlighting()
+
+func _on_mouse_entered_opponent(index):
+    for card_index in opponents[index].hand_indices:
+        if card_index < 2:
+            opponents[index].highlight_card(card_index + 1) # Normalize to player pocket card 1 or 2
+        else:
+            $CommunityCards.highlight_card(card_index - 1) # Normalize to community cards 1-5
+
+func _on_mouse_exited_opponent(index):
+    opponents[index].clear_card_highlighting()
+    $CommunityCards.clear_card_highlighting()
 
 func _do_check_call():
     $TableButton1.disable_button()

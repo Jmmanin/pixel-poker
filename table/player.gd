@@ -87,6 +87,14 @@ func reveal_hand():
     $StatusBlock/StatusLabel.visible = true
     revealed = true
 
-func set_card_highlight(highlight1, highlight2):
-    $Card1/CardHighlight.visible = highlight1
-    $Card2/CardHighlight.visible = highlight2
+func highlight_card(card_num):
+    if card_num == 1:
+        $Card1/CardHighlight.visible = true
+    elif card_num == 2:
+        $Card2/CardHighlight.visible = true
+    else:
+        pass # TO-DO - Invalid card index
+
+func clear_card_highlighting():
+    $Card1/CardHighlight.visible = false
+    $Card2/CardHighlight.visible = false

@@ -45,9 +45,23 @@ func clear_cards():
     $River.visible = false
     $Burn.visible = false
 
-func set_card_highlight(highlight1, highlight2, highlight3, highlight4, highlight5):
-    $Flop1/CardHighlight.visible = highlight1
-    $Flop2/CardHighlight.visible = highlight2
-    $Flop3/CardHighlight.visible = highlight3
-    $Turn/CardHighlight.visible = highlight4
-    $River/CardHighlight.visible = highlight5
+func highlight_card(card_num):
+    if card_num == 1:
+        $Flop1/CardHighlight.visible = true
+    elif card_num == 2:
+        $Flop2/CardHighlight.visible = true
+    elif card_num == 3:
+        $Flop3/CardHighlight.visible = true
+    elif card_num == 4:
+        $Turn/CardHighlight.visible = true
+    elif card_num == 5:
+        $River/CardHighlight.visible = true
+    else:
+        pass # TO-DO - Invalid card index
+
+func clear_card_highlighting():
+    $Flop1/CardHighlight.visible = false
+    $Flop2/CardHighlight.visible = false
+    $Flop3/CardHighlight.visible = false
+    $Turn/CardHighlight.visible = false
+    $River/CardHighlight.visible = false

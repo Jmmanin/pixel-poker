@@ -102,7 +102,7 @@ func _on_do_start_lobby_countdown():
     var dialog = load('res://dialog_box.tscn').instantiate()
     dialog.name = 'CountdownDialog'
     dialog.set_title('Game Starting')
-    dialog.set_message('Game Starting in ' + str(countdown_remaining) + ' seconds.')
+    dialog.set_message('Game starting in ' + str(countdown_remaining) + ' seconds.')
     dialog.set_single_button_text('Unready')
     dialog.get_node('DialogBoxFrame/CenterButton').pressed.connect(_on_countdown_dialog_button_pressed)
 

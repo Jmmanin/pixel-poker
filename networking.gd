@@ -82,14 +82,14 @@ func server_process_new_ready(new_ready):
 
     if not new_ready and self_host_data.game_starting:
         self_host_data.game_starting = false
-        get_node('LobbyCountdownTimer').queue_free()
+        get_node('GameStartTimer').queue_free()
         stop_lobby_countdown.rpc()
 
     if all_ready:
         self_host_data.game_starting = true
 
         var countdown_timer = Timer.new()
-        countdown_timer.name = 'LobbyCountdownTimer'
+        countdown_timer.name = 'GameStartTimer'
         countdown_timer.autostart = true
         countdown_timer.one_shot = true
         countdown_timer.wait_time = 10.0
@@ -112,7 +112,7 @@ func stop_lobby_countdown():
     emit_signal('do_stop_lobby_countdown')
 
 func _server_tranistion_to_table():
-    get_node('LobbyCountdownTimer').queue_free()
+    get_node('GameStartTimer').queue_free()
 
     self_host_data.start_game()
     var player_info_dict = self_host_data.get_client_player_table_data()

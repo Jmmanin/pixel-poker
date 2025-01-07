@@ -15,11 +15,11 @@ font = ExtResource("8_r7uli")
 font_size = 64
 font_color = Color(0, 0, 0, 1)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ukpev"]
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_haium"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_464cn"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ukpev"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_q3uhq"]
 font = ExtResource("8_r7uli")
@@ -70,13 +70,13 @@ offset_right = 202.0
 offset_bottom = 51.0
 focus_next = NodePath("../../GameNameParent/GameNameLineEdit")
 focus_previous = NodePath("../../IP_Parent/IP_LineEdit")
-theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("8_r7uli")
 theme_override_font_sizes/font_size = 64
-theme_override_styles/normal = SubResource("StyleBoxEmpty_ukpev")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_haium")
 theme_override_styles/read_only = SubResource("StyleBoxEmpty_464cn")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ukpev")
 max_length = 7
 context_menu_enabled = false
 caret_blink_interval = 0.75

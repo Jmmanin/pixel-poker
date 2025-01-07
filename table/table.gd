@@ -362,7 +362,7 @@ func _do_check_call():
     $TableButton2.disable_button()
     $TableButton3.disable_button()
 
-    emit_signal('send_player_action', 0)
+    send_player_action.emit(0)
 
 func _do_bet_raise():
     $TableButton1.visible = false
@@ -383,7 +383,7 @@ func _do_confirm():
         $TableButton2.disable_button()
         $TableButton3.disable_button()
 
-        emit_signal('send_player_action', int($TableBetEntry/ValueLineEdit.text))
+        send_player_action.emit(int($TableBetEntry/ValueLineEdit.text))
     else:
         pass # TO-DO - Figure out way to alert player of invalid bet!
 
@@ -408,7 +408,7 @@ func _do_fold():
 
     $Player.fold()
 
-    emit_signal('send_player_action', -1)
+    send_player_action.emit(-1)
 
 func _do_settings():
     print('settings')

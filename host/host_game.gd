@@ -94,7 +94,7 @@ func _on_password_line_edit_focus_exited():
         $PasswordParent/PasswordLineEdit.text = 'No Password'
 
 func _on_back_button_pressed():
-    emit_signal('change_scene', 'title')
+    change_scene.emit('title')
 
 func _on_host_game_button_pressed():
     var stripped_ip = $IP_Parent/IP_LineEdit.text.rstrip(' ')
@@ -150,7 +150,7 @@ func _on_host_game_button_pressed():
                                                         small_blind,
                                                         big_blind)
 
-                emit_signal('init_self_host', game_info, stripped_player_name)
+                init_self_host.emit(game_info, stripped_player_name)
         else:
             # TO-DO - implement hosting games by connecting to separate server application
             var dialog = load('res://dialog_box.tscn').instantiate()

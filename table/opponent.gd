@@ -92,11 +92,6 @@ func set_status(new_status, make_visible = true):
             break
 
     $StatusLabel.label_settings.font_size = 32 if long_string else 48
-#    var ls = $StatusLabel.label_settings
-#    if long_string:
-#        ls.font_size = 32
-#    else:
-#        ls.font_size = 48
 
     $StatusLabel.text = new_status
 

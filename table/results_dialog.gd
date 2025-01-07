@@ -52,7 +52,7 @@ func update_my_ready(new_ready):
                  '/ReadyTexture').modulate = Color(137.0/255.0, 137.0/255.0, 137.0/255.0)
         $LobbyFrame/ReadyButton/ButtonLabel.text = 'Ready'
 
-    emit_signal('send_new_ready', im_readied)
+    send_new_ready.emit(im_readied)
 
 func _on_update_player_ready(player_id, new_ready):
     if new_ready:

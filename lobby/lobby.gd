@@ -43,7 +43,7 @@ func _on_game_info_dialog_dismiss():
     $GameInfoDialog.visible = false
 
 func _on_back_button_pressed():
-    emit_signal('leave_lobby')
+    leave_lobby.emit()
 
 func _on_ready_button_pressed():
     update_my_ready(!im_readied)
@@ -57,7 +57,7 @@ func update_my_ready(new_ready):
     else:
         $ReadyButton/ReadyLabel.text = 'Ready'
 
-    emit_signal('send_new_ready', im_readied)
+    send_new_ready.emit(im_readied)
 
 func _on_player_connected(new_players):
     for player_id in new_players:

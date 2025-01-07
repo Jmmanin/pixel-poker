@@ -8,13 +8,13 @@ func _on_sign_timer_timeout():
     $Sign/SignMask2.visible = !$Sign/SignMask2.visible
 
 func _on_host_game_button_pressed():
-    emit_signal("change_scene", "host")
+    change_scene.emit('host')
 
 func _on_join_game_button_pressed():
-    emit_signal("change_scene", "join")
+    change_scene.emit('join')
 
 func _on_settings_button_pressed():
-    print("settings clicked from title")
+    print('settings clicked from title')
 
 func _on_quit_button_pressed():
     get_tree().quit()

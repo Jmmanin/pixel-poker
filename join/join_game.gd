@@ -58,7 +58,7 @@ func _on_password_line_edit_focus_exited():
         $PasswordParent/PasswordLineEdit.text = 'No Password'
 
 func _on_back_button_pressed():
-    emit_signal('change_scene', 'title')
+    change_scene.emit('title')
 
 func _on_join_game_button_pressed():
     var stripped_ip = $IP_Parent/IP_LineEdit.text.rstrip(' ')

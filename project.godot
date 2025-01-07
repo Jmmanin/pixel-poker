@@ -12,8 +12,8 @@ config_version=5
 
 config/name="Pixel-poker"
 run/main_scene="res://main.tscn"
-config/features=PackedStringArray("4.1", "Forward Plus")
-config/icon="res://icon.svg"
+config/features=PackedStringArray("4.3", "Forward Plus")
+config/windows_native_icon="res://resources/pixelpoker.ico"
 
 [autoload]
 

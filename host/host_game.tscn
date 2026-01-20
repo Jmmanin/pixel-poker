@@ -1,6 +1,6 @@
 [gd_scene load_steps=27 format=3 uid="uid://bci78cphedptc"]
 
-[ext_resource type="Script" path="res://host/host_game.gd" id="1_dnos3"]
+[ext_resource type="Script" uid="uid://drepgnkv3ujov" path="res://host/host_game.gd" id="1_dnos3"]
 [ext_resource type="Texture2D" uid="uid://coa235rmxckds" path="res://resources/host_join_lobby/sign.png" id="2_c3k2e"]
 [ext_resource type="FontFile" uid="uid://c3j6oa1sotgmy" path="res://resources/monogram.ttf" id="3_70p0n"]
 [ext_resource type="Texture2D" uid="uid://d20hb2fkkte2f" path="res://resources/host_join_lobby/sign_mask1.png" id="4_byfxv"]
@@ -27,11 +27,11 @@ font_color = Color(0.843137, 0.717647, 0.34902, 1)
 font = ExtResource("3_70p0n")
 font_size = 64
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_j2ts4"]
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wbg31"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2hfmu"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_j2ts4"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_g28fs"]
 font = ExtResource("3_70p0n")
@@ -130,13 +130,13 @@ offset_right = 450.0
 offset_bottom = 53.0
 focus_next = NodePath("../../PortParent/PortLineEdit")
 focus_previous = NodePath("../../BlindParent/BigBlindLineEdit")
-theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_70p0n")
 theme_override_font_sizes/font_size = 64
-theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts4")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_wbg31")
 theme_override_styles/read_only = SubResource("StyleBoxEmpty_2hfmu")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts4")
 text = "Self-Host"
 alignment = 1
 max_length = 15
@@ -169,13 +169,13 @@ offset_right = 259.0
 offset_bottom = 53.0
 focus_next = NodePath("../../GameNameParent/GameNameLineEdit")
 focus_previous = NodePath("../../IP_Parent/IP_LineEdit")
-theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_70p0n")
 theme_override_font_sizes/font_size = 64
-theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts4")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_wbg31")
 theme_override_styles/read_only = SubResource("StyleBoxEmpty_2hfmu")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts4")
 text = "1234"
 alignment = 1
 max_length = 5
@@ -207,13 +207,13 @@ offset_right = 738.0
 offset_bottom = 53.0
 focus_next = NodePath("../../PasswordParent/PasswordLineEdit")
 focus_previous = NodePath("../../PortParent/PortLineEdit")
-theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_70p0n")
 theme_override_font_sizes/font_size = 64
-theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts4")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_wbg31")
 theme_override_styles/read_only = SubResource("StyleBoxEmpty_2hfmu")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts4")
 text = "test"
 alignment = 1
 context_menu_enabled = false
@@ -248,13 +248,13 @@ offset_right = 728.0
 offset_bottom = 52.0
 focus_next = NodePath("../../PlayerNameParent/PlayerNameLineEdit")
 focus_previous = NodePath("../../GameNameParent/GameNameLineEdit")
-theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_70p0n")
 theme_override_font_sizes/font_size = 64
-theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts4")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_wbg31")
 theme_override_styles/read_only = SubResource("StyleBoxEmpty_2hfmu")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts4")
 text = "No Password"
 alignment = 1
 context_menu_enabled = false
@@ -285,13 +285,13 @@ offset_right = 556.0
 offset_bottom = 52.0
 focus_next = NodePath("../../StartingBalanceParent/StartingBalanceLineEdit")
 focus_previous = NodePath("../../PasswordParent/PasswordLineEdit")
-theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_70p0n")
 theme_override_font_sizes/font_size = 64
-theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts4")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_wbg31")
 theme_override_styles/read_only = SubResource("StyleBoxEmpty_2hfmu")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts4")
 alignment = 1
 max_length = 10
 context_menu_enabled = false
@@ -332,13 +332,13 @@ offset_right = 556.0
 offset_bottom = 52.0
 focus_next = NodePath("../../BlindParent/SmallBlindLineEdit")
 focus_previous = NodePath("../../PlayerNameParent/PlayerNameLineEdit")
-theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_70p0n")
 theme_override_font_sizes/font_size = 64
-theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts4")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_wbg31")
 theme_override_styles/read_only = SubResource("StyleBoxEmpty_2hfmu")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts4")
 text = "100"
 alignment = 1
 max_length = 4
@@ -438,13 +438,13 @@ offset_right = 438.0
 offset_bottom = 52.0
 focus_next = NodePath("../../IP_Parent/IP_LineEdit")
 focus_previous = NodePath("../../StartingBalanceParent/StartingBalanceLineEdit")
-theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_70p0n")
 theme_override_font_sizes/font_size = 64
-theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts4")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_wbg31")
 theme_override_styles/read_only = SubResource("StyleBoxEmpty_2hfmu")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts4")
 alignment = 1
 max_length = 3
 context_menu_enabled = false
@@ -485,13 +485,13 @@ offset_right = 414.0
 offset_bottom = 51.0
 focus_next = NodePath("../BigBlindLineEdit")
 focus_previous = NodePath("../../StartingBalanceParent/StartingBalanceLineEdit")
-theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_70p0n")
 theme_override_font_sizes/font_size = 64
-theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts4")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_wbg31")
 theme_override_styles/read_only = SubResource("StyleBoxEmpty_2hfmu")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts4")
 text = "5"
 alignment = 1
 max_length = 3
@@ -534,13 +534,13 @@ offset_right = 414.0
 offset_bottom = 119.0
 focus_next = NodePath("../../IP_Parent/IP_LineEdit")
 focus_previous = NodePath("../SmallBlindLineEdit")
-theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_70p0n")
 theme_override_font_sizes/font_size = 64
-theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts4")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_wbg31")
 theme_override_styles/read_only = SubResource("StyleBoxEmpty_2hfmu")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts4")
 text = "10"
 alignment = 1
 max_length = 3

@@ -64,6 +64,7 @@ func _on_ip_line_edit_focus_exited():
         $IP_Parent/IP_LineEdit.text = 'Self-Host'
 
 func _on_ante_button_pressed():
+    # TO-DO - Add support for antes AND blinds
     prebet = PokerTypes.PrebetTypes.PB_ANTE
     $IP_Parent/IP_LineEdit.focus_previous = $AnteParent/AnteLineEdit.get_path()
     $StartingBalanceParent/StartingBalanceLineEdit.focus_next = $AnteParent/AnteLineEdit.get_path()

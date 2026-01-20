@@ -1,7 +1,19 @@
 extends Node
 
+@warning_ignore("unused_signal") # TO-DO - Figure out how to resolve this warning
 signal change_scene
 signal send_player_action
+
+var button_action_map = {PokerTypes.ButtonActions.BA_CHECK : _do_check_call,
+                         PokerTypes.ButtonActions.BA_CALL : _do_check_call,
+                         PokerTypes.ButtonActions.BA_BET : _do_bet_raise,
+                         PokerTypes.ButtonActions.BA_RAISE : _do_bet_raise,
+                         PokerTypes.ButtonActions.BA_CONFIRM : _do_confirm,
+                         PokerTypes.ButtonActions.BA_CANCEL : _do_cancel,
+                         PokerTypes.ButtonActions.BA_ALL_IN : _do_all_in,
+                         PokerTypes.ButtonActions.BA_FOLD : _do_fold,
+                         PokerTypes.ButtonActions.BA_SETTINGS : _do_settings,
+                         PokerTypes.ButtonActions.BA_RESULTS : _do_results}
 
 const OPPONENT_POSITIONS = [[Vector2(507, 8)],
                             [Vector2(187, 14), Vector2(827, 14)],
@@ -18,39 +30,40 @@ var deal_index
 var current_player_turn
 
 var min_raise
-var previous_bet_made
+var curr_bet
+var starting_curr_bet
 
 func _ready():
     get_node('/root/Main/Networking').connect('do_start_game', _on_do_start_game)
+    get_node('/root/Main/Networking').connect('update_table_data', _on_update_table_data)
     get_node('/root/Main/Networking').connect('continue_betting_round', _on_continue_betting_round)
     get_node('/root/Main/Networking').connect('start_new_betting_round', _on_start_new_betting_round)
     get_node('/root/Main/Networking').connect('end_game', _on_end_game)
 
     connect('send_player_action', get_node('/root/Main/Networking')._on_send_player_action)
 
-    # Set initial button labels and behavior
-    $TableButton1.set_text('Check')
-    $TableButton1.disable_button()
-    $TableButton1.pressed.connect(_do_check_call)
-
-    $TableButton2.set_text('Bet')
-    $TableButton2.disable_button()
-    $TableButton2.pressed.connect(_do_bet_raise)
-
-    $TableButton3.set_text('Fold')
-    $TableButton3.disable_button()
-    $TableButton3.pressed.connect(_do_fold)
-
-    $TableButton4.set_text('Settings')
-    $TableButton4.pressed.connect(_do_settings)
+    update_button_action($TableButton4, PokerTypes.ButtonActions.BA_SETTINGS)
 
 func _on_do_start_game(opponent_order,
                        player_info_dict,
                        player_hand,
                        prebet_type,
                        dealer_id,
-                       starting_pot,
-                       starting_min_raise):
+                       starting_pots,
+                       starting_curr_bet,
+                       starting_min_raise,
+                       total_game_balance):
+    # Set starting pot and starting betting state
+    $Pot.total_game_balance = total_game_balance
+    $Pot.set_pots(starting_pots)
+
+    current_player_turn = deal_index
+
+    min_raise = starting_min_raise
+    curr_bet = starting_curr_bet
+    self.starting_curr_bet = starting_curr_bet
+
+    # Create opponents
     var opponent_scene = load('res://table/opponent.tscn')
     var num_opponents = opponent_order.size()
     var index = 0
@@ -59,6 +72,7 @@ func _on_do_start_game(opponent_order,
 
         op_scene.name = 'Opponent' + str(opponent_id)
         op_scene.set_op_name(player_info_dict[opponent_id]['player_name'])
+        op_scene.total_game_balance = total_game_balance
         op_scene.set_balance(player_info_dict[opponent_id]['balance'])
         op_scene.set_status(player_info_dict[opponent_id]['status'])
 
@@ -71,13 +85,11 @@ func _on_do_start_game(opponent_order,
 
         index += 1
 
+    # Initialize player data
+    $Player.total_game_balance = total_game_balance
     $Player.set_balance(player_info_dict[multiplayer.get_unique_id()]['balance'])
     $Player.set_status(player_info_dict[multiplayer.get_unique_id()]['status'])
-
-    # Clear out blind buttons
-    $Player.set_blind_button(PokerTypes.BlindButtons.BB_NONE)
-    for opponent in opponents:
-        opponent.set_blind_button(PokerTypes.BlindButtons.BB_NONE)
+    $Player.set_hand(player_hand)
 
     # Get dealer index from id (-1 = player is dealer)
     var dealer_index = -1 if multiplayer.get_unique_id() == dealer_id else opponents_index_map[dealer_id]
@@ -88,24 +100,20 @@ func _on_do_start_game(opponent_order,
 
     # Person next to dealer is where dealing starts
     # Index should wraparound to the player (-1) after the last opponent
+    # Betting starts with person next to dealer in ante games or 2-player blind games
     deal_index = (dealer_index + 1) if (dealer_index + 1) < opponents.size() else -1
 
-    # Betting starts with person next to dealer in ante games or 2-player blind games
-    current_player_turn = deal_index
-    previous_bet_made = (prebet_type == PokerTypes.PrebetTypes.PB_BLIND)
-
     # Set blind buttons and starting action buttons for blind games (table already set up for ante games)
+    # TO-DO - Handle case where player is all-in at the start
     if prebet_type == PokerTypes.PrebetTypes.PB_BLIND:
-        $TableButton1.set_text('Call')
-        $TableButton2.set_text('Raise')
-
         if opponents.size() > 1:
-            # deal_index (the person next to the dealer) is the small blind
+            # The person next to the dealer is the small blind
             if deal_index >= 0:
                 opponents[deal_index].set_blind_button(PokerTypes.BlindButtons.BB_SMALL_BLIND)
             else:
                 $Player.set_blind_button(PokerTypes.BlindButtons.BB_SMALL_BLIND)
 
+            # The person next to small blind is the big blind
             var big_blind_index = (deal_index + 1) if (deal_index + 1) < opponents.size() else -1
             if big_blind_index >= 0:
                 opponents[big_blind_index].set_blind_button(PokerTypes.BlindButtons.BB_BIG_BLIND)
@@ -120,11 +128,6 @@ func _on_do_start_game(opponent_order,
                 opponents[0].set_blind_button(PokerTypes.BlindButtons.BB_BIG_BLIND)
             else:
                 $Player.set_blind_button(PokerTypes.BlindButtons.BB_BIG_BLIND)
-
-    $Player.set_hand(player_hand)
-
-    $Pot.set_pot(starting_pot)
-    min_raise = starting_min_raise
 
     # Create timer to handle deal animation
     var deal_timer = Timer.new()
@@ -147,14 +150,28 @@ func _on_hand_deal_timer_timeout():
             opponents[current_player_turn].set_turn(true)
         else:
             $Player.set_turn(true)
-            $TableButton1.enable_button()
-            $TableButton2.enable_button()
-            $TableButton3.enable_button()
+
+            # Button actions depend on whether or not a bet has already been made (blind game),
+            # or if no bet has been made yet (ante game).
+            # - For blind games, if the player cannot afford the blind, they must go all-in or fold
+            if curr_bet > 0:
+                if (curr_bet < $Player.balance):
+                    update_button_action($TableButton1, PokerTypes.ButtonActions.BA_CALL)
+                    update_button_action($TableButton2, PokerTypes.ButtonActions.BA_RAISE)
+                else:
+                    update_button_action($TableButton1, PokerTypes.ButtonActions.BA_ALL_IN)
+                    # Leave button 2 with no action
+            else:
+                update_button_action($TableButton1, PokerTypes.ButtonActions.BA_CHECK)
+                update_button_action($TableButton2, PokerTypes.ButtonActions.BA_BET)
+
+            update_button_action($TableButton3, PokerTypes.ButtonActions.BA_FOLD)
     else:
         to_be_dealt.deal_next()
         deal_index = (deal_index + 1) if (deal_index + 1) < opponents.size() else -1
 
-func _on_continue_betting_round(new_player_data, turn_player_id, new_pot, new_prev_bet_made, new_min_raise):
+func _on_update_table_data(new_player_data, new_pots):
+    # Update player and game state data
     for player_id in new_player_data:
         if player_id == multiplayer.get_unique_id():
             $Player.set_balance(new_player_data[player_id]['balance'])
@@ -163,39 +180,55 @@ func _on_continue_betting_round(new_player_data, turn_player_id, new_pot, new_pr
             opponents[opponents_index_map[player_id]].set_balance(new_player_data[player_id]['balance'])
             opponents[opponents_index_map[player_id]].set_status(new_player_data[player_id]['status'])
 
+            # Fold opponent if that is their new state. Player fold is handled within this scene
             if new_player_data[player_id]['status'] == 'Fold':
                 opponents[opponents_index_map[player_id]].fold()
 
-    $Pot.set_pot(new_pot)
+    $Pot.set_pots(new_pots)
 
-    if current_player_turn >= 0:
-        opponents[current_player_turn].set_turn(false)
-    else:
-        $Player.set_turn(false)
-
-    previous_bet_made = new_prev_bet_made
-    if previous_bet_made:
-        $TableButton1.set_text('Call')
-        $TableButton2.set_text('Raise')
-    else:
-        $TableButton1.set_text('Check')
-        $TableButton2.set_text('Bet')
-
+func _on_continue_betting_round(turn_player_id, new_curr_bet, new_min_raise):
+    curr_bet = new_curr_bet
     min_raise = new_min_raise
 
-    current_player_turn = -1 if turn_player_id == multiplayer.get_unique_id() else opponents_index_map[turn_player_id]
-    if current_player_turn >= 0:
-        opponents[current_player_turn].set_turn(true)
-    else:
-        $Player.set_turn(true)
-        $TableButton1.enable_button()
-        $TableButton2.enable_button()
-        $TableButton3.enable_button()
+    # Clear previous player turn
+    var cur_player = opponents[current_player_turn] if current_player_turn >= 0 else $Player
+    cur_player.set_turn(false)
 
-func _on_start_new_betting_round(new_player_data, turn_player_id, new_community_cards, new_pot, new_min_raise):
+    # Update player turn
+    current_player_turn = -1 if turn_player_id == multiplayer.get_unique_id() else opponents_index_map[turn_player_id]
+    cur_player = opponents[current_player_turn] if current_player_turn >= 0 else $Player
+    cur_player.set_turn(true)
+
+    # Enable buttons if it's our turn
+    if current_player_turn == -1:
+        # Button actions depend on whether or not a bet has already been made
+        # - If the player cannot afford the current bet, they must go all-in or fold
+        if curr_bet > 0:
+            if (curr_bet < $Player.balance):
+                # A player "calls" only if their current bet does not match the current bet
+                # If the big blind player does not wish to bet more than the big blind,
+                # they "check" instead of checking.
+                if     (curr_bet == starting_curr_bet) \
+                   and ($Player.blind_button_value == PokerTypes.BlindButtons.BB_BIG_BLIND) \
+                   and ($CommunityCards.cards_dealt == -1):
+                    update_button_action($TableButton1, PokerTypes.ButtonActions.BA_CHECK)
+                else:
+                    update_button_action($TableButton1, PokerTypes.ButtonActions.BA_CALL)
+                update_button_action($TableButton2, PokerTypes.ButtonActions.BA_RAISE)
+            else:
+                update_button_action($TableButton1, PokerTypes.ButtonActions.BA_ALL_IN)
+                # Leave button 2 with no action
+        else:
+            update_button_action($TableButton1, PokerTypes.ButtonActions.BA_CHECK)
+            update_button_action($TableButton2, PokerTypes.ButtonActions.BA_BET)
+
+        update_button_action($TableButton3, PokerTypes.ButtonActions.BA_FOLD)
+
+func _on_start_new_betting_round(new_player_data, turn_player_id, new_community_cards, new_min_raise):
     # Sleep for a bit to let people see the final state of the last round of betting before clearing stuff out to prepare for the next one
     await get_tree().create_timer(0.75).timeout
 
+    # Update player and game state data
     for player_id in new_player_data:
         if player_id == multiplayer.get_unique_id():
             $Player.set_balance(new_player_data[player_id]['balance'])
@@ -204,25 +237,17 @@ func _on_start_new_betting_round(new_player_data, turn_player_id, new_community_
             opponents[opponents_index_map[player_id]].set_balance(new_player_data[player_id]['balance'])
             opponents[opponents_index_map[player_id]].set_status(new_player_data[player_id]['status'])
 
-            if new_player_data[player_id]['status'] == 'Fold':
-                opponents[opponents_index_map[player_id]].fold()
+    $CommunityCards.add_cards(new_community_cards)
 
-    $Pot.set_pot(new_pot)
-
-    if current_player_turn >= 0:
-        opponents[current_player_turn].set_turn(false)
-    else:
-        $Player.set_turn(false)
-
-    previous_bet_made = false
-    $TableButton1.set_text('Check')
-    $TableButton2.set_text('Bet')
-
+    curr_bet = 0
     min_raise = new_min_raise
 
-    current_player_turn = -1 if turn_player_id == multiplayer.get_unique_id() else opponents_index_map[turn_player_id]
+    # Clear previous player turn
+    var cur_player = opponents[current_player_turn] if current_player_turn >= 0 else $Player
+    cur_player.set_turn(false)
 
-    $CommunityCards.add_cards(new_community_cards)
+    # Set new player turn
+    current_player_turn = -1 if turn_player_id == multiplayer.get_unique_id() else opponents_index_map[turn_player_id]
 
     # Create timer to handle deal animation
     var deal_timer = Timer.new()
@@ -248,19 +273,24 @@ func _on_flop_deal_timer_timeout():
             opponents[current_player_turn].set_turn(true)
         else:
             $Player.set_turn(true)
-            $TableButton1.enable_button()
-            $TableButton2.enable_button()
-            $TableButton3.enable_button()
+
+            # Button actions depend on whether or not a bet has already been made
+            # - If the player cannot afford the current bet, they must go all-in or fold
+            if curr_bet > 0:
+                if (curr_bet < $Player.balance):
+                    update_button_action($TableButton1, PokerTypes.ButtonActions.BA_CALL)
+                    update_button_action($TableButton2, PokerTypes.ButtonActions.BA_RAISE)
+                else:
+                    update_button_action($TableButton1, PokerTypes.ButtonActions.BA_ALL_IN)
+                    # Leave button 2 with no action
+            else:
+                update_button_action($TableButton1, PokerTypes.ButtonActions.BA_CHECK)
+                update_button_action($TableButton2, PokerTypes.ButtonActions.BA_BET)
+
+            update_button_action($TableButton3, PokerTypes.ButtonActions.BA_FOLD)
 
 func _on_end_game(end_game_table_data, end_game_results_data, player_pockets, lone_player_in_hand):
-    $TableButton1.disable_button()
-    $TableButton2.disable_button()
-    $TableButton3.disable_button()
-    $TableButton1.set_text('Results')
-    $TableButton1.pressed.disconnect(_do_check_call)
-    $TableButton1.pressed.connect(_on_results_button_pressed)
-    $TableButton2.set_text('')
-    $TableButton3.set_text('')
+    update_button_action($TableButton1, PokerTypes.ButtonActions.BA_RESULTS)
 
     var results_dialog = load("res://table/results_dialog.tscn").instantiate()
     results_dialog.name = 'ResultsDialog'
@@ -273,11 +303,10 @@ func _on_end_game(end_game_table_data, end_game_results_data, player_pockets, lo
 
         # Go straight to results if there's only one player left in the hand (i.e. everyone else folded)
         results_dialog.visible = true
-        $TableButton1.enable_button()
     else:
         for player_id in end_game_table_data:
             var new_status = end_game_table_data[player_id]['status']
-            var folded = new_status == 'Fold'
+            var folded = (new_status == 'Fold')
             if player_id == multiplayer.get_unique_id():
                 $Player.set_turn(false)
                 $Player.set_status(new_status, folded)
@@ -315,7 +344,6 @@ func _on_hand_reveal_timer_timeout():
     if revealed:
         reveal_timer.queue_free()
         get_node('ResultsDialog').visible = true
-        $TableButton1.enable_button()
     else:
         if deal_index == -1:
             $Player.reveal_hand()
@@ -357,54 +385,70 @@ func _on_mouse_exited_opponent(index):
     opponents[index].clear_card_highlighting()
     $CommunityCards.clear_card_highlighting()
 
+func update_button_action(button, action):
+    if button.current_action != PokerTypes.ButtonActions.BA_NONE:
+        button.pressed.disconnect(button_action_map[button.current_action])
+
+    button.set_action(action)
+
+    if action != PokerTypes.ButtonActions.BA_NONE:
+        button.pressed.connect(button_action_map[action])
+
 func _do_check_call():
-    $TableButton1.disable_button()
-    $TableButton2.disable_button()
-    $TableButton3.disable_button()
+    update_button_action($TableButton1, PokerTypes.ButtonActions.BA_NONE)
+    update_button_action($TableButton2, PokerTypes.ButtonActions.BA_NONE)
+    update_button_action($TableButton3, PokerTypes.ButtonActions.BA_NONE)
 
     send_player_action.emit(0)
 
 func _do_bet_raise():
     $TableButton1.visible = false
     $TableBetEntry/ValueLineEdit.text = str(min_raise)
-    $TableButton2.set_text('Confirm')
-    $TableButton2.pressed.disconnect(_do_bet_raise)
-    $TableButton2.pressed.connect(_do_confirm)
-    $TableButton3.set_text('Cancel')
-    $TableButton3.pressed.disconnect(_do_fold)
-    $TableButton3.pressed.connect(_do_cancel)
+
+    update_button_action($TableButton2, PokerTypes.ButtonActions.BA_CONFIRM)
+    update_button_action($TableButton3, PokerTypes.ButtonActions.BA_CANCEL)
+    update_button_action($TableButton4, PokerTypes.ButtonActions.BA_ALL_IN)
 
 func _do_confirm():
     var amount = int($TableBetEntry/ValueLineEdit.text)
 
-    if amount >= min_raise and amount <= $Player.balance:
-        _do_cancel()
-        $TableButton1.disable_button()
-        $TableButton2.disable_button()
-        $TableButton3.disable_button()
+    if (amount > 0) and (amount <= $Player.balance) and ((amount >= min_raise) or (amount == $Player.balance)):
+        update_button_action($TableButton1, PokerTypes.ButtonActions.BA_NONE)
+        update_button_action($TableButton2, PokerTypes.ButtonActions.BA_NONE)
+        update_button_action($TableButton3, PokerTypes.ButtonActions.BA_NONE)
+        update_button_action($TableButton4, PokerTypes.ButtonActions.BA_SETTINGS)
+        $TableButton1.visible = true
 
-        send_player_action.emit(int($TableBetEntry/ValueLineEdit.text))
+        send_player_action.emit(amount)
     else:
-        pass # TO-DO - Figure out way to alert player of invalid bet!
+        $TableBetEntry/ValueLineEdit.text = 'Invalid'
 
 func _do_cancel():
     $TableButton1.visible = true
-    
-    $TableButton2.pressed.disconnect(_do_confirm)
-    $TableButton2.pressed.connect(_do_bet_raise)
-    if previous_bet_made:
-        $TableButton2.set_text('Raise')
-    else:
-        $TableButton2.set_text('Bet')
 
-    $TableButton3.set_text('Fold')
-    $TableButton3.pressed.disconnect(_do_cancel)
-    $TableButton3.pressed.connect(_do_fold)
+    if (curr_bet >= $Player.balance):
+        update_button_action($TableButton1, PokerTypes.ButtonActions.BA_ALL_IN)
+        update_button_action($TableButton2, PokerTypes.ButtonActions.BA_NONE)
+    elif curr_bet > 0:
+        update_button_action($TableButton2, PokerTypes.ButtonActions.BA_RAISE)
+    else:
+        update_button_action($TableButton1, PokerTypes.ButtonActions.BA_CHECK)
+        update_button_action($TableButton2, PokerTypes.ButtonActions.BA_BET)
+
+    update_button_action($TableButton3, PokerTypes.ButtonActions.BA_FOLD)
+    update_button_action($TableButton4, PokerTypes.ButtonActions.BA_SETTINGS)
+
+func _do_all_in():
+    $TableButton1.visible = false
+    $TableBetEntry/ValueLineEdit.text = str($Player.balance)
+
+    update_button_action($TableButton2, PokerTypes.ButtonActions.BA_CONFIRM)
+    update_button_action($TableButton3, PokerTypes.ButtonActions.BA_CANCEL)
 
 func _do_fold():
-    $TableButton1.disable_button()
-    $TableButton2.disable_button()
-    $TableButton3.disable_button()
+    update_button_action($TableButton1, PokerTypes.ButtonActions.BA_NONE)
+    update_button_action($TableButton2, PokerTypes.ButtonActions.BA_NONE)
+    update_button_action($TableButton3, PokerTypes.ButtonActions.BA_NONE)
 
     $Player.fold()
 
@@ -413,10 +457,7 @@ func _do_fold():
 func _do_settings():
     print('settings')
 
-func _on_help_button_pressed():
-    print('help')
-
-func _on_results_button_pressed():
+func _do_results():
     get_node('ResultsDialog').visible = true
 
 # 'Brighten' help button when hovering over it
@@ -425,3 +466,6 @@ func _on_help_button_mouse_entered():
 
 func _on_help_button_mouse_exited():
     $HelpButton.modulate = Color(95.0/255.0, 95.0/255.0, 95.0/255.0)
+
+func _on_help_button_pressed():
+    print('help')

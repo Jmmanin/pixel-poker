@@ -1,9 +1,18 @@
-[gd_scene load_steps=6 format=3 uid="uid://cipkeb6hjsgkf"]
+[gd_scene load_steps=11 format=3 uid="uid://cipkeb6hjsgkf"]
 
-[ext_resource type="Script" path="res://table/pot.gd" id="1_u6qh0"]
+[ext_resource type="Script" uid="uid://kjursvf3024s" path="res://table/pot.gd" id="1_u6qh0"]
+[ext_resource type="Texture2D" uid="uid://cta3vn3oo7h5d" path="res://resources/table/pot_outline_top_main.png" id="2_d38up"]
 [ext_resource type="Texture2D" uid="uid://bq6m4g5mvqh3s" path="res://resources/table/star.png" id="2_ejjt8"]
+[ext_resource type="Texture2D" uid="uid://df3e7tv37gfak" path="res://resources/table/pot_outline_top_main_split.png" id="3_03f5q"]
 [ext_resource type="Texture2D" uid="uid://7d5ngu5wdvqg" path="res://resources/table/big_chips.png" id="3_q1b1x"]
+[ext_resource type="Texture2D" uid="uid://t86upm4teqtl" path="res://resources/table/pot_outline_top_main_multi_split.png" id="4_4525m"]
 [ext_resource type="FontFile" uid="uid://c3j6oa1sotgmy" path="res://resources/monogram.ttf" id="4_bguk2"]
+[ext_resource type="Texture2D" uid="uid://c1f8apikfonw6" path="res://resources/table/pot_outline.png" id="5_puoxb"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_8fq00"]
+font = ExtResource("4_bguk2")
+font_size = 64
+font_color = Color(0.843137, 0.717647, 0.34902, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_okoyi"]
 font = ExtResource("4_bguk2")
@@ -13,36 +22,97 @@ font_color = Color(0, 0, 0, 1)
 [node name="Pot" type="Node2D"]
 script = ExtResource("1_u6qh0")
 
-[node name="Star1" type="TextureRect" parent="."]
-offset_right = 37.0
-offset_bottom = 34.0
+[node name="TopOutlineMain" type="TextureRect" parent="."]
+offset_left = 43.0
+offset_top = -9.0
+offset_right = 651.0
+offset_bottom = 2.0
+texture = ExtResource("2_d38up")
+
+[node name="TopOutlineMainSplit" type="TextureRect" parent="."]
+visible = false
+offset_left = 43.0
+offset_top = -9.0
+offset_right = 651.0
+offset_bottom = 2.0
+texture = ExtResource("3_03f5q")
+
+[node name="TopOutlineMainSplits" type="TextureRect" parent="."]
+visible = false
+offset_left = 43.0
+offset_top = -9.0
+offset_right = 651.0
+offset_bottom = 2.0
+texture = ExtResource("4_4525m")
+
+[node name="BottomOutline" type="TextureRect" parent="."]
+offset_right = 694.0
+offset_bottom = 50.0
+texture = ExtResource("5_puoxb")
+
+[node name="LeftStar" type="TextureRect" parent="."]
+offset_left = 42.0
+offset_top = 8.0
+offset_right = 79.0
+offset_bottom = 42.0
 texture = ExtResource("2_ejjt8")
 
-[node name="Chips1" type="Sprite2D" parent="."]
+[node name="LeftChips" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(19, 17)
+position = Vector2(61, 24)
 texture = ExtResource("3_q1b1x")
 region_enabled = true
 region_rect = Rect2(0, 0, 36, 36)
 
-[node name="PotLabel" type="Label" parent="."]
-offset_left = 193.0
-offset_top = -23.0
-offset_right = 423.0
-offset_bottom = 49.0
+[node name="PixelLabel" type="Label" parent="."]
+offset_left = 89.0
+offset_top = -4.0
+offset_right = 209.0
+offset_bottom = 47.0
+text = "PIXEL"
+label_settings = SubResource("LabelSettings_8fq00")
+
+[node name="LeftDivider" type="ColorRect" parent="."]
+offset_left = 219.0
+offset_top = 6.0
+offset_right = 223.0
+offset_bottom = 44.0
+color = Color(0.843137, 0.717647, 0.34902, 1)
+
+[node name="PotValueLabel" type="Label" parent="."]
+offset_left = 46.0
+offset_top = -15.0
+offset_right = 654.0
+offset_bottom = 57.0
 label_settings = SubResource("LabelSettings_okoyi")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Star2" type="TextureRect" parent="."]
-offset_left = 573.0
-offset_right = 610.0
-offset_bottom = 34.0
+[node name="RightDivider" type="ColorRect" parent="."]
+offset_left = 471.0
+offset_top = 6.0
+offset_right = 475.0
+offset_bottom = 44.0
+color = Color(0.843137, 0.717647, 0.34902, 1)
+
+[node name="PokerLabel" type="Label" parent="."]
+offset_left = 489.0
+offset_top = -4.0
+offset_right = 609.0
+offset_bottom = 47.0
+text = "POKER"
+label_settings = SubResource("LabelSettings_8fq00")
+
+[node name="RightStar" type="TextureRect" parent="."]
+offset_left = 615.0
+offset_top = 8.0
+offset_right = 652.0
+offset_bottom = 42.0
 texture = ExtResource("2_ejjt8")
 
-[node name="Chips2" type="Sprite2D" parent="."]
+[node name="RightChips" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(591, 17)
+position = Vector2(633, 24)
 texture = ExtResource("3_q1b1x")
 region_enabled = true
 region_rect = Rect2(0, 0, 36, 36)

@@ -1,5 +1,6 @@
 extends Node
 
+@warning_ignore("unused_signal") # TO-DO - Figure out how to resolve this warning
 signal change_scene
 signal send_new_ready
 signal leave_lobby
@@ -11,7 +12,7 @@ var lobby_players = Array()
 var lobby_player_map = {}
 var next_lobby_index = 0
 
-var countdown_remaining = 10
+var countdown_remaining = 5
 
 func _ready():
     lobby_players = [$LobbyPlayer1, $LobbyPlayer2, $LobbyPlayer3, $LobbyPlayer4,\
@@ -126,4 +127,4 @@ func _on_do_stop_lobby_countdown():
     if dialog:
         dialog.queue_free()
 
-    countdown_remaining = 10
+    countdown_remaining = 5

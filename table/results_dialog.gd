@@ -5,7 +5,7 @@ signal send_new_ready
 var player_id_index_map = {}
 var im_readied = false
 
-var countdown_remaining = 10
+var countdown_remaining = 5
 
 func _ready():
     get_node('/root/Main/Networking').connect('update_player_ready', _on_update_player_ready)
@@ -94,4 +94,4 @@ func _on_do_stop_lobby_countdown():
     if dialog:
         dialog.queue_free()
 
-    countdown_remaining = 10
+    countdown_remaining = 5

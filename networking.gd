@@ -8,11 +8,12 @@ signal update_player_ready
 signal do_start_lobby_countdown
 signal do_stop_lobby_countdown
 signal do_start_game
+signal update_table_data
 signal continue_betting_round
 signal start_new_betting_round
 signal end_game
 
-var self_host_data : host_data = null # Only used if self-hosting
+var self_host_data : HostData = null # Only used if self-hosting
 
 func _ready():
     multiplayer.peer_disconnected.connect(_on_player_disconnected)
@@ -21,7 +22,7 @@ func _ready():
 
 func _on_init_self_host(game_info,
                         player_name):
-    self_host_data = host_data.new(game_info)
+    self_host_data = HostData.new(game_info)
 
     var my_id = multiplayer.get_unique_id()
     self_host_data.add_player(multiplayer.get_unique_id(), player_name)
@@ -92,7 +93,7 @@ func server_process_new_ready(new_ready):
         countdown_timer.name = 'GameStartTimer'
         countdown_timer.autostart = true
         countdown_timer.one_shot = true
-        countdown_timer.wait_time = 10.0
+        countdown_timer.wait_time = 5.0
         countdown_timer.timeout.connect(_server_tranistion_to_table)
         add_child(countdown_timer)
 
@@ -114,7 +115,12 @@ func stop_lobby_countdown():
 func _server_tranistion_to_table():
     get_node('GameStartTimer').queue_free()
 
-    self_host_data.start_game()
+    # Set dealer as random player on first hand, otherwise advance to next dealer in order
+    if has_node('/root/Main/Scene_Switcher/Table'):
+        self_host_data.start_game((self_host_data.dealer_index + 1) % self_host_data.players.size())
+    else:
+        self_host_data.start_game(randi() % self_host_data.players.size())
+
     var player_info_dict = self_host_data.get_client_player_table_data()
 
     for player_id in self_host_data.players.keys():
@@ -124,9 +130,11 @@ func _server_tranistion_to_table():
                                           player_info_dict,
                                           self_host_data.get_player_pocket(player_id),
                                           self_host_data.game_info.prebet_type,
-                                          self_host_data.dealer,
-                                          self_host_data.pot,
-                                          self_host_data.min_raise)
+                                          self_host_data.players.keys()[self_host_data.dealer_index],
+                                          self_host_data.get_pot_amounts(),
+                                          self_host_data.get_curr_bet(),
+                                          self_host_data.min_raise,
+                                          self_host_data.get_total_game_balance())
 
 @rpc('authority', 'call_local', 'reliable')
 func client_transition_to_table(opponent_order,
@@ -134,16 +142,20 @@ func client_transition_to_table(opponent_order,
                                 player_hand,
                                 prebet_type,
                                 dealer_id,
-                                starting_pot,
-                                min_raise):
+                                starting_pots,
+                                starting_curr_bet,
+                                min_raise,
+                                total_game_balance):
     change_scene.emit('table')
     do_start_game.emit(opponent_order,
                        client_player_table_data,
                        player_hand,
                        prebet_type,
                        dealer_id,
-                       starting_pot,
-                       min_raise)
+                       starting_pots,
+                       starting_curr_bet,
+                       min_raise,
+                       total_game_balance)
 
 func _on_leave_lobby():
     # Destroy old game data obj if we're the server (i.e. self-hosting)
@@ -162,24 +174,25 @@ func _on_send_player_action(action):
 func server_process_player_action(action):
     self_host_data.process_player_action(multiplayer.get_remote_sender_id(), action)
 
+    client_update_data_data.rpc(self_host_data.get_client_player_table_data(), self_host_data.get_pot_amounts())
+
+    self_host_data.advance_game_state()
+
     if self_host_data.phase_complete:
         if self_host_data.game_phase == PokerTypes.GamePhases.GP_FLOP:
             client_start_new_betting_round.rpc(self_host_data.get_client_player_table_data(),
                                                self_host_data.get_turn_player_id(),
                                                self_host_data.community_cards,
-                                               self_host_data.pot,
                                                self_host_data.min_raise)
         elif self_host_data.game_phase == PokerTypes.GamePhases.GP_TURN:
             client_start_new_betting_round.rpc(self_host_data.get_client_player_table_data(),
                                                self_host_data.get_turn_player_id(),
                                                [self_host_data.community_cards[3]],
-                                               self_host_data.pot,
                                                self_host_data.min_raise)
         elif self_host_data.game_phase == PokerTypes.GamePhases.GP_RIVER:
             client_start_new_betting_round.rpc(self_host_data.get_client_player_table_data(),
                                                self_host_data.get_turn_player_id(),
                                                [self_host_data.community_cards[4]],
-                                               self_host_data.pot,
                                                self_host_data.min_raise)
         elif self_host_data.game_phase == PokerTypes.GamePhases.GP_END:
             client_end_game.rpc(self_host_data.get_client_end_game_table_data(),
@@ -187,21 +200,25 @@ func server_process_player_action(action):
                                 self_host_data.get_player_pockets(),
                                 self_host_data.players_in_hand.size() == 1)
         else:
-            pass # TO-DO - Should not enter this phase. Crash the game or something...
+            # TO-DO - Disconnect players, graceful shutdown
+            printerr('Game has entered unknown state. Server will now exit.')
+            get_tree().quit(1)
     else:
-        client_continue_betting_round.rpc(self_host_data.get_client_player_table_data(),
-                                          self_host_data.get_turn_player_id(),
-                                          self_host_data.pot,
-                                          self_host_data.curr_bet != 0,
+        client_continue_betting_round.rpc(self_host_data.get_turn_player_id(),
+                                          self_host_data.get_curr_bet(),
                                           self_host_data.min_raise)
 
 @rpc('authority', 'call_local', 'reliable')
-func client_continue_betting_round(new_player_data, turn_player_id, new_pot, new_prev_bet_made, new_min_raise):
-    continue_betting_round.emit(new_player_data, turn_player_id, new_pot, new_prev_bet_made, new_min_raise)
+func client_update_data_data(new_player_data, new_pots):
+    update_table_data.emit(new_player_data, new_pots)
 
 @rpc('authority', 'call_local', 'reliable')
-func client_start_new_betting_round(new_player_data, turn_player_id, new_community_cards, new_pot, new_min_raise):
-    start_new_betting_round.emit(new_player_data, turn_player_id, new_community_cards, new_pot, new_min_raise)
+func client_continue_betting_round(turn_player_id, new_curr_bet, new_min_raise):
+    continue_betting_round.emit(turn_player_id, new_curr_bet, new_min_raise)
+
+@rpc('authority', 'call_local', 'reliable')
+func client_start_new_betting_round(new_player_data, turn_player_id, new_community_cards, new_min_raise):
+    start_new_betting_round.emit(new_player_data, turn_player_id, new_community_cards, new_min_raise)
 
 @rpc('authority', 'call_local', 'reliable')
 func client_end_game(end_game_table_data, end_game_results_data, player_pockets, lone_player_in_hand):

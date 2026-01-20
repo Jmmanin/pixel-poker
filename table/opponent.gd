@@ -1,5 +1,6 @@
 extends TextureRect
 
+var total_game_balance = 0
 var balance = 0
 var blind_button_value = PokerTypes.BlindButtons.BB_NONE
 var cards_dealt = 0
@@ -27,13 +28,13 @@ func set_balance(new_balance):
 
     if balance > 0:
         #TO-DO - Adjust percentages
-        if balance >= (0.8 * GameProperties.total_game_balance):
+        if balance >= (0.8 * total_game_balance):
             $Chips.set_region_rect(Rect2(96, 0, 24, 24))
-        elif balance >= (0.6 * GameProperties.total_game_balance):
+        elif balance >= (0.6 * total_game_balance):
             $Chips.set_region_rect(Rect2(72, 0, 24, 24))
-        elif balance >= (0.4 * GameProperties.total_game_balance):
+        elif balance >= (0.4 * total_game_balance):
             $Chips.set_region_rect(Rect2(48, 0, 24, 24))
-        elif balance >= (0.2 * GameProperties.total_game_balance):
+        elif balance >= (0.2 * total_game_balance):
             $Chips.set_region_rect(Rect2(24, 0, 24, 24))
         else:
             $Chips.set_region_rect(Rect2(8, 0, 16, 24))

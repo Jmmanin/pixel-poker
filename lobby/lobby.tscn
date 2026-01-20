@@ -1,6 +1,6 @@
 [gd_scene load_steps=16 format=3 uid="uid://wjbw2drmop70"]
 
-[ext_resource type="Script" path="res://lobby/lobby.gd" id="1_u6h7t"]
+[ext_resource type="Script" uid="uid://q6ujgrfy68y0" path="res://lobby/lobby.gd" id="1_u6h7t"]
 [ext_resource type="Texture2D" uid="uid://coa235rmxckds" path="res://resources/host_join_lobby/sign.png" id="2_5j8i0"]
 [ext_resource type="FontFile" uid="uid://c3j6oa1sotgmy" path="res://resources/monogram.ttf" id="3_c1xet"]
 [ext_resource type="Texture2D" uid="uid://d20hb2fkkte2f" path="res://resources/host_join_lobby/sign_mask1.png" id="4_psomp"]

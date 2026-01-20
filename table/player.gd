@@ -1,5 +1,6 @@
 extends Node2D
 
+var total_game_balance = 0
 var balance = 0
 var blind_button_value = PokerTypes.BlindButtons.BB_NONE
 var cards_dealt = 0
@@ -63,13 +64,13 @@ func set_balance(new_balance):
 
     if balance > 0:
         #TO-DO - Adjust percentages
-        if balance >= (0.8 * GameProperties.total_game_balance):
+        if balance >= (0.8 * total_game_balance):
             $StatusBlock/Chips.set_region_rect(Rect2(144, 0, 36, 36))
-        elif balance >= (0.6 * GameProperties.total_game_balance):
+        elif balance >= (0.6 * total_game_balance):
             $StatusBlock/Chips.set_region_rect(Rect2(108, 0, 36, 36))
-        elif balance >= (0.4 * GameProperties.total_game_balance):
+        elif balance >= (0.4 * total_game_balance):
             $StatusBlock/Chips.set_region_rect(Rect2(72, 0, 36, 36))
-        elif balance >= (0.2 * GameProperties.total_game_balance):
+        elif balance >= (0.2 * total_game_balance):
             $StatusBlock/Chips.set_region_rect(Rect2(36, 0, 36, 36))
         else:
             $StatusBlock/Chips.set_region_rect(Rect2(12, 0, 24, 36))
